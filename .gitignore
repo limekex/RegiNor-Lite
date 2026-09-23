@@ -6,3 +6,24 @@
 
 # Temporary files
 *.log
+
+# Dependencies and build output
+node_modules/
+vendor/
+dist/
+
+# Local WordPress environment and secrets
+.wp-env.override.json
+.wp-env/
+.env
+.env.*
+!.env.example
+*.sql
+*.sql.gz
+
+# Test output
+coverage/
+.phpunit.cache/
+
+# Private inventory reports and site exports
+var/

@@ -1,0 +1,5 @@
+# Test-only independent iCalendar parser; not bundled with the WordPress plugin.
+icalendar==6.3.2
+python-dateutil==2.9.0.post0
+six==1.17.0
+tzdata==2026.4

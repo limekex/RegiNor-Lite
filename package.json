@@ -1,0 +1,59 @@
+{
+  "name": "reginor-lite",
+  "version": "0.1.14",
+  "private": true,
+  "description": "Lokale utviklingsverktøy for RegiNor Lite WordPress-plugin.",
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "wp-env": "wp-env",
+    "env:start": "wp-env start",
+    "env:configure": "node scripts/configure-local.cjs",
+    "test:local-config": "node --test tests/local-config.test.cjs",
+    "env:stop": "wp-env stop",
+    "lint": "php scripts/lint.php",
+    "test:wordpress": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-smoke.php",
+    "test:storage": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-storage.php",
+    "inspect:wordpress": "wp-env run cli wp eval-file /var/www/html/rnl-tools/inspect-wordpress.php",
+    "package": "python3 scripts/package.py",
+    "test:workflow": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-workflow.php",
+    "test:http": "python3 scripts/test-http.py",
+    "test:public": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-public.php",
+    "test:public-http": "python3 scripts/test-public-http.py",
+    "test:interface": "node tests/interface.test.cjs && node tests/admin-form.test.cjs && node tests/category-suggestions.test.cjs && node tests/appearance.test.cjs && node tests/map.test.cjs && node tests/letsreg-picker.test.cjs && node tests/course-editor.test.cjs && node tests/letsreg-import.test.cjs && node tests/letsreg-bulk.test.cjs && node tests/letsreg-template.test.cjs && node tests/registration-status.test.cjs && node tests/sharing.test.cjs && node --test tests/course-tools.test.cjs && node tests/rich-text.test.cjs",
+    "test:capacity": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-capacity.php",
+    "test:api-transport": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-api-transport.php",
+    "test:letsreg": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-letsreg.php",
+    "test:letsreg-import": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-letsreg-import.php",
+    "test:letsreg-mapping": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-letsreg-mapping.php",
+    "test:admin": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-admin.php",
+    "i18n:pot": "wp-env run cli wp i18n make-pot wp-content/plugins/reginor-lite wp-content/plugins/reginor-lite/languages/reginor-lite.pot --domain=reginor-lite",
+    "demo:courses": "wp-env run cli wp eval-file /var/www/html/rnl-tools/seed-demo-courses.php",
+    "test:journey": "node tests/journey.test.cjs",
+    "test:analytics": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-analytics.php",
+    "test:demo": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-demo.php",
+    "test:admin-menu": "python3 scripts/test-admin-menu.py",
+    "test:appearance": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-appearance.php",
+    "test:maps": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-maps.php",
+    "test:tec": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-tec.php",
+    "test:tec-http": "python3 scripts/test-tec-http.py",
+    "test:levels": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-levels.php",
+    "test:registration-status": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-registration-status.php",
+    "test:permalinks": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-permalinks.php",
+    "test:permalinks-http": "python3 scripts/test-permalinks-http.py",
+    "test:calendar": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-calendar.php",
+    "test:calendar-http": "python3 scripts/test-calendar-http.py",
+    "test:sales-history": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-sales-history.php",
+    "test:letsreg-changes": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-letsreg-changes.php",
+    "test:local-registration": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-local-registration.php"
+  },
+  "devDependencies": {
+    "@wordpress/env": "11.15.0",
+    "jsdom": "20.0.3"
+  },
+  "overrides": {
+    "qs": "6.16.0"
+  }
+}

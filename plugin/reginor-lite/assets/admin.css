@@ -1,0 +1,84 @@
+/* Administration only. Keep the embedded public color preview on its frontend scale. */
+.rnl-admin > h1 { font-size:clamp(28px,3vw,34px); line-height:1.2; }
+.rnl-admin h2 { font-size:24px; line-height:1.3; margin:28px 0 16px; }
+.rnl-admin h3:not(.rnl-public *) { font-size:20px; line-height:1.4; }
+.rnl-admin h4:not(.rnl-public *) { font-size:17px; }
+.rnl-admin p:not(.rnl-public *, .rnl-help, .rnl-small, .rnl-notice, .rnl-field-error) { font-size:inherit; line-height:inherit; }
+.rnl-admin .rnl-panel:not(.rnl-public *) { margin-block:28px; }
+.rnl-admin .rnl-panel > :first-child,
+.rnl-admin .rnl-field-section > :first-child { margin-top:0; }
+.rnl-admin .rnl-panel > :last-child { margin-bottom:0; }
+.rnl-admin .rnl-panel + h2,
+.rnl-admin .rnl-scroll + h2 { margin-top:32px; }
+.rnl-admin .rnl-field-section > h2 { margin-top:0; }
+.rnl-admin .rnl-category-card { padding:18px; margin-block:16px; }
+.rnl-admin .rnl-category-card > legend { font-size:17px; line-height:1.45; max-width:100%; }
+.rnl-admin .rnl-category-card small { color:var(--rnl-muted); font-size:13px; font-weight:400; }
+.rnl-admin .rnl-category-card .rnl-field-grid > p { margin-bottom:0; }
+.rnl-admin .rnl-button + .rnl-button { margin-inline-start:10px; }
+.rnl-admin .rnl-row-actions .rnl-button { margin-inline-start:0; }
+.rnl-admin .rnl-button-secondary { background:#fff; color:var(--rnl-plum); }
+.rnl-admin .rnl-button-secondary:hover { background:var(--rnl-soft); color:var(--rnl-plum-dark); }
+.rnl-admin :is(.rnl-button,.button-primary):disabled,
+.rnl-admin :is(.rnl-button,.button-primary):disabled:hover {
+    background:#eee9ec; color:#595159; border-color:#b6acb2; cursor:not-allowed; text-shadow:none;
+}
+.rnl-admin input[type=range] {
+    display:block; width:100%; max-width:100%; height:44px; padding:0; margin:6px 0;
+    border:0; background:transparent; accent-color:var(--rnl-plum); cursor:pointer;
+}
+.rnl-admin input[type=range]:disabled { cursor:not-allowed; }
+.rnl-admin [data-rnl-swatch] > label:not(:first-child) { display:block; margin-top:16px; }
+.rnl-admin .rnl-scroll { margin-block:18px 24px; }
+.rnl-admin table caption { text-align:start; font-size:16px; font-weight:650; padding:12px 0; }
+.rnl-admin th { text-align:start; font-weight:650; }
+.rnl-admin td { vertical-align:top; overflow-wrap:anywhere; }
+.rnl-admin dl:not(.rnl-public *) { margin:18px 0; }
+.rnl-admin dl:not(.rnl-public *) dt { color:var(--rnl-muted); font-size:14px; font-weight:600; }
+.rnl-admin dl:not(.rnl-public *) dd { margin:0 0 14px; overflow-wrap:anywhere; }
+.rnl-admin .rnl-preserve-lines { white-space:pre-wrap; }
+.rnl-admin .rnl-image-preview,
+.rnl-admin #rnl-calendar-image-preview img { max-width:100%; height:auto; border-radius:8px; }
+.rnl-admin [data-rnl-letsreg-picker] [data-search-form] input[type=search] { margin-bottom:12px; }
+.rnl-admin [data-rnl-letsreg-picker] [data-url-preview] { padding:14px; border:1px solid var(--rnl-line); border-radius:10px; margin-bottom:18px; }
+.rnl-admin [data-rnl-letsreg-picker] [data-url-preview] a { overflow-wrap:anywhere; }
+.rnl-admin .rnl-field-section { margin-block:28px; }
+.rnl-admin .rnl-field-grid { gap:16px 24px; }
+.rnl-admin .rnl-field-card { padding:18px; }
+.rnl-admin .rnl-row-actions { gap:12px; }
+.rnl-admin :is(details, form, section, .rnl-import-review) > .rnl-button { margin-block:8px 12px; }
+.rnl-admin .rnl-import-review { padding-block:20px; border-top:1px solid var(--rnl-line); }
+.rnl-admin .rnl-bulk-choice { padding:12px 14px; margin-block:10px; border:1px solid var(--rnl-line); border-radius:8px; }
+.rnl-admin [data-course-suggestions]:not(:empty) { padding:20px; margin-block:24px; border:1px solid var(--rnl-line); border-radius:12px; }
+.rnl-admin .rnl-validation-summary { padding:20px; margin-block:24px; border:1px solid #c88d87; border-left:4px solid #982c24; border-radius:10px; background:#fff8f7; }
+.rnl-admin .rnl-validation-summary ul { margin:0; padding-inline-start:22px; }
+.rnl-admin .rnl-validation-summary li + li { margin-top:12px; }
+.rnl-admin .rnl-validation-link { display:block; padding:6px 0; min-height:44px; border:0; background:transparent; color:#86271f; font:inherit; text-align:start; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+@media(max-width:780px) {
+    .rnl-admin h2 { font-size:22px; }
+    .rnl-admin .rnl-category-card { padding:14px; }
+    .rnl-admin .rnl-button { max-width:100%; }
+}
+
+.rnl-admin .rnl-status-control{margin:0;min-width:190px;max-width:270px}
+.rnl-admin .rnl-status-control select{width:100%;font-size:14px;min-height:38px;margin:0}
+.rnl-admin .rnl-status-control :is(.rnl-status-description,[data-status-message]){display:block;font-size:12px;line-height:1.5;margin-top:6px}
+.rnl-admin .rnl-status-control [role=alert]{color:#a51d2d}
+
+.rnl-admin .rnl-course-name{display:flex;align-items:center;gap:8px}
+.rnl-admin .rnl-course-name>.rnl-action-wrap{flex-shrink:0}
+.rnl-admin .rnl-course-name .dashicons{width:18px;height:18px;font-size:18px}
+
+/* Optional sharing controls reuse the field cards and leave room around media/actions. */
+.rnl-admin #rnl-sharing form { margin-top: 1rem; }
+.rnl-admin #rnl-sharing .rnl-field-card { margin-block: 1rem; }
+.rnl-admin #rnl-sharing .rnl-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .75rem; }
+.rnl-admin .rnl-sharing-url { overflow-wrap: anywhere; }
+
+/* Keep WordPress editor controls compact inside the larger course form fields. */
+.rnl-admin .rnl-rich-field { margin-block: 0 18px; }
+.rnl-admin .rnl-rich-field > label { display:block; font-weight:650; margin-bottom:8px; }
+.rnl-admin .rnl-rich-field .wp-editor-container { background:#fff; }
+.rnl-admin .rnl-rich-field textarea.wp-editor-area { margin:0; border:0; border-radius:0; font:14px/1.6 monospace; }
+.rnl-admin .rnl-rich-field .quicktags-toolbar input { display:inline-block; width:auto; min-height:28px; margin:2px; padding:2px 8px; font:13px/1.5 sans-serif; }
+.rnl-admin .rnl-rich-field .rnl-help { display:block; margin-top:10px; }

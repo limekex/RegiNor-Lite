@@ -1,0 +1,10 @@
+const assert = require('node:assert/strict');
+const { ink, hex, paint } = require('../plugin/reginor-lite/assets/appearance.js');
+assert.equal(ink('#000000'), '#ffffff'); assert.equal(ink('#ffffff'), '#000000');
+assert.equal(hex('#FA1'), '#ffaa11'); assert.equal(hex('rgb(255, 128, 0)'), '#ff8000');
+assert.equal(hex('rgba(255, 128, 0, 0.5)'), '#ff8000'); assert.equal(hex('rgb(900, 0, 0)'), null);
+assert.equal(paint('#123456', 'avada:color4', 50), 'color-mix(in srgb,var(--awb-color4,#123456) 50%,transparent)');
+assert.equal(paint('#123456', 'wp:primary', 100), 'var(--wp--preset--color--primary,#123456)');
+assert.equal(paint('#123456', '', 0), 'color-mix(in srgb,#123456 0%,transparent)');
+assert.equal(paint('#123456', '', 100), '#123456');
+console.log('10 appearance color/alpha checks passed.');

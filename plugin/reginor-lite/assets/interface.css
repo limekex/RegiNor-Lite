@@ -1,0 +1,146 @@
+/* Scoped to RegiNor; Avada, TEC and existing WordPress screens retain their own styles. */
+.rnl-ui{--rnl-ink:#292336;--rnl-muted:#625b69;--rnl-plum:#61364d;--rnl-plum-dark:#452338;--rnl-paper:#fcfaf7;--rnl-line:#ded7d3;--rnl-soft:#f1e9e4;--rnl-green:#20553d;color:var(--rnl-ink);font-family:inherit;font-size:18px;line-height:1.6;box-sizing:border-box;max-width:1240px;margin:0 auto;padding:clamp(18px,3vw,44px);background:var(--rnl-paper);border-radius:24px}
+.rnl-ui *{box-sizing:border-box}.rnl-ui :is(h1,h2,h3,h4,p,dl,ol,ul){color:inherit;overflow-wrap:anywhere}.rnl-ui h1,.rnl-ui h2{font-size:clamp(28px,3.5vw,44px);line-height:1.18;letter-spacing:-.025em;font-weight:650;margin:0 0 18px}.rnl-ui h3{font-size:24px;line-height:1.3;margin:0 0 16px}.rnl-ui h4{font-size:19px;line-height:1.4;margin:18px 0 8px}.rnl-ui p{margin:0 0 18px}.rnl-ui a{color:var(--rnl-plum);text-decoration:underline;text-underline-offset:4px}.rnl-ui a:hover{color:var(--rnl-plum-dark)}.rnl-ui :is(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #255caf;outline-offset:4px;box-shadow:none}.rnl-ui :is([tabindex="-1"]):focus{outline:3px solid #255caf;outline-offset:5px}
+.rnl-ui .rnl-button,.rnl-ui .button-primary{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;padding:12px 20px;border:1px solid var(--rnl-plum);border-radius:10px;background:var(--rnl-plum);color:#fff;text-decoration:none;font:inherit;font-weight:650;line-height:1.45;white-space:normal;cursor:pointer;box-shadow:none;height:auto;text-shadow:none}
+.rnl-ui .rnl-button:hover,.rnl-ui .button-primary:hover{background:var(--rnl-plum-dark);color:#fff;border-color:var(--rnl-plum-dark)}.rnl-ui .rnl-button-secondary{background:#fff;color:var(--rnl-plum)}.rnl-ui .rnl-button-secondary:hover{background:var(--rnl-soft);color:var(--rnl-plum-dark)}.rnl-ui .rnl-small,.rnl-ui .rnl-help{font-size:16px;color:var(--rnl-muted);line-height:1.5}.rnl-ui .rnl-eyebrow{display:block;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:750;color:var(--rnl-plum);margin-bottom:12px}
+.rnl-hero{padding:18px 0 32px;max-width:760px}.rnl-hero>p{font-size:20px;color:var(--rnl-muted);max-width:640px}.rnl-toolbar{padding:24px;background:#fff;border:1px solid var(--rnl-line);border-radius:16px;margin-bottom:32px}.rnl-choice-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}.rnl-ui .rnl-chip{display:inline-flex;align-items:center;min-height:46px;padding:8px 16px;border:1px solid var(--rnl-line);border-radius:999px;color:var(--rnl-ink);text-decoration:none;font-size:16px;font-weight:600}.rnl-ui .rnl-chip.is-selected{background:var(--rnl-plum);border-color:var(--rnl-plum);color:#fff}.rnl-filter-form{display:flex;flex-wrap:wrap;gap:18px;align-items:end}.rnl-filter-form label{flex:1 1 180px;font-weight:650;font-size:16px}.rnl-ui select,.rnl-ui input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=submit]):not([type=button]):not([type=range]),.rnl-ui textarea{display:block;width:100%;max-width:100%;min-height:48px;margin-top:6px;padding:10px 12px;font:inherit;color:var(--rnl-ink);background:#fff;border:1px solid #9a9198;border-radius:8px;box-shadow:none}.rnl-ui select{padding-right:30px}.rnl-view-switch{display:flex;flex-wrap:wrap;gap:8px;padding-top:20px;margin-top:20px;border-top:1px solid var(--rnl-line)}.rnl-view-switch a{padding:8px 18px;min-height:44px;text-decoration:none;border-radius:8px}.rnl-view-switch .is-selected{background:var(--rnl-soft);font-weight:700}.rnl-results-heading{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin:28px 0 8px}.rnl-results-heading p{font-size:16px;color:var(--rnl-muted)}
+.rnl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px}.rnl-card,.rnl-panel{background:#fff;border:1px solid var(--rnl-line);border-radius:16px;padding:26px;box-shadow:0 4px 16px #29233605}.rnl-card{display:flex;flex-direction:column}.rnl-card-top{display:flex;gap:12px;justify-content:space-between;align-items:start;flex-wrap:wrap;margin-bottom:18px}.rnl-card-top .rnl-eyebrow{margin:5px 0 0}.rnl-ui .rnl-badge{display:inline-block;padding:5px 10px;border-radius:6px;background:var(--rnl-soft);color:var(--rnl-ink);font-size:13px;line-height:1.45;font-weight:650}.rnl-ui .rnl-status-available{background:#e4f1e9;color:#18472f}.rnl-ui .rnl-status-cancelled{background:#fae8e6;color:#8a2928}.rnl-level{color:var(--rnl-muted)}.rnl-facts{margin:4px 0 24px}.rnl-facts>div{margin:0 0 14px}.rnl-facts dt{font-size:13px;font-weight:650;color:var(--rnl-muted)}.rnl-facts dd{margin:0;font-weight:550}.rnl-facts dd span{display:block;font-size:15px;color:var(--rnl-muted);font-weight:400}.rnl-ui .rnl-price{font-size:23px;font-weight:700;line-height:1.3}.rnl-price span{display:block;font-weight:400;font-size:15px;color:var(--rnl-muted);margin-top:5px}.rnl-card>.rnl-button{margin-top:auto}.rnl-card>.rnl-small{margin-bottom:18px}.rnl-empty{padding:36px;border:1px dashed #b8a9ae;border-radius:16px;background:#fff}.rnl-ui .rnl-notice{padding:14px 18px;background:#f5eee1;border-left:4px solid #98713a;border-radius:0 8px 8px 0;font-size:16px}.rnl-back{display:inline-block;padding:12px 0;min-height:44px}.rnl-detail-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);gap:28px;align-items:start}.rnl-detail-layout .rnl-panel{margin-bottom:24px}.rnl-booking .rnl-button{width:100%}.rnl-session-list{list-style:none;padding:0;margin:0}.rnl-session-list li{padding:18px 0;border-top:1px solid var(--rnl-line)}.rnl-session-list span{display:block;font-size:16px;color:var(--rnl-muted)}.rnl-session-list .is-cancelled strong{text-decoration:line-through}.rnl-ui details{border:1px solid var(--rnl-line);background:#fff;border-radius:12px;padding:0 20px;margin:18px 0}.rnl-ui summary{padding:16px 0;font-weight:650;min-height:48px;cursor:pointer}.rnl-ui details[open]{padding-bottom:20px}
+.rnl-week{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:24px}.rnl-day{min-width:0}.rnl-day>h3{padding:18px;background:var(--rnl-soft);border-radius:12px}.rnl-timetable{display:grid;grid-template-columns:minmax(46px,max-content) repeat(var(--rnl-columns),minmax(0,1fr));grid-template-rows:minmax(64px,auto) repeat(var(--rnl-rows),minmax(5px,1fr));column-gap:8px;align-items:stretch}.rnl-ui .rnl-room-heading{grid-row:1;font-size:19px;font-weight:700;color:var(--rnl-ink);background:var(--rnl-soft);border-bottom:3px solid var(--rnl-plum);border-radius:8px 8px 0 0;margin:0;padding:14px 10px;line-height:1.4;overflow-wrap:anywhere}.rnl-time-heading{grid-column:1;grid-row:1;font-size:13px}.rnl-time-tick{grid-column:1;font-size:12px;line-height:1.4;align-self:start;white-space:nowrap;font-variant-numeric:tabular-nums}.rnl-ui .rnl-week-course{border:1px solid var(--rnl-line);border-left:3px solid var(--rnl-plum);background:#fff;border-radius:10px;padding:14px;margin:4px 0;min-width:0;align-self:stretch}.rnl-week-course h4{font-size:18px;margin:0 0 10px}.rnl-week-course p{font-size:14px;line-height:1.45;margin:0 0 10px}.rnl-week-course a{display:block;font-size:15px;padding:10px 0;min-height:44px}.rnl-week-course .rnl-badge{margin-bottom:10px}
+/* WordPress administration: the same visual language, with explicit task sections. */
+.rnl-admin{margin:22px 22px 22px 0;max-width:1180px;font-size:17px}.rnl-admin .notice{margin:18px 0;padding:14px 20px;border-radius:10px;box-shadow:none}.rnl-admin .notice p{font-size:17px}.rnl-admin form,.rnl-admin [data-rnl-course-editor]{max-width:900px}.rnl-admin .rnl-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 24px}.rnl-admin .rnl-field-grid>p{margin:0 0 16px}.rnl-admin .rnl-field-grid>.rnl-wide{grid-column:1/-1}.rnl-admin label{font-weight:600}.rnl-admin input[type=checkbox]{width:22px;height:22px;min-width:22px;margin-right:8px}.rnl-admin fieldset{min-width:0}.rnl-admin .rnl-field-section{border:0;margin:22px 0;padding:24px;background:#fff;border-radius:14px;box-shadow:0 0 0 1px var(--rnl-line)}.rnl-admin .rnl-field-section>legend{font-size:22px;font-weight:650;padding:0 8px}.rnl-admin .rnl-field-section .rnl-help{font-weight:400;margin-top:6px}.rnl-admin .submit{margin:18px 0;padding:0}.rnl-admin table{border:1px solid var(--rnl-line);border-radius:10px;border-spacing:0;background:#fff;font-size:16px}.rnl-admin th,.rnl-admin td{font-size:16px;padding:14px;line-height:1.5}.rnl-admin .rnl-scroll{max-width:100%;overflow-x:auto}.rnl-steps{display:flex;flex-wrap:wrap;gap:12px;list-style:none;margin:22px 0 30px;padding:0;counter-reset:rnlstep}.rnl-steps li{display:flex;align-items:center;gap:10px;font-size:16px;padding:12px 16px;background:#fff;border:1px solid var(--rnl-line);border-radius:10px}.rnl-steps li:before{counter-increment:rnlstep;content:counter(rnlstep);display:inline-grid;place-items:center;width:30px;height:30px;background:var(--rnl-soft);color:var(--rnl-plum);border-radius:50%;font-weight:700}.rnl-admin .rnl-period-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;margin-bottom:28px}.rnl-admin .rnl-period-card{background:#fff;border:1px solid var(--rnl-line);border-radius:14px;padding:24px}.rnl-period-card h3{margin-top:12px}.rnl-admin .rnl-danger{border-color:#dec8c6}.rnl-danger .button-primary{background:#fff;color:#8a2928;border-color:#aa5451}.rnl-danger .button-primary:hover{background:#fae8e6;color:#6c201d}.rnl-admin .rnl-next-step{background:#ece4eb;border-radius:14px;padding:22px 26px;margin:24px 0}.rnl-admin .rnl-next-step p:last-child{margin-bottom:0}
+@media(max-width:780px){.rnl-ui{padding:18px;border-radius:14px;font-size:17px}.rnl-detail-layout{grid-template-columns:1fr}.rnl-booking{grid-row:1}.rnl-toolbar{padding:18px}.rnl-card,.rnl-panel{padding:22px}.rnl-admin{margin:14px 10px 14px 0}.rnl-admin .rnl-field-grid{grid-template-columns:1fr}.rnl-admin .rnl-field-section{padding:18px}.rnl-hero>p{font-size:18px}.rnl-filter-form .rnl-button{width:100%}.rnl-timetable{display:flex;flex-direction:column;gap:10px}.rnl-time-tick,.rnl-time-heading,.rnl-room-heading{display:none}.rnl-week-course{grid-row:auto!important;grid-column:auto!important}.rnl-week-course h4{font-size:20px}.rnl-week-course p,.rnl-week-course a{font-size:16px}.rnl-week-course .rnl-badge{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.rnl-ui *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.rnl-day-list .rnl-timetable{display:flex;flex-direction:column;gap:10px}.rnl-day-list :is(.rnl-time-tick,.rnl-time-heading,.rnl-room-heading){display:none}.rnl-day-list .rnl-week-course{grid-column:auto!important;grid-row:auto!important}
+
+.rnl-ui .rnl-button:disabled,.rnl-ui .rnl-button:disabled:hover{background:#eee9ec;color:#595159;border-color:#b6acb2;cursor:not-allowed}
+
+/* Period navigation and accessible table actions. Status is always also written in text. */
+.rnl-step-nav{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}.rnl-step-nav a{display:inline-flex;align-items:center;min-height:48px;padding:12px 20px;border:1px solid var(--rnl-line);border-radius:10px;background:#fff;text-decoration:none}.rnl-step-nav a[aria-current=step]{background:var(--rnl-plum);color:#fff;font-weight:700}.rnl-period-table{width:100%}.rnl-period-table caption{text-align:start;font-size:18px;font-weight:650;padding:16px 0}.rnl-period-table tr.rnl-period-active>:is(th,td){background:#eaf4ec}.rnl-period-table tr.rnl-period-next>:is(th,td){background:#fff7df}.rnl-row-actions{display:flex;gap:8px;flex-wrap:wrap}.rnl-ui .rnl-icon-action{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px;border:1px solid var(--rnl-line);border-radius:8px;background:#ffffffb3;text-decoration:none;font-size:14px}.rnl-icon-action .dashicons{flex-shrink:0}.rnl-period-table th[scope=row]{min-width:180px}.rnl-ui [dir=rtl] .rnl-back{direction:rtl}
+
+/* Quiet field cards and a single progressive entry for teaching breaks. */
+.rnl-admin .rnl-field-card{padding:14px;background:#faf8f6;border:1px solid #e9e3df;border-radius:10px;min-width:0}
+.rnl-admin #rnl-calendar{margin-top:24px}.rnl-admin #rnl-calendar .rnl-field-card{margin:18px 0}
+.rnl-admin .rnl-help{display:block;margin-top:8px;font-size:14px;line-height:1.5;font-weight:400}
+.rnl-admin .rnl-field-error{display:block;color:#982c24;font-size:14px;font-weight:550;line-height:1.5;margin-top:6px}
+.rnl-admin .rnl-field-error:empty{display:none}.rnl-admin .rnl-field-note{color:#79551c}
+.rnl-admin [aria-invalid=true]{border-color:#982c24!important;box-shadow:0 0 0 1px #982c24!important}
+.rnl-admin .rnl-breaks{margin:18px 0}.rnl-admin .rnl-breaks>legend{font-size:18px;font-weight:650}
+.rnl-admin .rnl-break-row{padding:16px 0;border-top:1px solid var(--rnl-line)}
+.rnl-admin .rnl-break-row.is-removed [data-field]{opacity:.5}.rnl-admin .rnl-break-row.is-removed{border-left:3px solid #982c24;padding-left:12px}
+.rnl-admin .rnl-session-tools>summary{font-size:16px;font-weight:550}.rnl-admin details.rnl-session-row{border:0;border-top:1px solid var(--rnl-line);border-radius:0;margin:0;padding:0 8px}
+.rnl-admin .rnl-session-row>summary{font-size:15px;font-weight:500;padding:10px 0;min-height:44px}
+.rnl-admin [hidden]{display:none!important}
+
+.rnl-week-course .rnl-start-note{padding:8px 10px;border-left:3px solid var(--rnl-plum);background:var(--rnl-soft);border-radius:4px}
+
+/* Configurable frontend surfaces; these never style WordPress/Avada outside RegiNor. */
+.rnl-public{background:var(--rnl-background-bg,var(--rnl-paper));color:var(--rnl-background-ink,var(--rnl-ink))}
+.rnl-public>.rnl-hero>p,.rnl-public .rnl-results-heading p,.rnl-public [data-rnl-track-list]>.rnl-help,.rnl-public .rnl-back{color:var(--rnl-background-ink,var(--rnl-ink))}
+.rnl-public .rnl-toolbar,.rnl-public .rnl-empty,.rnl-public details{color:#292336}
+.rnl-public .rnl-day{background:var(--rnl-day-bg,var(--rnl-paper));color:var(--rnl-day-ink,var(--rnl-ink));padding:12px;border-radius:16px}
+.rnl-public .rnl-day>h3{background:var(--rnl-day-heading-bg,var(--rnl-soft));color:var(--rnl-day-heading-ink,var(--rnl-ink))}
+.rnl-public .rnl-room-heading,.rnl-public .rnl-room-fill,.rnl-preview-room{background:var(--rnl-room-bg,var(--rnl-soft));color:var(--rnl-room-ink,var(--rnl-ink))}
+.rnl-ui .rnl-room-heading{text-align:center}
+.rnl-ui .rnl-room-heading .rnl-room-name{display:block}
+.rnl-ui .rnl-room-heading .rnl-room-venue{display:block;font-size:.8em;font-weight:400;line-height:1.4;margin-top:4px}
+.rnl-public .rnl-room-name{font-weight:700}
+.rnl-public.rnl-day-colors-off .rnl-day{background:transparent;color:inherit}
+.rnl-public.rnl-day-colors-off .rnl-day>h3{background:var(--rnl-soft);color:var(--rnl-ink)}
+.rnl-room-fill{pointer-events:none;border-radius:0 0 10px 10px}
+.rnl-public :is(.rnl-card,.rnl-week-course,.rnl-course-detail .rnl-panel){background:var(--rnl-course-bg,#fff);color:var(--rnl-course-ink,#000);--rnl-muted:var(--rnl-course-ink,#000)}
+.rnl-public :is(.rnl-card,.rnl-week-course).rnl-featured,.rnl-public .rnl-course-detail.rnl-featured .rnl-panel{background:var(--rnl-highlight-bg,#fff2cf);color:var(--rnl-highlight-ink,#000);--rnl-muted:var(--rnl-highlight-ink,#000);border:3px solid currentColor}
+.rnl-public .rnl-week-course{position:relative;z-index:1}
+.rnl-public .rnl-week-course a:not(.rnl-button){color:inherit}
+.rnl-public .rnl-card .rnl-eyebrow{color:inherit}
+.rnl-public .rnl-course-detail>.rnl-hero>p{color:var(--rnl-background-ink,var(--rnl-ink))}
+.rnl-public .rnl-notice{color:#292336}.rnl-public .rnl-start-note{color:#292336}
+.rnl-public.rnl-days-stacked .rnl-week{grid-template-columns:1fr}
+.rnl-admin input[type=color]{width:100%;max-width:160px;min-height:52px;padding:5px;cursor:pointer}
+.rnl-appearance-preview{padding:18px;margin:16px 0}.rnl-preview-rooms{display:grid;grid-template-columns:1fr 1fr;gap:12px}.rnl-preview-room{padding:8px;border-radius:10px}
+@media(max-width:780px){.rnl-public .rnl-room-fill{display:none}.rnl-preview-rooms{grid-template-columns:1fr}.rnl-appearance-preview .rnl-room-heading{display:block}}
+.rnl-day-list .rnl-room-fill{display:none}
+/* Inset cards within the room background without shifting their time-grid rows. */
+@media(min-width:781px){.rnl-public .rnl-day:not(.rnl-day-list) .rnl-timetable>.rnl-week-course{margin-inline:8px}}
+.rnl-palette-samples{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.rnl-palette-sample{position:relative;border:2px solid transparent;background:#fff;border-radius:8px;padding:4px;width:48px;height:48px;cursor:pointer;overflow:visible}.rnl-palette-sample[aria-pressed=true]{border-color:#292336;box-shadow:0 0 0 2px #fff inset}.rnl-palette-chip{display:block;width:100%;height:100%;border:1px solid #999;border-radius:4px}.rnl-swatch-label{display:none;position:absolute;bottom:calc(100% + 6px);left:0;min-width:120px;width:max-content;max-width:240px;padding:8px;border-radius:6px;background:#292336;color:#fff;font-size:14px;line-height:1.4;z-index:10;pointer-events:none}.rnl-palette-sample:hover .rnl-swatch-label,.rnl-palette-sample:focus .rnl-swatch-label{display:block}
+.rnl-public .rnl-has-dropin{position:relative}
+.rnl-public details.rnl-dropin{position:absolute;top:-8px;right:8px;margin:0;padding:0;border:0;background:transparent;width:96px;z-index:3;box-shadow:none}
+.rnl-public .rnl-dropin summary{list-style:none;padding:0;min-height:44px;background:transparent;color:#fff;text-align:center;font-size:14px;font-weight:700;cursor:pointer}
+.rnl-public .rnl-dropin summary>span{display:block;background:#61364d;border-radius:4px;transform:rotate(12deg);box-shadow:0 2px 4px #0003;line-height:24px}
+.rnl-public .rnl-dropin summary::-webkit-details-marker{display:none}
+.rnl-public .rnl-dropin-popover{position:absolute;top:44px;right:0;width:240px;max-width:75vw;background:#fff;color:#292336;padding:16px;border:1px solid #61364d;border-radius:10px;box-shadow:0 5px 20px #0003;font-size:15px;line-height:1.5;z-index:4}
+.rnl-public .rnl-dropin-popover p{margin:8px 0 0;color:#292336}
+.rnl-public .rnl-week-course:has(.rnl-dropin[open]),.rnl-public .rnl-card:has(.rnl-dropin[open]){z-index:5}
+/* Compact, named actions and status markers. Tooltips escape scrolling tables via popover. */
+.rnl-admin .rnl-row-actions,.rnl-course-badges{display:flex;gap:6px;flex-wrap:nowrap;align-items:center}
+.rnl-action-wrap{position:relative;display:inline-flex}
+.rnl-admin .rnl-icon-action,.rnl-admin .rnl-status-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--rnl-line);border-radius:9px;background:#ffffffb3;color:var(--rnl-plum);text-decoration:none;cursor:pointer}
+.rnl-admin .rnl-status-icon{border-color:transparent;background:transparent}
+.rnl-icon-action .dashicons,.rnl-status-icon .dashicons{width:22px;height:22px;font-size:22px}
+.rnl-action-tip{display:none;position:absolute;z-index:100000;right:0;top:100%;width:250px;max-width:calc(100vw - 24px);padding:12px 14px;background:#fff;color:#2c2537;border:1px solid #d9d1d1;border-radius:10px;box-shadow:0 4px 16px #0002;font:normal 14px/1.5 system-ui;margin:0;box-sizing:border-box}
+.rnl-action-wrap:not([data-rnl-tooltip]):hover .rnl-action-tip,.rnl-action-wrap:not([data-rnl-tooltip]):focus-within .rnl-action-tip{display:block}
+.rnl-action-tip:popover-open{display:block;position:fixed;inset:auto}
+.rnl-map{height:320px;width:100%;max-width:100%;margin:16px 0;border:1px solid #d9d1d1;border-radius:10px;isolation:isolate}
+.rnl-map[hidden]{display:none}
+.rnl-ui .rnl-map .leaflet-control a{min-height:0;padding:0;color:#222;text-decoration:none}
+.rnl-ui .rnl-map .leaflet-control-attribution{font:12px/1.5 sans-serif;color:#222;background:#fffe}
+.rnl-map-marker{display:grid;place-items:center;color:#fff;background:#663d54;border:3px solid #fff;border-radius:50%;box-shadow:0 1px 6px #0008}
+.rnl-map-result{display:block;width:100%;text-align:start;min-height:44px;margin:6px 0;padding:12px;border:1px solid #d9d1d1;background:#fff;border-radius:8px;cursor:pointer;color:#2c2537}
+.rnl-venue-map{margin:18px 0}.rnl-venue-map .rnl-map{height:320px}.rnl-location{scroll-margin-top:100px}.rnl-venue-map [data-map-fallback][hidden]{display:none}
+
+/* Inline course linking uses the same quiet form cards as the course editor. */
+.rnl-admin [data-rnl-letsreg-picker] [data-results]>.rnl-button{margin:0 8px 12px 0}.rnl-admin [data-rnl-letsreg-picker] [data-message]:empty{display:none}.rnl-admin [data-rnl-letsreg-picker] [data-message][role=alert]{border-left:4px solid #b32d2e;padding:12px;background:#fff}.rnl-admin [data-rnl-letsreg-picker][aria-busy=true]{cursor:progress}
+
+.rnl-admin .rnl-letsreg-select{display:block;width:100%;max-width:100%;margin:8px 0;font-size:16px;min-height:44px}.rnl-admin .rnl-period-toggle{display:inline-flex;align-items:center;gap:6px}
+.rnl-ui .rnl-bulk-choice { display: block; padding: .5rem 0; }
+
+/* Reading order keeps facts and registration before long descriptions on every device. */
+@media(min-width:781px){.rnl-detail-layout>.rnl-booking{grid-column:2;grid-row:1}.rnl-detail-layout>.rnl-course-description{grid-column:1;grid-row:1}}
+
+/* Separate reading and registration actions, with room for translated labels and narrow cards. */
+.rnl-public .rnl-course-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.rnl-public .rnl-card>.rnl-course-actions{margin-top:auto;padding-top:8px}
+.rnl-public .rnl-course-actions .rnl-button{flex:1 1 150px;max-width:100%}
+.rnl-public .rnl-course-actions-links{margin-top:12px;column-gap:20px;row-gap:4px}
+.rnl-public .rnl-course-actions-links a{display:inline-flex;align-items:center;gap:6px;min-height:44px;text-decoration:underline;text-underline-offset:3px}
+
+.rnl-ui .rnl-category-capacity{margin:16px 0;padding:14px 16px;border:1px solid var(--rnl-line);border-radius:10px;background:rgba(255,255,255,.65);font-size:14px}
+.rnl-ui .rnl-category-capacity summary{font-size:14px;font-weight:600;cursor:pointer}
+.rnl-ui .rnl-category-capacity h4{font-size:16px;margin:0 0 12px}
+.rnl-ui .rnl-capacity-categories{list-style:none;margin:12px 0;padding:0}
+.rnl-ui .rnl-capacity-categories li{display:flex;justify-content:space-between;align-items:start;gap:12px;padding:10px 0;border-bottom:1px solid var(--rnl-line)}
+.rnl-ui .rnl-capacity-categories li:last-child{border-bottom:0}
+.rnl-ui .rnl-capacity-categories li>span{min-width:0}
+.rnl-ui .rnl-capacity-categories li>strong{flex-shrink:0}
+.rnl-ui .rnl-capacity-categories .rnl-small,.rnl-ui .rnl-capacity-category-name{display:block;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.rnl-ui .rnl-category-capacity>p{font-size:12px;line-height:1.5;margin:8px 0 0}
+@media(max-width:480px){.rnl-ui .rnl-capacity-categories li{flex-direction:column;gap:4px}}
+
+/* Secondary course actions, deliberately quieter than registration. */
+.rnl-ui .rnl-course-tools { margin-block-start: 1.25rem; }
+.rnl-ui details.rnl-course-tools { border: 1px solid var(--rnl-border, #ded8d5); border-radius: .75rem; padding: 1rem; }
+.rnl-ui .rnl-course-tools summary { cursor: pointer; font-weight: 600; }
+.rnl-ui .rnl-course-tools svg { display: inline-block; flex-shrink: 0; vertical-align: middle; margin-inline-end: .45rem; }
+.rnl-ui .rnl-tools-body { padding-block-start: .65rem; }
+.rnl-ui .rnl-tools-choice + .rnl-tools-choice { border-block-start: 1px solid var(--rnl-border, #ded8d5); margin-block-start: 1.25rem; padding-block-start: 1.25rem; }
+.rnl-ui .rnl-tools-actions, .rnl-ui .rnl-copy-row { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }
+.rnl-ui .rnl-copy-field { margin-block: 1rem; min-width: 0; }
+.rnl-ui .rnl-copy-field label { display: block; margin-block-end: .4rem; }
+.rnl-ui .rnl-copy-row input { flex: 1 1 14rem; min-width: 0; width: 100%; border: 1px solid var(--rnl-border, #ded8d5); border-radius: .4rem; padding: .65rem; font: inherit; }
+.rnl-ui .rnl-course-tools .rnl-button { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+.rnl-ui .rnl-calendar-help { margin-block-start: .75rem; }
+.rnl-ui .rnl-calendar-guide { margin-block: .65rem; padding-inline-start: .5rem; }
+.rnl-ui .rnl-course-tools [data-rnl-tools-status]:empty { display: none; }
+.rnl-ui .rnl-course-tools [hidden] { display: none !important; }
+
+/* Course taxonomy stays compact; longer explanations live in the profile's main column. */
+.rnl-public .rnl-course-pills{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;min-width:0}
+.rnl-public .rnl-course-pill{display:inline-flex;align-items:center;max-width:100%;padding:5px 12px;border:1px solid var(--rnl-line);border-radius:999px;background:var(--rnl-soft);color:var(--rnl-ink);font-size:14px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.rnl-public .rnl-week-course .rnl-course-pills{margin-bottom:12px;gap:6px}
+.rnl-public .rnl-week-course .rnl-course-pill{font-size:13px;padding:4px 10px}
+.rnl-public .rnl-course-description{min-width:0}
+.rnl-public .rnl-text-section>:last-child{margin-bottom:0}
+
+/* Compact course-table external links; keep a distinct keyboard/touch target. */
+.rnl-admin .rnl-course-name .rnl-icon-action{width:28px;height:28px;min-width:28px;min-height:28px;padding:2px;border-radius:5px}
+.rnl-admin .rnl-course-name .rnl-icon-action .dashicons{width:18px;height:18px;font-size:18px}

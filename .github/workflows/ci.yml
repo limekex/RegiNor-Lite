@@ -1,0 +1,83 @@
+name: Quality checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer check
+      - run: python3 scripts/package.py
+      - uses: actions/upload-artifact@v4
+        if: matrix.php == '8.2'
+        with:
+          name: reginor-lite
+          path: dist/reginor-lite.zip
+
+  wordpress:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        wordpress: ['6.8', '7.1']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:local-config
+      - run: npm run test:interface
+      - run: npm run test:journey
+      - name: Select minimum WordPress version
+        if: matrix.wordpress == '6.8'
+        run: node -e 'require("fs").writeFileSync(".wp-env.override.json", JSON.stringify({core:"WordPress/WordPress#6.8"}))'
+      - run: npm run env:start
+      - run: npm run test:wordpress
+      - run: npm run test:levels
+      - run: npm run test:storage
+      - run: npm run test:capacity
+      - run: npm run test:api-transport
+      - run: npm run test:letsreg
+      - run: npm run test:local-registration
+      - run: npm run test:registration-status
+      - run: npm run test:letsreg-mapping
+      - run: npm run test:letsreg-import
+      - run: npm run test:admin
+      - run: npm run test:admin-menu
+      - run: npm run test:appearance
+      - run: npm run test:maps
+      - run: npm run test:analytics
+      - run: npm run test:workflow
+      - run: npm run test:http
+      - run: npm run test:public
+      - run: npm run test:public-http
+      - run: npm run test:permalinks
+      - run: npm run test:calendar
+      - run: python3 -m pip install -r tests/requirements-calendar.txt
+      - run: npm run test:calendar-http
+      - run: npm run test:permalinks-http
+      - run: npm run demo:courses
+      - run: npm run test:demo
+      - run: npm run wp-env -- run cli wp plugin install the-events-calendar --version=6.17.5 --activate
+      - run: npm run test:tec
+      - run: npm run test:tec-http
+      - run: npm run test:admin-menu
+      - name: Stop local WordPress
+        if: always()
+        run: npm run env:stop

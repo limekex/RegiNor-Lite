@@ -1,0 +1,6 @@
+{
+  "mappings": {
+    "../rnl-letsreg.json": "./.env.letsreg.json",
+    "wp-content/mu-plugins/rnl-local-letsreg.php": "./scripts/local-letsreg.php"
+  }
+}

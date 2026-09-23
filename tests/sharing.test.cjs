@@ -1,0 +1,14 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const {JSDOM} = require('jsdom');
+const dom = new JSDOM(`<form data-rnl-sharing><input name="image_id" value="12"><input name="title"><textarea name="description"></textarea><div data-rnl-image-preview></div><button type="button" data-rnl-image-choose>Velg</button><button type="button" data-rnl-image-remove>Fjern</button><p data-rnl-image-status role="status"></p><strong data-rnl-share-title data-default="Kursnavn"></strong><p data-rnl-share-description></p></form>`, {runScripts:'outside-only'});
+const w=dom.window;const $=s=>w.document.querySelector(s);let selected;
+w.wp={i18n:{__:v=>v},media:()=>({on:(event,fn)=>{if(event==='select')selected=fn;},open:()=>{},state:()=>({get:()=>({first:()=>({toJSON:()=>({id:23,url:'https://example.org/image.png',alt:'Dans'})})})})})};
+w.eval(fs.readFileSync('plugin/reginor-lite/assets/sharing.js','utf8'));
+$('[name=title]').value='<b>Tekst</b>'; $('[name=description]').value='<img src=x onerror=alert(1)>';
+$('[name=title]').dispatchEvent(new w.Event('input',{bubbles:true}));
+assert.equal($('[data-rnl-share-title]').textContent,'<b>Tekst</b>');assert.equal($('[data-rnl-share-title]').children.length,0);assert.equal($('[data-rnl-share-description]').children.length,0);
+$('[data-rnl-image-choose]').click();selected();assert.equal($('[name=image_id]').value,'23');assert.equal($('[data-rnl-image-preview] img').alt,'Dans');assert.match($('[data-rnl-image-status]').textContent,/Lagre/);
+$('[data-rnl-image-remove]').click();assert.equal($('[name=image_id]').value,'0');assert.equal($('[data-rnl-image-preview]').children.length,0);
+$('[name=title]').value='';$('[name=title]').dispatchEvent(new w.Event('input',{bubbles:true}));assert.equal($('[data-rnl-share-title]').textContent,'Kursnavn');
+console.log('Sharing DOM passed: safe preview, image selection/removal and default text.');

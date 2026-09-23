@@ -1,0 +1,25 @@
+{
+  "name": "reginor/reginor-lite",
+  "description": "Kursoversikt og kursadministrasjon for SalsaNor i WordPress.",
+  "type": "wordpress-plugin",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.5"
+  },
+  "config": {
+    "platform": { "php": "8.2.0" },
+    "sort-packages": true
+  },
+  "scripts": {
+    "lint": "@php scripts/lint.php",
+    "test": "phpunit",
+    "check": [
+      "@composer validate --strict",
+      "@lint",
+      "@test"
+    ]
+  }
+}

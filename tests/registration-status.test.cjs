@@ -1,0 +1,47 @@
+const assert = require('node:assert/strict');
+const { JSDOM } = require('jsdom');
+const fs = require('node:fs');
+const dom = new JSDOM(`<form data-rnl-status-row data-url="/ajax"><input name="id" value="42"><input name="version" value="3"><input name="period" value="9"><input name="action" value="rnl_registration_status"><input name="operation" value="save"><input name="nonce" value="nonce"><select name="status"><option value="automatic">Automatisk</option><option value="closed">Manuelt: stengt</option><option value="waiting">Manuelt: venteliste</option></select><button data-status-save>Save</button><span data-status-description>Automatisk</span><span data-status-message></span></form>`, { url: 'http://localhost/', runScripts: 'outside-only', pretendToBeVisual: true });
+const w = dom.window; w.wp = { i18n: { __: text => text } };
+const queue = []; const calls = []; let timer;
+w.setInterval = fn => { timer = fn; };
+w.fetch = async (url, options) => {
+    calls.push(Object.fromEntries(options.body.entries()));
+    const next = queue.shift(); assert.ok(next, 'Unexpected request');
+    if (next instanceof Error) throw next;
+    return typeof next === 'function' ? next() : next;
+};
+const reply = (version, status, description = 'Status fra server') => ({ ok: true, json: async () => ({ success: true, data: { rows: [{ id: 42, version, status, description }] } }) });
+queue.push(reply(3, 'automatic'));
+w.eval(fs.readFileSync('plugin/reginor-lite/assets/registration-status.js', 'utf8'));
+const form = w.document.querySelector('form'); const select = form.elements.status;
+const tick = () => new Promise(resolve => setImmediate(resolve));
+const change = status => { select.value = status; select.dispatchEvent(new w.Event('change', { bubbles: true })); };
+(async () => {
+    await tick();
+    assert.equal(calls.shift().operation, 'read', 'Opening the overview must start refresh immediately');
+    assert.equal(form.querySelector('button').hidden, true);
+    queue.push(reply(4, 'closed')); change('closed');
+    assert.equal(select.disabled, true); await tick();
+    assert.equal(calls[0].status, 'closed'); assert.equal(calls[0].version, '3');
+    assert.equal(select.disabled, false); assert.equal(form.elements.version.value, '4');
+    assert.equal(form.querySelector('[data-status-message]').textContent, 'Lagret');
+    queue.push({ ok: false, json: async () => ({ success: false, data: { message: 'Versjonskonflikt – last siden på nytt' } }) });
+    change('waiting'); await tick();
+    assert.equal(select.value, 'closed'); assert.equal(form.elements.version.value, '4');
+    assert.equal(form.querySelector('[data-status-message]').getAttribute('role'), 'alert');
+    queue.push(reply(5, 'automatic', 'Automatisk · Fullt · Hentet 12:01')); await timer();
+    assert.equal(calls.at(-1).operation, 'read'); assert.equal(select.value, 'automatic');
+    assert.match(form.querySelector('[data-status-description]').textContent, /Fullt/);
+    assert.equal(form.querySelector('[data-status-message]').textContent, '');
+    // A late refresh must not overwrite a more recent save.
+    let finishRead; queue.push(() => new Promise(resolve => { finishRead = resolve; }));
+    const refreshing = timer(); await tick();
+    queue.push(reply(6, 'closed')); change('closed'); await tick();
+    finishRead(reply(5, 'automatic')); await refreshing;
+    assert.equal(select.value, 'closed'); assert.equal(form.elements.version.value, '6');
+    queue.push(new Error('Network error')); change('waiting'); await tick();
+    assert.equal(select.value, 'closed'); assert.equal(select.disabled, false);
+    assert.equal(queue.length, 0); dom.window.close();
+    console.log('Status dropdown DOM passed: AJAX save, versions, conflict/network recovery and refresh race.');
+})().catch(e => { dom.window.close(); console.error(e); process.exitCode = 1; });

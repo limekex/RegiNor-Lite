@@ -1,0 +1,19 @@
+<wpml-config>
+  <!-- Shared operational records. Display text is registered with String Translation. -->
+  <custom-types>
+    <custom-type translate="0">rnl_course</custom-type>
+    <custom-type translate="0">rnl_period</custom-type>
+    <custom-type translate="0">rnl_group</custom-type>
+    <custom-type translate="0">rnl_venue</custom-type>
+    <custom-type translate="0">rnl_room</custom-type>
+    <custom-type translate="0">rnl_level</custom-type>
+  </custom-types>
+  <custom-fields>
+    <custom-field action="ignore">rnl_state</custom-field>
+    <custom-field action="ignore">_rnl_capacity</custom-field>
+    <custom-field action="ignore">_rnl_web</custom-field>
+  </custom-fields>
+  <shortcodes>
+    <shortcode><tag>reginor_courses</tag></shortcode>
+  </shortcodes>
+</wpml-config>

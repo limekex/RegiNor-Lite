@@ -1,0 +1,36 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const { JSDOM } = require('jsdom');
+const dom = new JSDOM('<form id="course"><label for="terms">Prisvilkår</label><textarea data-rnl-rich-text id="terms" name="data[price_terms]"></textarea></form><form id="other"><textarea data-rnl-rich-text id="othertext" name="description"></textarea></form>', { runScripts: 'outside-only' });
+const { window: w } = dom;
+const editors = new Map();
+w.wp = { i18n: { __: value => value }, editor: { initialize(id, options) {
+    const field = w.document.getElementById(id); const handlers = {};
+    const instance = { html: field.value, hidden: false, on(event, fn) { handlers[event] = fn; },
+        isHidden() { return this.hidden; }, save() { field.value = this.html; }, setContent(value) { this.html = value; }, focus() { this.focused = true; } };
+    editors.set(id, instance); options.tinymce.setup(instance);
+    ['-tmce', '-html'].forEach(suffix => { const button = w.document.createElement('button'); button.id = id + suffix; field.after(button); });
+} } };
+w.tinymce = { get: id => editors.get(id) };
+w.eval(fs.readFileSync('plugin/reginor-lite/assets/rich-text.js', 'utf8'));
+w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+const form = w.document.getElementById('course'); const field = form.elements.namedItem('data[price_terms]');
+const rich = '<p>Rabatt</p><p><a href="https://example.org/medlem">Medlemskap</a></p>';
+w.RegiNorRichText.set(field, rich);
+assert.equal(editors.get('terms').html, rich, 'API suggestion not shown in visual editor');
+editors.get('terms').html += '<p>Lokal endring</p>';
+w.RegiNorRichText.save(form);
+assert.equal(new w.FormData(form).get(field.name), rich + '<p>Lokal endring</p>', 'AJAX loses unsaved visual edits');
+editors.get('terms').hidden = true; field.value = '<p>HTML-fanen</p>';
+w.RegiNorRichText.save(form);
+assert.equal(field.value, '<p>HTML-fanen</p>', 'Old visual editor overwrites HTML tab');
+editors.get('terms').hidden = false; form.reset(); w.RegiNorRichText.refresh(form);
+assert.equal(editors.get('terms').html, '', 'Next import retains previous rich text');
+editors.get('terms').html = rich;
+form.dispatchEvent(new w.Event('submit', { bubbles: true, cancelable: true }));
+assert.equal(field.value, rich, 'Normal form submission loses visual edits');
+assert.equal(w.RegiNorRichText.focus(field), true);
+assert.equal(editors.get('terms').focused, true);
+assert.equal(w.document.getElementById('terms-html').textContent, 'HTML');
+dom.window.close();
+console.log('Rich text: visual/HTML tabs, suggestions, form/AJAX sync, reset and focus passed.');
