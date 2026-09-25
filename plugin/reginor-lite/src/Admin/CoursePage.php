@@ -35,7 +35,7 @@ final class CoursePage
         'address' => __('Adresse', 'reginor-lite'), 'venue_id' => __('Kurssted', 'reginor-lite'), 'timezone' => __('Tidssone', 'reginor-lite'), 'start_date' => __('Foreslått startdato', 'reginor-lite'),
         'default_session_count' => __('Standard antall kvelder', 'reginor-lite'), 'default_room_id' => __('Standard sal', 'reginor-lite'), 'default_price_minor' => __('Standard pris (kr)', 'reginor-lite'),
         'default_price_basis' => __('Standard prisgrunnlag', 'reginor-lite'), 'visible_from' => __('Synlig fra', 'reginor-lite'), 'visible_until' => __('Synlig til', 'reginor-lite'), 'sales_from' => __('Påmelding fra', 'reginor-lite'), 'sales_until' => __('Påmelding til', 'reginor-lite'),
-        'show_as_upcoming' => __('Vis som kommende periode', 'reginor-lite'), 'cancelled' => __('Perioden er avlyst', 'reginor-lite'), 'first_date' => __('En annen første kursdato (valgfritt)', 'reginor-lite'), 'latest_date' => __('Absolutt siste dato (valgfritt)', 'reginor-lite'),
+        'show_as_upcoming' => __('Vis som kommende periode', 'reginor-lite'), 'cancelled' => __('Perioden er avlyst', 'reginor-lite'), 'first_date' => __('En annen første kursdato (valgfritt)', 'reginor-lite'), 'allow_early_start' => __('Tillat kursstart før kursperioden', 'reginor-lite'), 'latest_date' => __('Absolutt siste dato (valgfritt)', 'reginor-lite'),
         'weekday' => __('Ukedag', 'reginor-lite'), 'start_time' => __('Start', 'reginor-lite'), 'end_time' => __('Slutt', 'reginor-lite'), 'session_count' => __('Antall undervisningskvelder', 'reginor-lite'), 'room_id' => __('Sal', 'reginor-lite'),
         'instructor_ids' => __('Instruktører (valgfritt)', 'reginor-lite'), 'price_minor' => __('Pris (kr)', 'reginor-lite'), 'price_basis' => __('Prisgrunnlag', 'reginor-lite'), 'currency' => __('Valuta', 'reginor-lite'), 'price_terms' => __('Prisvilkår og tillegg', 'reginor-lite'), 'dropin_price_minor' => __('Drop-in-pris per person og kurskveld (kr)', 'reginor-lite'),
         'registration_url' => __('Påmeldingslenke', 'reginor-lite'), 'registration_scope' => __('Lenken gjelder', 'reginor-lite'), 'registration_status' => __('Påmeldingsstatus', 'reginor-lite'), 'reason' => __('Forklaring', 'reginor-lite'), 'date' => __('Dato', 'reginor-lite'),
@@ -51,10 +51,10 @@ final class CoursePage
         'dropin_enabled' => __('Vis et Drop-in-banner. Oppgi pris for én person og én kurskveld nedenfor.', 'reginor-lite'),
         'calendar_enabled' => __('Én oppføring fra periodens start til slutt, med lenke til alle kursene. Også fremtidige perioder vises før kursstart når de er publisert og synlighetsvinduet er åpent. Hvis sluttdato mangler, brukes siste kurskveld. Krever The Events Calendar.', 'reginor-lite'),
         'end_date' => __('Undervisning og kursfrie dager må være innenfor denne datoen. La stå tomt hvis slutten ikke er bestemt ennå. Dette endrer ikke synlighet eller påmelding.', 'reginor-lite'),
-        'from' => __('Første kursfrie dato, innenfor kursperioden. Eksempel: første dag i høstferien.', 'reginor-lite'),
+        'from' => __('Første kursfrie dato, innenfor tillatt tidsrom. Et godkjent unntak for tidligere kursstart gjelder også kursets egne fridager. Eksempel: første dag i høstferien.', 'reginor-lite'),
         'until' => __('Siste kursfrie dato, også inkludert. La stå tomt for bare én fridag.', 'reginor-lite'),
         'reason' => __('Forklar kort hvorfor. Eksempel: Høstferie eller salen er opptatt.', 'reginor-lite'),
-        'date' => __('Velg ny kursdato innenfor perioden. Eksempel: neste ledige undervisningsdag.', 'reginor-lite'),
+        'date' => __('Velg ny kursdato innenfor kursets tillatte tidsrom. En manuelt godkjent første kursdato før perioden utvider tidsrommet for dette kurset. Eksempel: neste ledige undervisningsdag.', 'reginor-lite'),
         'description' => __('Beskriv hva deltakerne lærer. Eksempel: Grunnsteg og enkle turer i salsa.', 'reginor-lite'),
         'dance_style' => __('Navnet på dansen. Eksempel: Salsa eller Bachata.', 'reginor-lite'),
         'address' => __('Gateadresse til kursstedet. Eksempel: Dansegata 12, Trondheim.', 'reginor-lite'),
@@ -87,7 +87,8 @@ final class CoursePage
         'dropin_price_minor' => __('Eksempel: 200,00 kr for én kveld. Prisen må fylles ut når drop-in er aktivert. 0 betyr gratis.', 'reginor-lite'),
         'price_terms' => __('Skriv hva som er inkludert, og om medlemskap eller andre tillegg kommer utenom.', 'reginor-lite'),
         'registration_url' => __('Lim inn hele HTTPS-lenken til påmelding. Velg Egen påmeldingslenke for andre nettsider enn LetsReg. Kun drop-in krever ingen lenke.', 'reginor-lite'),
-        'first_date' => __('La stå tomt for første valgte ukedag fra kursperiodens start. Fyll bare ut hvis kurset starter senere. Datoen må passe med ukedagen og være innenfor perioden.', 'reginor-lite'),
+        'allow_early_start' => __('Jeg bekrefter at dette kurset kan starte før kursperiodens vanlige start. Gjelder bare dette kurset, for eksempel et introkurs. Velg dato i «En annen første kursdato». Sluttdato, synlighet og kollisjonskontroll gjelder fortsatt.', 'reginor-lite'),
+        'first_date' => __('La stå tomt for første valgte ukedag fra kursperiodens start. Velg en egen dato hvis kurset starter tidligere eller senere, for eksempel et introkurs før perioden. Tidligere oppstart må bekreftes med avkryssingen nedenfor. Datoen må passe med ukedagen. Periodens sluttdato og synlighetsvindu gjelder fortsatt.', 'reginor-lite'),
         'latest_date' => __('Valgfritt. Bruk dette hvis undervisningen må være ferdig innen en bestemt dato.', 'reginor-lite'),
         'level_description' => __('Forklar hvem kurset passer for med vanlige ord, ikke bare en nivåkode.', 'reginor-lite'),
         'partner_info' => __('Forklar om man kan komme alene, og hvordan partnerbytte fungerer.', 'reginor-lite'),
@@ -121,7 +122,7 @@ final class CoursePage
         $page->step = in_array($_GET['step'] ?? '', ['period', 'courses', 'publish', 'manage'], true) ? $_GET['step'] : 'courses';
         echo ('<div class="wrap rnl-ui rnl-admin"><span class="rnl-eyebrow">' . esc_html(__('RegiNor Lite · Kursadministrasjon', 'reginor-lite')) . '</span><h1>' . esc_html(($_GET['page'] ?? '') === 'rnl-resources' ? __('Kursinnhold og ressurser', 'reginor-lite') : __('Kursperioder', 'reginor-lite')) . '</h1><p>' . esc_html(__('Lag et godt kurstilbud, ett steg om gangen. Du kan lagre underveis og kontrollere alt før kursene blir synlige.', 'reginor-lite')) . '</p>');
         echo '<p class="rnl-back"><a href="' . esc_url(admin_url('admin.php?page=reginor-lite')) . ('">' . esc_html(__('Alle perioder', 'reginor-lite')) . '</a></p>');
-        if ($error !== '') { echo '<div class="notice notice-error" role="alert"><p>' . esc_html($error) . ('</p><p>' . esc_html(__('Endringen er ikke bekreftet. Rett feltene og prøv igjen. Ved versjonskonflikt: åpne siden på nytt og sammenlign med siste lagrede oppsett.', 'reginor-lite')) . '</p></div>'); }
+        if ($error !== '') { echo '<div class="notice notice-error" role="alert"><p>' . esc_html($error) . ('</p><p>' . esc_html(__('Endringen er ikke bekreftet. Følg beskjeden over før du prøver igjen.', 'reginor-lite')) . '</p></div>'); }
         if (isset($_GET['updated'])) { echo ('<div class="notice notice-success" role="status"><p>' . esc_html(__('Handlingen er fullført. Oppsettet nedenfor viser lagrede verdier.', 'reginor-lite')) . '</p></div>'); }
         if (isset($result['message'])) { echo '<div class="notice notice-success" role="status"><p>' . esc_html($result['message']) . '</p></div>'; }
         try {
@@ -165,11 +166,13 @@ final class CoursePage
         $this->formCommand = $command; $this->formId = $id; $this->formSession = ''; $this->formKind = '';
         $page = ($_GET['page'] ?? '') === 'rnl-resources' ? 'rnl-resources' : 'reginor-lite';
         $bounds = $this->periodId && $command !== 'copy' ? $this->repo->get($this->periodId, 'period')['data'] : [];
-        echo '<form' . ($formId !== '' ? ' id="' . esc_attr($formId) . '"' : '') . ' class="rnl-edit-form" data-period-start="' . esc_attr($bounds['start_date'] ?? '') . '" data-period-end="' . esc_attr($bounds['end_date'] ?? '') . '" data-registration-hosts="' . esc_attr(wp_json_encode(\RegiNor\Lite\Infrastructure\RegistrationDomains::allowed())) . '" method="post" action="' . esc_url(add_query_arg(array_filter(['page' => $page, 'period' => $this->periodId, 'group' => $this->groupId, 'step' => $this->step, 'new' => isset($_GET['new']) ? 1 : 0]), admin_url('admin.php'))) . '">';
+        $courseBounds = $bounds && $this->groupId && in_array($command, ['session', 'replacement'], true)
+            ? \RegiNor\Lite\Infrastructure\PlanningBounds::forGroup($this->repo->get($this->groupId, 'group')['data'], $bounds) : $bounds;
+        echo '<form' . ($formId !== '' ? ' id="' . esc_attr($formId) . '"' : '') . ' class="rnl-edit-form" data-period-start="' . esc_attr($bounds['start_date'] ?? '') . '" data-course-start="' . esc_attr($courseBounds['start_date'] ?? '') . '" data-period-end="' . esc_attr($bounds['end_date'] ?? '') . '" data-registration-hosts="' . esc_attr(wp_json_encode(\RegiNor\Lite\Infrastructure\RegistrationDomains::allowed())) . '" method="post" action="' . esc_url(add_query_arg(array_filter(['page' => $page, 'period' => $this->periodId, 'group' => $this->groupId, 'step' => $this->step, 'new' => isset($_GET['new']) ? 1 : 0]), admin_url('admin.php'))) . '">';
         if ($bounds && in_array($command, ['preview_group', 'preview_import', 'session', 'replacement', 'add_group'], true)) {
             $from = (new \DateTimeImmutable($bounds['start_date']))->format('d.m.Y');
             $until = !empty($bounds['end_date']) ? (new \DateTimeImmutable($bounds['end_date']))->format('d.m.Y') : __('ingen sluttdato valgt', 'reginor-lite');
-            echo '<p class="rnl-help">' . esc_html(sprintf(/* translators: 1: first allowed teaching date; 2: last allowed date or an unset explanation. */ __('Kursperiodens datogrenser: %1$s – %2$s. Datoer utenfor grensen krever at perioden endres først.', 'reginor-lite'), $from, $until)) . '</p>';
+            echo '<p class="rnl-help">' . esc_html(sprintf(/* translators: 1: normal period start; 2: last allowed date or an unset explanation. */ __('Kursperiodens vanlige tidsrom: %1$s – %2$s. Tidligere kursstart velges med «En annen første kursdato» og bekreftes med «Tillat kursstart før kursperioden» under Flere valg. Sluttdatoen gjelder fortsatt.', 'reginor-lite'), $from, $until)) . '</p>';
         }
         wp_nonce_field('rnl_course_command');
         $this->hidden('command', $command); $this->hidden('id', (string) $id); $this->hidden('version', (string) $version);
@@ -201,7 +204,7 @@ final class CoursePage
     {
         $help = self::help()[$key] ?? '';
         if ($this->formKind === 'level' && $key === 'description') { $help = __('Valgfritt. Forklar nivået med vanlige ord. Forklaringen vises på kursdetaljen når dette nivået er valgt.', 'reginor-lite'); }
-        if ($this->formKind === 'period' && $key === 'start_date') { $help = __('Tidligste undervisningsdag i perioden. Kurs og kursfrie dager må være på eller etter denne datoen.', 'reginor-lite'); }
+        if ($this->formKind === 'period' && $key === 'start_date') { $help = __('Vanlig oppstart for kursene i perioden. Et enkeltkurs kan starte tidligere ved å fylle ut «En annen første kursdato» og krysse av «Tillat kursstart før kursperioden» i kursoppsettet. Felles kursfrie dager må være på eller etter periodens start.', 'reginor-lite'); }
         echo '<span class="rnl-help" id="' . $id . '-help">' . esc_html($help) . '</span><span class="rnl-field-error" id="' . $id . '-error" aria-live="polite"></span>';
     }
     private function input(string $key, mixed $value, string $type = 'text', string $name = ''): void
@@ -287,7 +290,7 @@ final class CoursePage
                 __('Flere valg', 'reginor-lite') => ['timezone', 'cancelled', 'breaks']],
             'group' => [__('Undervisning', 'reginor-lite') => ['title', 'level_id', 'weekday', 'start_time', 'end_time', 'session_count', 'room_id', 'course_features'],
                 __('Pris og påmelding', 'reginor-lite') => ['price_minor', 'price_from', 'price_basis', 'price_terms', 'registration_status', 'registration_dates', 'registration_url', 'registration_scope'],
-                __('Flere valg', 'reginor-lite') => ['first_date', 'latest_date', 'instructor_ids', 'timezone', 'currency', 'breaks']],
+                __('Flere valg', 'reginor-lite') => ['first_date', 'allow_early_start', 'latest_date', 'instructor_ids', 'timezone', 'currency', 'breaks']],
             'venue' => [__('Om kursstedet', 'reginor-lite') => ['title', 'address']],
             'room' => [__('Om salen', 'reginor-lite') => ['title', 'venue_id']],
             default => [__('Om oppføringen', 'reginor-lite') => array_keys(StateSchema::data($kind)['properties'])],
@@ -321,7 +324,7 @@ final class CoursePage
             elseif ($key === 'level_id') { $this->select($key, $value, $this->levelChoices((int) $value)); }
             elseif ($key === 'weekday') { $this->select($key, $value, [1 => __('Mandag', 'reginor-lite'), __('Tirsdag', 'reginor-lite'), __('Onsdag', 'reginor-lite'), __('Torsdag', 'reginor-lite'), __('Fredag', 'reginor-lite'), __('Lørdag', 'reginor-lite'), __('Søndag', 'reginor-lite')]); }
             elseif (isset($schema['enum'])) { $this->select($key, $value, array_combine($schema['enum'], array_map(static fn ($v) => self::options()[$v] ?? $v, $schema['enum']))); }
-            elseif ($schema['type'] === 'boolean') { if (in_array($key, ['calendar_enabled', 'price_from'], true)) { $this->hidden('data[' . $key . ']', '0'); } $this->checkbox('data[' . $key . ']', self::labels()[$key], (bool) $value); }
+            elseif ($schema['type'] === 'boolean') { if (in_array($key, ['calendar_enabled', 'price_from', 'allow_early_start'], true)) { $this->hidden('data[' . $key . ']', '0'); } $this->checkbox('data[' . $key . ']', self::labels()[$key], (bool) $value); }
             elseif (str_ends_with($key, 'price_minor')) { $this->input($key, $sticky ? $value : number_format((int) $value / 100, 2, ',', '')); }
             elseif (in_array($key, ['visible_from', 'visible_until', 'sales_from', 'sales_until'], true)) {
                 $local = $sticky ? $value : ($value ? (new \DateTimeImmutable($value))->setTimezone(new \DateTimeZone($data['timezone']))->format('Y-m-d\TH:i') : '');

@@ -128,6 +128,61 @@ $assert($schema['hasCourseInstance']['offers']['price']==='1234.50','Schema-pris
 $evil=$g; $evil['description']='</script><script>alert(1)</script>'; $assert(!str_contains(SchemaPresenter::script(SchemaPresenter::group($evil,PublicSite::url($group))),'</script><script>'),'JSON-LD kan brytes ut av script-tag.');
 $week=(new Renderer())->render($read,['rnl_view'=>'week']);
 $assert(str_contains($week,'Mandager') && str_contains($week,'Sal 1') && !str_contains(strip_tags($week),'2030-01-07'),'Ukeskalenderen viser feil mønster eller konkrete datoer.');
+// A single evening is a date, not a weekly series, including early/late intro courses.
+$singleRead = $read;
+$single = array_replace($g, ['weekday'=>6, 'start_time'=>'13:00', 'end_time'=>'15:30', 'count'=>1,
+    'first'=>'2030-01-05T12:00:00Z', 'last'=>'2030-01-05T14:30:00Z', 'early_start'=>false, 'delayed_start'=>false]);
+$single['sessions'] = [array_replace($g['sessions'][0], ['date'=>'2030-01-05', 'original_date'=>'2030-01-05',
+    'starts_at'=>$single['first'], 'ends_at'=>$single['last'], 'start_time'=>'13:00', 'end_time'=>'15:30'])];
+$singleRead['groups'] = [$group=>$single];
+$singleList = (new Renderer())->render($singleRead, []);
+$assert(str_contains($singleList, 'Lørdag · 13:00–15:30') && !str_contains($singleList, 'Lørdager'), 'En enkelt kveld beskrives som et gjentakende kurs på kortet.');
+$assert(str_contains($singleList, '<dt>Dato</dt>') && str_contains($singleList, '5. januar 2030 · 1 kveld') && !str_contains($singleList, '<dt>Oppstart</dt>'), 'Kurskortet mangler dato/entallsantall for én kveld.');
+$singleDetail = (new Renderer())->render($singleRead, ['rnl_course'=>$group]);
+$assert(str_contains($singleDetail, 'Dato: 5. januar 2030') && str_contains($singleDetail, 'Lørdag 13:00–15:30')
+    && str_contains($singleDetail, '1 kurskveld') && !str_contains($singleDetail, 'Oppstart:') && !str_contains($singleDetail, 'Lørdager'), 'Kursprofilen bruker oppstart/flertallsdag for én kveld.');
+foreach (['normal', 'early_start', 'delayed_start'] as $startKind) {
+    $singleRead['groups'][$group] = $single;
+    if ($startKind !== 'normal') { $singleRead['groups'][$group][$startKind] = true; }
+    $singleWeek = (new Renderer())->render($singleRead, ['rnl_view'=>'week']);
+    $assert(str_contains($singleWeek, '<h3>Lørdag</h3>') && str_contains($singleWeek, 'Dato: 5. januar 2030')
+        && !str_contains($singleWeek, 'oppstart:'), 'Kalenderen mangler enkeltdato eller bruker oppstart for én kveld: ' . $startKind);
+}
+$assert(str_contains($html, 'Mandager · 18:00–19:00') && str_contains($html, '<dt>Oppstart</dt>')
+    && str_contains($detail, 'Oppstart: 7. januar 2030') && str_contains($detail, 'Mandager 18:00–19:00'), 'Kurs over flere kvelder mistet flertall eller oppstart.');
+// Each day has its own extent. Rooms within the day retain a shared clock, including gaps.
+$lateId = $group + 1000000; $saturdayId = $group + 1000001; $tuesdayId = $group + 1000002;
+$dailyRead = $read;
+$dailyRead['groups'][$lateId] = array_replace($g, ['id'=>$lateId, 'room_id'=>$room + 1000000, 'room'=>'Sal 2', 'start_time'=>'19:30', 'end_time'=>'20:15', 'level_id'=>101]);
+$dailyRead['groups'][$saturdayId] = array_replace($single, ['id'=>$saturdayId]);
+$dailyRead['groups'][$tuesdayId] = array_replace($g, ['id'=>$tuesdayId, 'weekday'=>2, 'start_time'=>'18:10', 'end_time'=>'19:05']);
+$parseCalendar = static function(string $markup): DOMXPath {
+    $document = new DOMDocument(); $previous = libxml_use_internal_errors(true);
+    $document->loadHTML('<?xml encoding="UTF-8">'.$markup); libxml_clear_errors(); libxml_use_internal_errors($previous);
+    return new DOMXPath($document);
+};
+$dayPath = '//section[contains(concat(" ",normalize-space(@class)," ")," rnl-day ")]';
+$dailyXp = $parseCalendar((new Renderer())->render($dailyRead, ['rnl_view'=>'week']));
+foreach ([['Mandager', 135, ['18:00','18:30','19:00','19:30','20:00']], ['Tirsdager', 55, ['18:10','18:40']], ['Lørdag', 150, ['13:00','13:30','14:00','14:30','15:00']]] as [$heading, $duration, $expectedTicks]) {
+    $dayNode = $dailyXp->query($dayPath.'[h3="'.$heading.'"]')->item(0);
+    $assert($dayNode !== null, 'Mangler dagsoverskrift: '.$heading);
+    $table = $dailyXp->query('./div[contains(@class,"rnl-timetable")]', $dayNode)->item(0);
+    $assert(str_contains($table->getAttribute('style'), '--rnl-rows:'.$duration), 'Dagens tidsakse påvirkes av kurs på andre dager: '.$heading);
+    $actualTicks = [];
+    foreach ($dailyXp->query('./div[contains(@class,"rnl-time-tick")]', $table) as $tick) { $actualTicks[] = $tick->textContent; }
+    $assert($actualTicks === $expectedTicks, 'Tomtid før/etter dagens kurs eller feil minuttplassering: '.$heading);
+}
+$firstCard = $dailyXp->query('//article[@id="rnl-course-'.$group.'"]')->item(0);
+$laterCard = $dailyXp->query('//article[@id="rnl-course-'.$lateId.'"]')->item(0);
+$assert(str_contains($firstCard->getAttribute('style'), 'grid-row:2 / 62') && str_contains($laterCard->getAttribute('style'), 'grid-row:92 / 137'), 'Saler på samme dag mister felles klokke eller oppholdet mellom kurs.');
+$assert(str_contains($firstCard->getAttribute('style'), 'grid-column:2') && str_contains($laterCard->getAttribute('style'), 'grid-column:3'), 'Saler havner ikke i separate kolonner.');
+$filteredXp = $parseCalendar((new Renderer())->render($dailyRead, ['rnl_view'=>'week', 'rnl_level'=>101]));
+$assert($filteredXp->query($dayPath)->length === 1 && $filteredXp->query('//div[contains(@class,"rnl-time-tick")]')->item(0)->textContent === '19:30'
+    && str_contains($filteredXp->query('//div[contains(@class,"rnl-timetable")]')->item(0)->getAttribute('style'), '--rnl-rows:45'), 'Filtrerte bort kurs legger fortsatt til tomtid.');
+$mixedRead = $singleRead;
+$mixedRead['groups'][$lateId] = array_replace($g, ['id'=>$lateId, 'weekday'=>6, 'start_time'=>'18:00', 'end_time'=>'19:00']);
+$mixedWeek = (new Renderer())->render($mixedRead, ['rnl_view'=>'week']);
+$assert(str_contains($mixedWeek, '<h3>Lørdager</h3>') && str_contains($mixedWeek, 'Dato: 5. januar 2030'), 'Blandet dag må beholde flertallsoverskrift og datomerking på enkeltkurset.');
 // Avada's content pipeline may apply wpautop after the pretty-URL render.
 // Time labels must remain independent grid children, including after repeated formatting.
 foreach ([$week, wpautop($week), wpautop(wpautop($week))] as $formattedWeek) {

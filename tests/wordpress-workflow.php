@@ -106,6 +106,18 @@ try {
 
     $versions = array_map(static fn ($g) => $g['version'], $repo->groups($period));
     $reject(fn () => $repo->lifecycle($period, $published['version'], [], 'draft'), 409);
+    try {
+        $repo->lifecycle($period, $published['version'], [], 'draft');
+        $assert(false, 'Endret kursliste ble godkjent.');
+    } catch (\RegiNor\Lite\Infrastructure\VersionConflict $error) {
+        $assert(str_contains($error->getMessage(), 'RNL-COURSE-LIST') && str_contains($error->getMessage(), $repo->get($group)['data']['title']), 'Kurslistekonflikt mangler konkret kurs og kontrollkode.');
+    }
+    try {
+        $repo->lifecycle($period, $published['version'] - 1, $versions, 'draft');
+        $assert(false, 'Gammel periodeversjon ble godkjent.');
+    } catch (\RegiNor\Lite\Infrastructure\VersionConflict $error) {
+        $assert(str_contains($error->getMessage(), 'RNL-VERSION') && str_contains($error->getMessage(), 'lagret versjon er ' . $published['version']), 'Periodekonflikt mangler konkrete versjoner.');
+    }
     $draft = $repo->lifecycle($period, $published['version'], $versions, 'draft');
     $assert(get_post_status($group) === 'draft' && $draft['event'] === 'unpublished', 'Avpublisering mangler.');
     $versions = array_map(static fn ($g) => $g['version'], $repo->groups($period));
@@ -156,6 +168,18 @@ try {
     try { $reject(fn () => $repo->update($period, $lockedBefore['version'], $lockedBefore['data']), 409); }
     finally { $competitor->get_var($competitor->prepare('SELECT RELEASE_LOCK(%s)', $lockName)); $competitor->close(); }
     $assert($repo->get($period) === $lockedBefore, 'Konkurrerende skriver omgår global lås.');
+
+    // NULL means a database failure, not another editor. Never run the write anyway.
+    $brokenLock = static fn ($sql) => str_contains($sql, 'SELECT GET_LOCK(') ? 'SELECT NULL' : $sql;
+    add_filter('query', $brokenLock);
+    try { $reject(fn () => $repo->update($period, $lockedBefore['version'], $lockedBefore['data']), 503); }
+    finally { remove_filter('query', $brokenLock); }
+    $assert($repo->get($period) === $lockedBefore && !Mutation::active(), 'Databasefeil endret kursdata eller etterlot aktiv mutasjon.');
+    $cleanupFailure = static function ($id) use ($period): void { if ((int) $id === $period) throw new RuntimeException('Synthetic cache hook failure'); };
+    add_action('clean_post_cache', $cleanupFailure);
+    try { $reject(static function () use ($period): void { Mutation::run(static function () use ($period): void { Mutation::touch($period); }); }); }
+    finally { remove_action('clean_post_cache', $cleanupFailure); }
+    $assert(!Mutation::active() && (int) $wpdb->get_var($wpdb->prepare('SELECT IS_FREE_LOCK(%s)', $lockName)) === 1, 'Oppryddingsfeil etterlot kurslåsen eller aktiv mutasjon.');
 
     // An overlapping draft in another period must block publication too.
     $conflictPeriod = $created[] = $repo->create('period', $p);

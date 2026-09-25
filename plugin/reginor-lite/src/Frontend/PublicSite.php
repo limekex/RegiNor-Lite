@@ -8,6 +8,7 @@ use function RegiNor\Lite\plural as _n;
 
 final class PublicSite
 {
+    private static int $renderCount = 0;
     public static function boot(): void
     {
         add_action('init', [self::class, 'register']);
@@ -62,7 +63,10 @@ final class PublicSite
         wp_register_script('rnl-block', $url . 'block.js', ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n'], (string) filemtime(dirname(__DIR__, 2) . '/assets/block.js'), true);
         wp_set_script_translations('rnl-block', 'reginor-lite', dirname(__DIR__, 2) . '/languages');
         register_block_type('reginor-lite/courses', ['api_version' => 3, 'editor_script' => 'rnl-block',
-            'attributes' => ['default_view' => ['type' => 'string', 'default' => 'site'], 'allowed_views' => ['type' => 'array', 'default' => ['list', 'week']]],
+            'attributes' => ['default_view' => ['type' => 'string', 'default' => 'site'], 'allowed_views' => ['type' => 'array', 'default' => ['list', 'week']],
+                'levels' => ['type' => 'string', 'default' => ''], 'exclude_levels' => ['type' => 'string', 'default' => ''],
+                'featured' => ['type' => 'string', 'default' => 'all'], 'show_header' => ['type' => 'boolean', 'default' => true],
+                'show_filters' => ['type' => 'boolean', 'default' => true], 'show_view_switch' => ['type' => 'boolean', 'default' => true]],
             'render_callback' => [self::class, 'render']]);
     }
     public static function route(): void
@@ -120,14 +124,24 @@ final class PublicSite
     {
         self::noCache();
         if (!self::pageId()) { return current_user_can('manage_options') ? ('<p>' . esc_html(__('Velg siden for kursoversikten under RegiNor Lite → Nettsidevisning.', 'reginor-lite')) . '</p>') : ''; }
-        $attributes = shortcode_atts(['default_view' => 'site', 'allowed_views' => 'list,week'], is_array($attributes) ? $attributes : []);
-        if ($attributes['default_view'] === 'site') { $attributes['default_view'] = \RegiNor\Lite\Infrastructure\Appearance::settings()['view']; }
+        $attributes = OverviewOptions::normalize(is_array($attributes) ? $attributes : []);
+        $catalog = OverviewOptions::restrict((new Catalog())->read(), $attributes);
+        $attributes['page_query'] = wp_unslash($_GET);
         $query = PublicRoutes::query($_GET);
         if (is_404()) { return ''; }
-        if (!self::onPage()) { unset($query['rnl_course']); }
-        $allowed = is_array($attributes['allowed_views']) ? $attributes['allowed_views'] : explode(',', (string) $attributes['allowed_views']);
-        $allowed = array_values(array_intersect(['list', 'week'], $allowed));
-        return (new Renderer())->render((new Catalog())->read(), $query, (string) $attributes['default_view'], $allowed ?: ['list']);
+        $instance = ++self::$renderCount;
+        if (!self::onPage() || $instance > 1) {
+            $attributes['instance'] = (string) $instance;
+            $attributes['base_url'] = is_singular() ? get_permalink(get_queried_object_id()) : self::url();
+            $selections = is_array($_GET['rnl_embed'] ?? null) ? $_GET['rnl_embed'] : [];
+            $selection = $selections[$instance] ?? [];
+            $query = is_array($selection) ? array_intersect_key($selection, array_flip(['rnl_period', 'rnl_day', 'rnl_level', 'rnl_view'])) : [];
+            // Preserve existing links selecting a period on an embedding page.
+            if (!self::onPage() && !isset($query['rnl_period']) && isset($_GET['rnl_period'])) { $query['rnl_period'] = $_GET['rnl_period']; }
+        }
+        if (!$attributes['show_filters']) { unset($query['rnl_day'], $query['rnl_level']); }
+        if (!$attributes['show_view_switch']) { unset($query['rnl_view']); }
+        return (new Renderer())->render($catalog, $query, (string) $attributes['default_view'], $attributes['allowed_views'], $attributes);
     }
     public static function title(string $title): string
     {

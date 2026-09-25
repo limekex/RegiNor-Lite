@@ -49,6 +49,65 @@ for embed_url in fixtures['embed_urls']:
     check(embed_status == 200 and 'HTTP testkurs' in embed_html, 'Secondary shortcode or synced block overview is missing')
     check('no-store' in embed_headers.get('Cache-Control', ''), 'Secondary overview does not disable cache before theme output')
     check(embed_headers.get('Cloudflare-CDN-Cache-Control') == 'no-store' and embed_headers.get('X-LiteSpeed-Cache-Control') == 'no-cache', 'Embedded shortcode CDN/LiteSpeed headers missing')
+# Campaign restrictions and controls are independent for every shortcode on the page.
+def embed_url(target, **query):
+    parts = urllib.parse.urlsplit(target)
+    params = urllib.parse.parse_qs(parts.query)
+    params.update({'rnl_period': fixtures['period'], 'utm_source': 'campaign-test', **query})
+    return urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(params, doseq=True)))
+
+def roots(body):
+    return re.split(r'(?=<section\b[^>]*class="rnl-ui rnl-public)', body)[1:]
+
+def cards(body):
+    return ''.join(re.findall(r'<article\b[^>]*class="[^"]*rnl-(?:card|week-course)[^"]*".*?</article>', body, re.S))
+
+status, campaign, headers = get(embed_url(fixtures['campaign_url']))
+sections = roots(campaign)
+check(status == 200 and len(sections) == 2, 'Two shortcodes are not rendered on campaign page')
+check('no-store' in headers.get('Cache-Control', '') and headers.get('X-LiteSpeed-Cache-Control') == 'no-cache', 'Campaign cache policy missing')
+check('HTTP fremhevet intro' in cards(sections[0]) and 'HTTP vanlig intro' not in cards(sections[0]) and 'HTTP testkurs' not in cards(sections[0]), 'Featured intro restriction is not enforced')
+check('rnl-hero' not in sections[0] and 'rnl-results-heading' not in sections[0] and 'rnl-filter-form' not in sections[0] and 'rnl-view-switch' not in sections[0], 'Hidden campaign controls still render')
+check('HTTP testkurs' in cards(sections[1]) and 'HTTP fremhevet intro' not in sections[1] and 'HTTP vanlig intro' not in sections[1], 'Excluded intro remains in second listing or schema')
+check('rnl-week-course' in sections[1] and 'rnl-view-switch' in sections[1] and 'rnl-filter-form' in sections[1], 'Independent default view or controls missing')
+check('HTTP Intro' not in sections[1] and 'HTTP nivå Nybegynner' in sections[1], 'Excluded level remains in filter options')
+check('data-rnl-track-list=' in sections[0] and 'data-rnl-track-list=' in sections[1], 'List tracking markers were lost')
+registration = next(a for a in Page(sections[0]).links if a.get('data-rnl-letsreg') == str(fixtures['intro']))
+check(registration['href'].endswith('?utm_source=original#register') and registration.get('target') == '_blank', 'Signup URL or tracking attributes changed')
+check(len(Page(campaign).scripts) == 2 and len({j['@id'] for j in Page(campaign).scripts}) == 2, 'Two embedded lists share or omit schema identity')
+view_link = next(a['href'] for a in Page(sections[1]).links if 'rnl_embed' in a.get('href', '') and 'rnl_view%5D=list' in a['href'])
+check(urllib.parse.urlsplit(view_link).path == urllib.parse.urlsplit(fixtures['campaign_url']).path and 'utm_source=campaign-test' in view_link, 'View switch leaves campaign or drops attribution')
+_, switched, _ = get(view_link)
+switched_sections = roots(switched)
+check('rnl-week-course' not in switched_sections[1] and 'HTTP testkurs' in cards(switched_sections[1]) and 'HTTP fremhevet intro' in cards(switched_sections[0]), 'Switching second instance affects first or removes its restriction')
+# Filters can only narrow the editorial selection. A hidden control cannot override its fixed view.
+_, tampered, _ = get(embed_url(fixtures['campaign_url'], **{'rnl_embed[1][rnl_view]': 'week', 'rnl_embed[1][rnl_level]': fixtures['level'], 'rnl_embed[2][rnl_level]': fixtures['intro_level']}))
+tampered_sections = roots(tampered)
+check('HTTP fremhevet intro' in cards(tampered_sections[0]) and 'rnl-week-course' not in tampered_sections[0], 'Hidden filter/view query overrides fixed campaign display')
+check(not cards(tampered_sections[1]) and 'Ingen kurs passer' in tampered_sections[1], 'URL filter bypasses excluded levels')
+check('name="rnl_embed[1][rnl_view]"' in tampered_sections[1] and 'name="utm_source" value="campaign-test"' in tampered_sections[1], 'Filter form discards sibling choices or campaign parameters')
+for name, target in fixtures['variant_urls'].items():
+    _, variant, _ = get(embed_url(target))
+    rendered = cards(variant)
+    if name == 'included':
+        check(all(title in rendered for title in ['HTTP testkurs', 'HTTP fremhevet intro', 'HTTP vanlig intro']), 'Multiple level names do not match')
+        check('rnl-view-switch' in variant and 'rnl-filter-form' not in variant, 'Hiding filters also hides view choice')
+    elif name == 'excluded':
+        check('HTTP testkurs' in rendered and 'HTTP fremhevet intro' not in rendered, 'ID matching or exclusion precedence failed')
+    elif name in ['unknown', 'conflict']:
+        check(not rendered and 'Ingen kurs passer' in variant, 'Unknown/conflicting selection expands to all courses')
+    elif name == 'no-featured':
+        check('HTTP fremhevet intro' not in rendered and 'HTTP vanlig intro' in rendered, 'Excluding featured courses failed')
+    elif name == 'calendar':
+        check('rnl-week-course' in rendered and 'rnl-view-switch' not in variant, 'Allowed views do not constrain default')
+    elif name == 'no-switch':
+        check('rnl-filter-form' in variant and 'rnl-view-switch' not in variant, 'Hiding switch also hides filters')
+    elif name == 'overlap':
+        ids = re.findall(r'\bid="(rnl-(?:course|results)-[^" ]+)"', variant)
+        check(len(ids) == len(set(ids)) and len(roots(variant)) == 2, 'Overlapping listings create duplicate anchors')
+    elif name == 'block':
+        check('HTTP fremhevet intro' in rendered and 'HTTP vanlig intro' not in rendered and 'HTTP testkurs' not in rendered and 'rnl-week-course' in rendered and 'rnl-filter-form' not in variant, 'Block does not use same restriction and layout options')
+
 for view in ['list', 'week']:
     level_status, level_html, _ = get(url(rnl_period=fixtures['period'], rnl_level=fixtures['level'], rnl_view=view))
     check(level_status == 200 and 'HTTP testkurs' in level_html and 'HTTP nivå Nybegynner' in level_html, 'Named level filter does not render matching courses')

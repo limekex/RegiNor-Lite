@@ -22,15 +22,20 @@
     }
     function consent(w) {
         const allowed = (category) => typeof w.cmplz_has_consent === 'function' && typeof w.cmplz_get_cookie === 'function'
-            && w.cmplz_has_consent(category) === true && w.cmplz_get_cookie(category) === 'allow';
+            && w.cmplz_has_consent(category) === true && w.cmplz_get_cookie(category) === 'allow'
+            && (typeof w.wp_has_consent !== 'function' || w.wp_has_consent(category) === true);
         return { statistics: allowed('statistics'), marketing: allowed('marketing') };
     }
     function start(w, d, config) {
         const key = 'rnl_journey_v1'; let journey = null; let prior = { statistics: false, marketing: false }; let seen = new Set();
         const pending = new Set();
+        let syncTimer = null; const queuedClicks = new Set();
         const uuid = () => w.crypto.randomUUID();
         const send = (payload) => {
-            const controller = new AbortController(); pending.add(controller);
+            const controller = new AbortController();
+            // A second category-revocation event must not abort the deletion
+            // request started by the first one.
+            if (payload.operation !== 'forget') pending.add(controller);
             try { const request = w.fetch(config.endpoint, { method: 'POST', credentials: 'same-origin', keepalive: true,
                 headers: { 'Content-Type': 'application/json', 'X-RNL-Journey': '1' }, body: JSON.stringify(payload), signal: controller.signal });
             Promise.resolve(request).catch(() => {}).finally(() => pending.delete(controller));
@@ -89,18 +94,43 @@
             d.querySelectorAll('[data-rnl-track-list]').forEach(() => emit('course_list'));
             d.querySelectorAll('[data-rnl-track-course]').forEach((node) => emit('course_view', Number(node.dataset.rnlTrackCourse)));
         }
-        ['cmplz_status_change', 'cmplz_enable_category', 'cmplz_cookie_warning_loaded', 'cmplz_run_after_all_scripts'].forEach((event) => d.addEventListener(event, () => sync()));
-        d.addEventListener('cmplz_revoke', () => sync(true));
+        function scheduleSync() {
+            const c = consent(w);
+            // Revocation stops in-flight collection immediately. Do not restart a
+            // statistics-only journey while Complianz is still changing categories.
+            if (!c.statistics || (prior.marketing && !c.marketing)) {
+                queuedClicks.clear();
+                if (journey || prior.statistics) forget();
+                prior = c;
+            }
+            if (syncTimer !== null) w.clearTimeout(syncTimer);
+            // Complianz emits category events before the WP Consent API / Site Kit
+            // listener queues Google's update. Measure after that whole task, using
+            // final consent, without changing consent or replaying any RNL event.
+            syncTimer = w.setTimeout(() => {
+                syncTimer = null;
+                sync();
+                queuedClicks.forEach((course) => emit('letsreg_click', course));
+                queuedClicks.clear();
+            }, 0);
+        }
+        ['cmplz_status_change', 'cmplz_enable_category', 'cmplz_cookie_warning_loaded', 'cmplz_run_after_all_scripts', 'wp_listen_for_consent_change'].forEach((event) => d.addEventListener(event, scheduleSync));
+        d.addEventListener('cmplz_revoke', () => {
+            if (syncTimer !== null) w.clearTimeout(syncTimer);
+            syncTimer = null; queuedClicks.clear(); sync(true);
+        });
         const trackRegistration = (event) => {
             if (event.type === 'auxclick' && event.button !== 1) return;
             const link = event.target.closest?.('[data-rnl-letsreg]');
             if (!link || event.defaultPrevented) return;
-            sync(); emit('letsreg_click', Number(link.dataset.rnlLetsreg));
+            if (syncTimer !== null) {
+                if (consent(w).statistics) queuedClicks.add(Number(link.dataset.rnlLetsreg));
+            } else { sync(); emit('letsreg_click', Number(link.dataset.rnlLetsreg)); }
             // Never delay navigation, alter the destination or claim that a click is a purchase.
         };
         d.addEventListener('click', trackRegistration);
         d.addEventListener('auxclick', trackRegistration);
-        sync();
+        scheduleSync();
         return { sync, emit };
     }
     if (typeof module !== 'undefined' && module.exports) module.exports = { attribution, consent, start };

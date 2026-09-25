@@ -49,7 +49,9 @@ if (($args[0] ?? '') === 'public-state') {
     update_post_meta($id, ContentTypes::META, wp_slash($state));
     WP_CLI::success('Syntetisk status oppdatert.'); return;
 }
+$beforeSetup = ['rnl_course_page_id' => get_option('rnl_course_page_id', null), 'rnl_instructor_types' => get_option('rnl_instructor_types', null)];
 $repo = new CourseRepository(); $created = [];
+try {
 $venue = $created[] = $repo->create('venue', ['title' => 'HTTP teststed', 'address' => 'Testgate 7']);
 $room = $created[] = $repo->create('room', ['title' => 'HTTP testsal', 'venue_id' => $venue]);
 $course = $created[] = $repo->create('course', ['title' => 'HTTP testkurs', 'description' => 'Kurs kun for automatisk test.', 'level_description' => 'Ingen forkunnskaper', 'dance_style' => 'Salsa', 'partner_info' => 'Valgfri partner']);
@@ -74,8 +76,38 @@ if (($args[0] ?? '') === 'public') {
     $period = $created[] = $repo->create('period', $p);
     $group = $created[] = $repo->createGroup($period, $course, ['weekday' => 1, 'start_time' => '18:00', 'end_time' => '19:00', 'level_id' => $level, 'instructor_ids' => [$instructor], 'registration_status' => 'available', 'registration_url' => 'https://www.letsreg.com/event/http-salsa']);
     $repo->confirm($repo->previewGroup($group, 1, []));
+    $introLevel = $created[] = $repo->create('level', ['title' => 'HTTP gammelt nivånavn', 'description' => '', 'sort_order' => 5, 'active' => true]);
+    $repo->update($introLevel, 1, ['title' => 'HTTP Intro', 'description' => '', 'sort_order' => 5, 'active' => true]);
+    $intro = $created[] = $repo->createGroup($period, $course, ['title' => 'HTTP fremhevet intro', 'weekday' => 2, 'start_time' => '18:00', 'end_time' => '19:00', 'level_id' => $introLevel, 'featured' => true, 'appearance_custom' => false, 'registration_status' => 'available', 'registration_url' => 'https://www.letsreg.com/event/http-intro?utm_source=original#register']);
+    $repo->confirm($repo->previewGroup($intro, 1, []));
+    $otherIntro = $created[] = $repo->createGroup($period, $course, ['title' => 'HTTP vanlig intro', 'weekday' => 3, 'start_time' => '18:00', 'end_time' => '19:00', 'level_id' => $introLevel, 'registration_status' => 'available', 'registration_url' => 'https://www.letsreg.com/event/http-intro-2']);
+    $repo->confirm($repo->previewGroup($otherIntro, 1, []));
     $repo->publish($repo->previewPublication($period, 1, true));
+    $campaign = $created[] = wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'HTTP kampanje', 'post_content' => '<h2>Prøv intro</h2>[reginor_courses levels="http-intro" featured="only" default_view="list" show_header="0" show_filters="0" show_view_switch="0"]<h2>Flere kurs</h2>[reginor_courses exclude_levels="http-intro" default_view="week" show_header="0"]']);
+    $variants = [];
+    foreach ([
+        'included' => '[reginor_courses levels="HTTP Intro,HTTP nivå Nybegynner" show_filters="0"]',
+        'excluded' => '[reginor_courses levels="' . $introLevel . ',' . $level . '" exclude_levels="' . $introLevel . '"]',
+        'unknown' => '[reginor_courses levels="ukjent-niva"]',
+        'conflict' => '[reginor_courses levels="http-intro" exclude_levels="http-intro"]',
+        'no-featured' => '[reginor_courses featured="exclude"]',
+        'calendar' => '[reginor_courses default_view="list" allowed_views="week" show_filters="0" show_view_switch="0"]',
+        'no-switch' => '[reginor_courses default_view="list" show_view_switch="false"]',
+        'overlap' => '[reginor_courses][reginor_courses default_view="week"]',
+        'block' => '<!-- wp:reginor-lite/courses {"levels":"http-intro","featured":"only","default_view":"week","show_header":false,"show_filters":false,"show_view_switch":false} /-->',
+    ] as $name => $content) {
+        $variant = $created[] = wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'HTTP kortkode ' . $name, 'post_content' => $content]);
+        $variants[$name] = get_permalink($variant);
+    }
+    $extra += ['campaign_url' => get_permalink($campaign), 'variant_urls' => $variants, 'intro' => $intro, 'intro_level' => $introLevel];
     $extra += ['page' => $page, 'period' => $period, 'group' => $group, 'level' => $level, 'url' => get_permalink($page), 'course_url' => \RegiNor\Lite\Frontend\PublicSite::url($group), 'period_url' => \RegiNor\Lite\Frontend\PublicSite::url(null, ['rnl_period' => $period]), 'embed_urls' => [get_permalink($embed), get_permalink($blockPage)]];
 }
 WP_CLI::line(wp_json_encode(['created' => $created, 'user' => $user, 'login' => $login, 'password' => $password, 'room' => $room,
     'course' => $course, 'instructor' => $instructor, 'old_types' => $old, 'types_existed' => $old !== null] + $extra));
+
+} catch (Throwable $error) {
+    foreach (array_reverse($created) as $id) { wp_delete_post($id, true); }
+    if (isset($user) && !is_wp_error($user)) { require_once ABSPATH . 'wp-admin/includes/user.php'; wp_delete_user($user); }
+    foreach ($beforeSetup as $key => $value) { if ($value === null) { delete_option($key); } else { update_option($key, $value); } }
+    throw $error;
+}

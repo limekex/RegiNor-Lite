@@ -1,5 +1,97 @@
 # Endringslogg
 
+## 25. september 2026 – Testutgave 0.1.24: enkeltkvelder og daglige tidsakser
+
+- Én kveld vises med entallsdag og «Dato» på kurskort og kursprofil. Kalenderkort viser datoen, og dagsoverskriften er i entall når alle viste kurs har én kveld. Kurs over flere kvelder beholder flertall og oppstart.
+- Hver kalenderdag bruker bare dagens første/siste viste kurstid. Saler innenfor dagen beholder felles tidsakse og opphold; filtrering avgrenser tiden på nytt. Kortere dagskolonner strekkes ikke til nabodagens høyde.
+- Lokalt: offentlig 119 / HTTP 83, admin 117, interface/DOM og Composer 230 tester / 565 assertions består. POT og ZIP med 126 runtime-filer kontrollert.
+- [Releasenotat og testomfang](docs/releases/0.1.24.md). Faktisk visuell Avada-/stagingprøve gjenstår.
+
+## 25. september 2026 – Testutgave 0.1.23: manuelt godkjent tidligere kursstart
+
+- Et enkeltkurs kan starte før kursperioden når egen første dato er valgt og «Tillat kursstart før kursperioden» er krysset av. Håndheves på server og i skjema, også ved import. Tillatelsen lagres på kurset og nullstilles ved kopiering.
+- Unntaket forklares i forhåndsvisning og publiseringskontroll. Kursdatoer, kalenderfil og schema bruker faktiske økter; ukeskalenderen merker tidligere oppstart. Periodens oppgitte datoer og øvrige kurs beholdes.
+- Synlighets-/salgsgrenser, siste tillatte dato, ukedag, kollisjoner og vern av historiske økter gjelder fortsatt. TECs samleoppføring beholder periodens tidsrom.
+- Lokalt: admin 117, lagring 65, arbeidsflyt 92, HTTP 43, offentlig 99 / HTTP 83, import 117, kalender 43, WordPress, interface/DOM og Composer 230/565 består. POT og ZIP med 126 runtime-filer kontrollert.
+- [Releasenotat og testomfang](docs/releases/0.1.23.md). Faktisk stagingprøve gjenstår.
+
+## 25. september 2026 – Beskrivelsesmal for introkurs
+
+- Ny [introkursbeskrivelse](docs/SALSA-INTROKURS-LETSREG.md) i enkel HTML, tilpasset eksisterende LetsReg-markører. Sko beholdes i lokal kursbeskrivelse, og ukjent partnerordning er tom. Medlemsomtalen lover bare rabatt på ordinære kurs og andre arrangementer.
+- Dokumentert lokalt oppsett med én økt kl. 16.00–18.30, separat nivåvalg og kontroll av dato, sal og pris. År er ikke utledet fra medlemslenken. Ingen runtime-endring eller ny pluginutgave; faktisk LetsReg-roundtrip gjenstår.
+- Kontrollert: eksisterende maltester (6 tester / 34 assertions) og 11 direkte kontroller av HTML-eksemplets feltfordeling, tom partnerseksjon, enkel HTML og nivånavntreff. WordPress-/HTTP-tester og POT-generering er ikke kjørt; leveransen endrer bare dokumentasjon.
+
+## 25. september 2026 – Testutgave 0.1.22: erklært støtte for WP Consent API
+
+- Registrerer den dokumenterte støtteerklæringen som WP Consent API kontrollerer i Nettstedhelse, kun for RegiNor. Gjelder også når måling er deaktivert.
+- Kontrollerer API-samtykke direkte i både nettleser og server når API-et finnes. Avslag stopper måling; eksisterende krav om Complianz og håndtering av tilbaketrekking beholdes. Ingen kode gir samtykke på vegne av besøkeren.
+- Lokalt: journey 55, analytics 36, WordPress-oppstart og Composer 230 tester / 565 assertions består. Nye prøver dekker API-avslag, tillatelse, tilbaketrekking og avgrenset støtteerklæring. POT og ZIP med 126 runtime-filer kontrollert.
+- [Releasenotat og testomfang](docs/releases/0.1.22.md). Faktisk Nettstedhelse og samtykkeflyt med Complianz/GTM må kontrolleres etter installasjon.
+
+## 25. september 2026 – Testutgave 0.1.21: kortkoder for kampanjesider
+
+- Inkluder og utelat kursnivåer med navn/ID, og avgrens til fremhevede kurs. Flere innbygginger på samme side kan vise ulike utvalg. Filtre og URL-valg kan ikke utvide utvalget satt i kortkoden.
+- Egne valg for å skjule innledning/overskrifter, filtre og visningsbytte. Startvisning og tillatte visninger gjelder separat per innbygging. Tilsvarende kontroller i WordPress-blokken og kortkodehjelp under Nettsidevisning.
+- Filter- og visningslenker bevarer landingssiden, kampanjeparametere og øvrige innbyggingers valg. Separate ankre, tastaturfokus og schema-ID-er. Direkte LetsReg-lenker og målingsattributter beholdes.
+- Testoppsett for offentlig HTTP rydder nå syntetiske objekter og gjenoppretter sine midlertidige innstillinger også hvis opprettelsen av testdata feiler.
+- Lokalt: offentlig 99 / HTTP 83, admin 91, nivåer 37, WordPress, interface/DOM/blokk/fokus, journey og Composer 230/565 består. POT og ZIP med 126 runtime-filer kontrollert.
+- [Releasenotat, testomfang og avgrensninger](docs/releases/0.1.21.md). Faktisk visuell Avada-/stagingkontroll gjenstår.
+
+## 25. september 2026 – Testutgave 0.1.20: intern cache under samlet lagring
+
+- RegiNor hindrer ikke lenger priming av WordPress' vanlige interne objektcache under transaksjoner. En regresjonsprøve avdekker 100 SQL-kall for 100 gjentatte hook-lesinger før rettingen, og 2 etter.
+- Lokal minnecache tømmes ved transaksjonsgrensen for å unngå rester etter rollback. Lagringshooks, rettigheter, versjonskontroll og samlet tilbakeføring beholdes. Ekstern/ikke-standard objektcache beholder tidligere policy; ingen Redis-/Memcached-/sidecache tømmes.
+- Valgfri diagnostikk viser cachemodus, cachesperre og SQL-antall uten å logge spørringene. Første produksjonsspor viser 10–32 sekunder per kursstatusoppdatering; den konkrete tidsbruken i hver tredjepartshook er ikke kartlagt.
+- Lokalt: cache 15, diagnostikk, arbeidsflyt 92 med/uten sporing, lagring 65, WordPress, HTTP 43, TEC 102, offentlig 99 / HTTP 58, DOM og Composer 230/565 består. POT og ZIP kontrollert.
+- Prosjekteier bekrefter 25. september at «Til kladd» fungerer på nettsted 19 etter 0.1.20 og går forholdsvis raskt. Ingen eksakt tidsmåling eller nytt spor er mottatt. Republisering/TEC og automatisk cron er ikke godkjent gjennom denne prøven.
+- [Releasenotat](docs/releases/0.1.20.md). Resultatet er dokumentert; ingen ny kode eller ZIP i denne oppfølgingen, og ingen tester er kjørt på nytt. Automatisk cron-testing avventes.
+
+## 25. september 2026 – Testutgave 0.1.19: sporing av kurslagring
+
+- Valgfri `RNL-MUTATION`-diagnostikk viser hvilket objekt og lagringstrinn som stopper, tidsbruk og eksisterende databaseforbindelse. Av som standard, med valgfri nettstedsavgrensning. Ingen ekstra SQL, kursinnhold, rå spørringer eller unntaksmeldinger logges.
+- Feilpunkt beholdes før rollback og opprydding; best mulig avslutningsspor ved fatalfeil. Rettigheter, versjonskontroll og samlet transaksjon beholdes.
+- RegiNors kalender- og kapasitetsintervaller er fortsatt tilgjengelige før `init`, men navnene oversettes først etter `init`. Regresjonsprøven gjenskapte WordPress-varselet før rettingen.
+- Ny produksjonslogg bekrefter fortsatt 120-sekunders tidsavbrudd og 37 låsetidsavbrudd ved Avadas cache. Tre stammer fra en annen cron-jobb. LiteSpeed har også to tilkoblingstidsavbrudd; sammenheng med kladdforsøket er ikke bevist. Ingen server- eller cron-endringer er utført.
+- Lokalt: ny diagnostikkprøve, arbeidsflyt 92 med og uten sporing, lagring 65, HTTP 43, WordPress, oversettelser og Composer 230/565 består. POT og ZIP med 125 runtime-filer er kontrollert.
+- Dette er diagnose, ikke bekreftet reparasjon av produksjonsfeilen. [Releasenotat](docs/releases/0.1.19.md) og [kontrollert prøve](docs/HOSTING-DATABASEKONTROLL.md#avgrenset-lagringsspor-fra-0119).
+
+## 24. september 2026 – Driftsoppfølging av nettsted 19
+
+- Nytt køpanel bekrefter registrert start/avslutning kl. 23:43:51 CEST uten den gamle kømeldingen, men «Til kladd» feiler fortsatt. Dokumentert vurdering av PHP-logginnstillinger og 120-sekundersgrensen; videre automatisk cron-prøve avventes. Ingen nye kode- eller serverendringer i denne vurderingen.
+- cPanel-kommando og cronlogg bekrefter at WP-CLI avbryter på grunn av PHP-CGI. Dokumentert eksplisitt PHP-CLI, kontroll av nettsted 19 og avgrenset kalenderprøve før gjenopptakelse av gamle jobber. Retting på serveren og stabil drift er ikke bekreftet.
+- Terminalprøve bekrefter `/usr/local/bin/php` som PHP 8.3.33 (cli); WP-CLI/hendelseskjøring gjenstår. Dobbel OPcache-lasting er dokumentert som separat konfigurasjonsadvarsel.
+- Dokumentert kraftig forsinkede RegiNor-cronjobber, deaktivert besøksutløst cron og gammel lagret kømelding. Lagt til avgrenset kjøreprøve og kontroll av riktig nettsted for host.
+- Ny logg har ti låsetidsavbrudd ved Avada-cache og PHP-timeout etter 120 sekunder. Automatisk cron og blokkeringen ved lagring er fortsatt ikke løst/verifisert på serveren.
+- Dokumentasjonsendring; ingen runtime-endring, ny pluginutgave eller nye testpåstander.
+
+## 24. september 2026 – Testutgave 0.1.18: konkret kødiagnose
+
+- Kalenderens køfeil viser WordPress-feilkode og jobbnavn, og forklarer at RegiNor bruker WordPress-cron, ikke Action Scheduler. Ingen rå leverandørmeldinger eller feildata vises.
+- Bekrefter faktisk eksisterende jobb etter konkurrerende kølegging før feil meldes. Rydder tidligere køfeil for samme jobb når køleggingen er bekreftet; feil under utføring beholdes.
+- Administrativ teknisk status viser køtider, siste jobbstart/avslutning, nettsteds-ID og cron-konfigurasjon, uten å kjøre eller slette jobber.
+- Dokumentert ny logg og lesende kontroll for host. Utgaven diagnostiserer videre; produksjonens 504 er ikke verifisert løst. [Releasenotat](docs/releases/0.1.18.md).
+
+## 24. september 2026 – Testutgave 0.1.17: kalenderarbeid i bakgrunnen
+
+- TEC oppdateres via deduplisert bakgrunnsjobb og femminutters kontroll, ikke i siden eller lagringsforespørselen. Oppføringen gjenbrukes ved republisering; kladdvern gjelder mens kalenderkopien venter.
+- Egne meldinger for kølegging, forsinket jobb og manglende fullføring. Automatisk drift krever fungerende WordPress-/servercron.
+- Lagringsavvisning/databasefeil skilles fra versjonskonflikt. Reelle konflikter viser hvilket oppsett eller kurs som er endret.
+- Manglende TEC-datovelgerformat stopper ikke reserveoppdateringen. HTTP-prøven kontrollerer at lagringen er fullført før offentlig lesing.
+- Fortsatt 120-sekunders tidsavbrudd i faktisk miljø etter 0.1.16; blokkeringens eier er ikke påvist. Ingen tredjepartsutvidelser eller produksjonsinnstillinger er endret. [Releasenotat](docs/releases/0.1.17.md).
+
+## 24. september 2026 – Testutgave 0.1.16: kladd og kalenderlåser
+
+- Kalenderoppdatering bruker egen databaselås. Kurslagringens lås holdes bare under lesing av kildegrunnlaget, slik at treg TEC-/Pro-lagring ikke holder kursredigeringens lås.
+- Innsendte skjemaendringer behandles før kalenderkontroll. Kalenderkontroller venter ikke på opptatte låser; ny kontroll skjer ved neste sidelasting. Eksisterende vern mot duplikater, samtidige kursendringer og offentlig visning av kladder beholdes.
+- Skiller opptatt lås fra mislykket databaseforespørsel (`RNL-DB-LOCK`). Feil i språkbytte eller cacheopprydding skal ikke etterlate låsen eller intern aktiv-status.
+- Generell feilmelding ber ikke lenger brukeren rette skjemafelter når årsaken kan være en driftsfeil. Lokalt verifisert med 82 TEC- og 90 arbeidsflytkontroller, relevante lagrings-/admin-/offentlig-/HTTP-tester og Composer. Faktisk serverkontroll gjenstår. [Releasenotat](docs/releases/0.1.16.md).
+
+## 23. september 2026 – Testutgave 0.1.15: samtykkerekkefølge
+
+- Første måling utsettes til Complianz-/WP Consent API-oppdateringen har fullført, slik at Site Kit kan oppdatere Google-samtykket før RegiNor-hendelsene.
+- Samlet tilbaketrekking starter ikke en ekstra reise mellom kategoriendringene. Pågående måling avbrytes straks; slettingsforespørselen overlever senere tilbaketrekkingshendelser.
+- Regresjonstest gjenskapte blokkeringen før retting. 46 lokale journey-tester og Composer 225 tester / 518 assertions passerer. Faktisk nettleser-/GA4-kontroll av denne utgaven gjenstår. [Releasenotat](docs/releases/0.1.15.md).
+
 ## 23. september 2026 – Testutgave 0.1.14: robust TEC-lagring
 
 - TECs dokumentasjon oppgir upålitelige ORM-oppdateringssvar (BTRIA-2310). RegiNor kontrollerer nå faktiske lagrede felt etter oppdatering, inkludert publiseringsstatus, heldag, datoer og kurslenke.

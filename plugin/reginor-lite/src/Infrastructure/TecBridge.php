@@ -24,15 +24,14 @@ final class TecBridge
     public static function boot(): void
     {
         add_filter('post_row_actions', [\RegiNor\Lite\Admin\CalendarSettings::class, 'eventActions'], 20, 2);
-        // Reconcile before public queries, including window changes on quiet sites.
-        add_action('wp_loaded', [self::class, 'sync'], 30);
+        TecSyncQueue::boot();
         foreach (['added_post_meta', 'updated_post_meta', 'deleted_post_meta'] as $hook) {
             add_action($hook, static function ($metaId, $id, $key): void { if ($key === ContentTypes::META) { self::$pending = true; self::$allowed = null; } }, 10, 3);
         }
         add_action('before_delete_post', static function ($id): void { if (in_array(get_post_type($id), ContentTypes::TYPES, true)) { self::$pending = true; self::$allowed = null; } });
         add_action('updated_option', static function ($name): void { if ($name === 'rnl_course_page_id') { self::$pending = true; self::$allowed = null; } });
         add_action('transition_post_status', static function ($new, $old, $post): void { if (in_array($post->post_type, ContentTypes::TYPES, true) || ($post->post_type === 'page' && (int) get_option('rnl_course_page_id') === (int) $post->ID)) { self::$pending = true; self::$allowed = null; } }, 10, 3);
-        add_action('shutdown', static function (): void { if (self::$pending) { self::sync(); } }, 20);
+        add_action('shutdown', [self::class, 'queuePending'], 20);
         add_filter('post_type_link', static function ($url, $post) { return $post->post_type === 'tribe_events' ? (self::periodUrl((int) $post->ID) ?: $url) : $url; }, 20, 2);
         add_filter('tribe_get_event_link', static function ($link, $id, $full) {
             $url = self::periodUrl((int) $id); if (!$url) { return $link; }
@@ -143,22 +142,39 @@ final class TecBridge
         }
         return $blocked;
     }
+    public static function queuePending(): void
+    {
+        if (self::$pending) { self::$pending = false; TecSyncQueue::request(); }
+    }
     public static function sync(): void
     {
         if (!self::available() || self::$writing || Mutation::active()) { return; }
         self::$syncProblem = null;
-        global $wpdb;
-        $lock = 'rnl:' . md5(DB_NAME . ':' . $wpdb->prefix);
-        if ((int) $wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s, 3)', $lock)) !== 1) {
-            self::$syncProblem = __('Kalendersynkroniseringen fikk ikke tilgang til databaselåsen. En annen kursendring kan pågå. Last siden på nytt; hvis dette gjentar seg, må administrator kontrollere databasens støtte for GET_LOCK.', 'reginor-lite');
-            return;
-        }
-        self::$writing = true; self::$pending = false; self::$allowed = null;
-        $language = apply_filters('wpml_current_language', null); $defaultLanguage = apply_filters('wpml_default_language', null);
-        if ($defaultLanguage && $language !== $defaultLanguage) { do_action('wpml_switch_language', $defaultLanguage); }
-        $switchedLocale = switch_to_locale((string) (get_option('WPLANG') ?: 'en_US'));
+        $lock = DatabaseLock::name(true);
         try {
-            $catalog = (new Catalog())->read(); $eligible = self::eligible($catalog); self::$allowed = array_keys($eligible); $owned = self::owned();
+            if (!DatabaseLock::acquire($lock, 0)) {
+                self::$syncProblem = __('En kalenderoppdatering pågår. Du kan fortsatt redigere kursperioden. En senere bakgrunnskontroll prøver igjen.', 'reginor-lite');
+                return;
+            }
+        } catch (\RuntimeException $error) { self::$syncProblem = $error->getMessage(); TecSyncQueue::finished(self::$syncProblem); return; }
+        self::$writing = true; self::$pending = false; self::$allowed = null;
+        $language = null; $restoreLanguage = false; $switchedLocale = false; $failed = false; $catalog = [];
+        try {
+            TecSyncQueue::started();
+            $language = apply_filters('wpml_current_language', null); $defaultLanguage = apply_filters('wpml_default_language', null);
+            if ($defaultLanguage && $language !== $defaultLanguage) {
+                $restoreLanguage = true; do_action('wpml_switch_language', $defaultLanguage);
+            }
+            $switchedLocale = switch_to_locale((string) (get_option('WPLANG') ?: 'en_US'));
+            // Serialize the source snapshot with publication, but never hold the course
+            // writer lock while TEC/Pro or third-party save hooks update the projection.
+            $sourceLock = DatabaseLock::name();
+            if (!DatabaseLock::acquire($sourceLock, 0)) {
+                self::$syncProblem = __('Kalenderen venter til en kursendring er ferdig lagret. En senere bakgrunnskontroll prøver igjen.', 'reginor-lite');
+                return;
+            }
+            try { $catalog = (new Catalog())->read(); $eligible = self::eligible($catalog); $owned = self::owned(); }
+            finally { DatabaseLock::release($sourceLock); }
             // Hide first: withdrawal must not depend on successful creation of another event.
             foreach ($owned as $event => $period) {
                 if (!isset($eligible[$period]) || (int) array_search($period, $owned, true) !== $event) {
@@ -193,20 +209,33 @@ final class TecBridge
                 } catch (\Throwable $error) {
                     update_post_meta($period, self::ERROR, match ($phase) {
                         'create' => __('TEC kunne ikke opprette arrangementet. Perioden er offentlig og klar for kalenderdeling. Administrator må kontrollere TEC/TEC Pro-versjoner og feilloggen før nytt forsøk.', 'reginor-lite'),
-                        'save' => $error->getCode() === 53114 ? $error->getMessage() : __('TEC avbrøt oppdateringen av kalenderoppføringen. Kursperioden er beholdt. Last siden på nytt for et nytt forsøk.', 'reginor-lite'),
+                        'save' => $error->getCode() === 53114 ? $error->getMessage() : __('TEC avbrøt oppdateringen av kalenderoppføringen. Kursperioden er beholdt. En senere bakgrunnskontroll prøver igjen.', 'reginor-lite'),
                         'defaults' => __('Arrangementet er lagret, men kalenderkategori eller bilde kunne ikke oppdateres. Kontroller valgene under Nettsidevisning → Arrangementskalender.', 'reginor-lite'),
-                        default => __('Kalenderoppføringen kunne ikke klargjøres. Last siden på nytt. Hvis feilen fortsetter, må administrator undersøke feilloggen.', 'reginor-lite'),
+                        default => __('Kalenderoppføringen kunne ikke klargjøres. En senere bakgrunnskontroll prøver igjen. Hvis feilen fortsetter, må administrator undersøke feilloggen.', 'reginor-lite'),
                     });
                 }
             }
-        } catch (\Throwable) {
-            self::$allowed = []; // Read filters fail closed if reconciliation cannot determine visibility.
-            self::$syncProblem = __('Kalendersynkroniseringen ble avbrutt under lesing eller skjuling av kalenderoppføringer. Administrator må kontrollere feilloggen. Dette er ikke en beskjed om at kursstart ligger frem i tid.', 'reginor-lite');
+        } catch (\Throwable $error) {
+            $failed = true; // Read filters fail closed if reconciliation cannot determine visibility.
+            self::$syncProblem = $error->getCode() === 503 ? $error->getMessage() : __('Kalendersynkroniseringen ble avbrutt under lesing eller skjuling av kalenderoppføringer. Administrator må kontrollere feilloggen. Dette er ikke en beskjed om at kursstart ligger frem i tid.', 'reginor-lite');
         } finally {
-            if ($switchedLocale) { restore_previous_locale(); }
-            if ($defaultLanguage && $language !== $defaultLanguage) { do_action('wpml_switch_language', $language); }
-            self::$writing = false;
-            $wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $lock));
+            try {
+                if ($switchedLocale) { restore_previous_locale(); }
+                if ($restoreLanguage) { do_action('wpml_switch_language', $language); }
+            } catch (\Throwable) {
+                $failed = true;
+                self::$syncProblem = __('Kalenderoppdateringen kunne ikke gjenopprette språkinnstillingen. Hvis feilen fortsetter, må administrator kontrollere WPML og feilloggen.', 'reginor-lite');
+            } finally {
+                // Source changes may have committed while TEC was saving. Public reads
+                // must evaluate current source visibility rather than the old snapshot.
+                self::$allowed = $failed ? [] : null;
+                self::$writing = false;
+                try { TecSyncQueue::finished(self::$syncProblem); }
+                finally { DatabaseLock::release($lock); }
+                foreach (array_unique(array_merge(array_keys($catalog['periods'] ?? []), array_keys($catalog['groups'] ?? []))) as $id) {
+                    wp_cache_delete($id, 'posts'); wp_cache_delete($id, 'post_meta');
+                }
+            }
         }
     }
     private static function save(int $event, array $args): void
@@ -247,7 +276,8 @@ final class TecBridge
             if (array_key_exists($key, $args)) { $mapped[$target] = $args[$key]; }
         }
         // The older date API reads the site's configured datepicker format, including d/m/Y.
-        $format = \Tribe__Date_Utils::datepicker_formats(tribe_get_option('datepickerFormat'));
+        $formats = \Tribe__Date_Utils::datepicker_formats();
+        $format = $formats[(int) tribe_get_option('datepickerFormat', 0)] ?? $formats[0];
         foreach (['start_date' => 'EventStartDate', 'end_date' => 'EventEndDate'] as $key => $target) {
             if (isset($args[$key])) { $mapped[$target] = (new \DateTimeImmutable($args[$key]))->format($format); }
         }
@@ -295,6 +325,7 @@ final class TecBridge
         }
         if (new \DateTimeImmutable($data['visible_until']) <= $now) { return __('Kalenderoppføringen er skjult fordi Synlig til er passert. Kontroller synlighetsvinduet i periodeoppsettet.', 'reginor-lite'); }
         if (self::$syncProblem !== null) { return self::$syncProblem; }
+        if (($background = TecSyncQueue::message()) !== null) { return $background; }
         $catalog = (new Catalog())->read();
         if (!isset($catalog['periods'][$period])) { return __('Kalenderoppføringen er skjult fordi perioden ikke har et offentlig tilgjengelig kurs. Kontroller publisering, kursøkter, beskrivelse, sal, sted og eventuelle instruktørreferanser.', 'reginor-lite'); }
         if (!isset(self::eligible($catalog)[$period])) { return __('Kalenderoppføringen mangler en gyldig sluttdato. Angi periodens sluttdato eller kontroller at en kursøkt gir en sluttdato etter periodens start.', 'reginor-lite'); }
@@ -302,6 +333,6 @@ final class TecBridge
         $event = self::eventId((int) get_post_meta($period, self::EVENT, true));
         return $event && get_post_status($event) === 'publish' && !in_array($event, self::blocked(), true)
             ? __('Perioden vises i arrangementskalenderen, med lenke til alle kursene.', 'reginor-lite')
-            : __('Perioden er klar for kalenderdeling, men ingen publisert TEC-oppføring er bekreftet. Last siden på nytt for et nytt synkroniseringsforsøk. Hvis dette fortsetter, må administrator kontrollere TEC-oppsettet.', 'reginor-lite');
+            : __('Perioden er klar for kalenderdeling og venter på bekreftet bakgrunnskontroll. Hvis oppføringen fortsatt mangler etter noen minutter, må administrator kontrollere automatiske jobber og TEC-oppsettet.', 'reginor-lite');
     }
 }

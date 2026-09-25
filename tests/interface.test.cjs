@@ -45,3 +45,14 @@ assert.notEqual(refreshed.searchParams.get('rnl_refresh'), 'old');
 assert.equal(refreshed.searchParams.getAll('rnl_refresh').length, 1);
 
 console.log('Utløp, oversettelse, fokus og oppdateringsadresse med bevarte filtre/sporing bestått.');
+
+// Instance anchors restore keyboard focus independently on pages with multiple overviews.
+const { JSDOM } = require('jsdom');
+for (const id of ['rnl-results-2', 'rnl-course-123-embed-2', 'rnl-results', 'rnl-course-123']) {
+    const dom = new JSDOM('<div id="' + id + '" tabindex="-1"></div>', { url: 'https://example.org/campaign/#' + id, runScripts: 'outside-only' });
+    dom.window.wp = { i18n: { __: text => text } };
+    dom.window.eval(source);
+    assert.equal(dom.window.document.activeElement.id, id);
+    dom.window.close();
+}
+console.log('Separate keyboard focus targets for embedded overviews passed.');

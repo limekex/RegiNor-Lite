@@ -134,6 +134,19 @@ try {
     $assert($profilePlan['data']['instructor_ids'] === [$instructor], 'Profilreferanse må beholdes uten duplisering.');
 
     // A stale CAS must not overwrite a writer that wins after the initial version read.
+    $deniedWrite = static fn ($check, $id, $key) => $id === $course && $key === ContentTypes::META ? false : $check;
+    $beforeDenied = $repo->get($course);
+    add_filter('update_post_metadata', $deniedWrite, 10, 3);
+    try { $reject(static fn () => $repo->update($course, $beforeDenied['version'], $beforeDenied['data']), 503); }
+    finally { remove_filter('update_post_metadata', $deniedWrite, 10); }
+    $assert($repo->get($course) === $beforeDenied, 'Avvist skriving endret data.');
+    global $wpdb;
+    $brokenSql = static fn ($sql) => str_starts_with($sql, "UPDATE `{$wpdb->postmeta}`") && str_contains($sql, ContentTypes::META) ? 'UPDATE rnl_nonexistent_test_table SET missing = 1' : $sql;
+    $oldSuppress = $wpdb->suppress_errors(true); add_filter('query', $brokenSql);
+    try { $reject(static fn () => $repo->update($course, $beforeDenied['version'], $beforeDenied['data']), 503); }
+    finally { remove_filter('query', $brokenSql); $wpdb->suppress_errors($oldSuppress); }
+    $assert($repo->get($course) === $beforeDenied, 'SQL-feil endret kursdata.');
+
     $competitor = $repo->get($course);
     $competitor['version']++;
     $competitor['data']['title'] = 'Konkurrerende lagring';

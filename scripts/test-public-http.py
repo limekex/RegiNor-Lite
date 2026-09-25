@@ -3,7 +3,10 @@ import base64,json,subprocess,sys,tempfile
 from pathlib import Path
 root=Path(__file__).resolve().parent.parent
 cmd=[str(root/'node_modules/.bin/wp-env'),'run','cli','wp','eval-file','/var/www/html/rnl-tests/http-fixtures.php']
-setup=subprocess.run(cmd+['public'],cwd=root,text=True,capture_output=True,check=True)
+setup=subprocess.run(cmd+['public'],cwd=root,text=True,capture_output=True)
+if setup.returncode:
+    sys.stderr.write(setup.stdout + setup.stderr)
+    setup.check_returncode()
 fixtures=next(json.loads(line) for line in setup.stdout.splitlines() if line.startswith('{'))
 with tempfile.TemporaryDirectory(prefix='rnl-public-') as folder:
     path=Path(folder)/'fixtures.json';path.write_text(json.dumps(fixtures))

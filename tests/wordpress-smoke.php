@@ -13,6 +13,12 @@ if (!is_plugin_active('reginor-lite/reginor-lite.php') || !class_exists(ProjectP
     WP_CLI::error('Pluginen er ikke aktivert og lastet.');
 }
 
+$plugin = plugin_basename(WP_PLUGIN_DIR . '/reginor-lite/reginor-lite.php');
+if (apply_filters('wp_consent_api_registered_' . $plugin, false) !== true
+    || apply_filters('wp_consent_api_registered_unrelated-plugin/unrelated.php', false) !== false) {
+    WP_CLI::error('Consent API-støtte skal erklæres for RegiNor, ikke andre utvidelser.');
+}
+
 if (false === has_action('admin_menu', [ProjectPage::class, 'register'])) {
     WP_CLI::error('Administrasjonssiden er ikke registrert.');
 }

@@ -19,9 +19,12 @@
         }
         if (field.type === 'date') {
             if (!validDate(value)) return __('Velg en gyldig dato i kalenderen.', 'reginor-lite');
+            if (field.key === 'first_date' && context.periodStart && value < context.periodStart && !context.allowEarlyStart) return format(
+                /* translators: 1: selected first date; 2: normal period start. */
+                __('Første kursdato %1$s er før kursperiodens start %2$s. Kryss av «Tillat kursstart før kursperioden» under Flere valg hvis dette er et bevisst unntak, eller velg en dato fra periodens start.', 'reginor-lite'), value, context.periodStart);
             if (context.min && value < context.min) return format(
                 /* translators: 1: valgt dato, 2: tidligste tillatte dato (ÅÅÅÅ-MM-DD). */
-                __('Datoen %1$s er før tidligste tillatte dato %2$s. Velg denne datoen eller en senere dato innenfor kursperioden.', 'reginor-lite'), value, context.min);
+                __('Datoen %1$s er før tidligste tillatte dato %2$s. Velg denne datoen eller en senere dato innenfor tillatt tidsrom.', 'reginor-lite'), value, context.min);
             if (context.max && value > context.max) return format(
                 /* translators: 1: valgt dato, 2: siste tillatte dato (ÅÅÅÅ-MM-DD). */
                 __('Datoen %1$s er etter siste tillatte dato %2$s. Velg en tidligere dato, eller endre sluttdatoen i kursoppsettet eller kursperioden først.', 'reginor-lite'), value, context.max);
@@ -98,7 +101,13 @@
             });
             summary.append(list);
         }
-        const bounds = () => ({ min: isPeriod ? value('start_date') : form.dataset.periodStart, max: isPeriod ? value('end_date') : form.dataset.periodEnd });
+        const bounds = () => {
+            let min = isPeriod ? value('start_date') : form.dataset.periodStart;
+            const approved = scope.querySelector('[type="checkbox"][name="data[allow_early_start]"]')?.checked;
+            const first = get('first_date') ? (approved ? value('first_date') : '') : form.dataset.courseStart;
+            if (!isPeriod && validDate(first || '') && first < min) min = first;
+            return { min, max: isPeriod ? value('end_date') : form.dataset.periodEnd };
+        };
         function context(input) {
             const key = input.dataset.field;
             const result = bounds();
@@ -107,6 +116,9 @@
             if (key === 'end_date') result.after = value('start_date');
             if (key === 'latest_date') result.after = value('first_date') || value('start_date') || form.dataset.periodStart;
             if (key === 'first_date') {
+                result.min = '';
+                result.periodStart = form.dataset.periodStart;
+                result.allowEarlyStart = !!scope.querySelector('[type="checkbox"][name="data[allow_early_start]"]')?.checked;
                 result.weekday = value('weekday'); result.weekdayLabel = get('weekday')?.selectedOptions?.[0]?.textContent;
                 if (value('latest_date')) result.max = result.max ? [result.max, value('latest_date')].sort()[0] : value('latest_date');
             }

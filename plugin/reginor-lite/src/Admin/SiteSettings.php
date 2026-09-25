@@ -33,6 +33,20 @@ final class SiteSettings
         echo ('<label for="rnl-page">' . esc_html(__('Hvilken side skal vise kursene?', 'reginor-lite')) . '</label><select id="rnl-page" name="course_page"><option value="0">' . esc_html(__('Ikke koblet til ennå', 'reginor-lite')) . '</option>');
         foreach (get_pages(['post_status' => 'publish']) as $p) { if ($p->post_password !== '') { continue; } echo '<option value="' . (int) $p->ID . '"' . selected((int) get_option('rnl_course_page_id', 0), $p->ID, false) . '>' . esc_html($p->post_title) . '</option>'; }
         echo '</select>'; submit_button(__('Lagre valgt side', 'reginor-lite')); echo ('</form><section class="rnl-panel"><h2>' . esc_html(__('Legg inn oversikten', 'reginor-lite')) . '</h2><p>' . esc_html(__('I WordPress-editoren velger du blokken ', 'reginor-lite')) . '<strong>' . esc_html(__('RegiNor kursoversikt', 'reginor-lite')) . '</strong>.</p><p>' . esc_html(__('I Avada kan du bruke et Text Block-element og lime inn:', 'reginor-lite')) . '</p><p><code>[reginor_courses]</code></p><p>' . esc_html(__('Kontroller at elementet tolker shortcodes i den installerte Avada-versjonen. Ingen eksisterende ACF-kurs flyttes eller endres.', 'reginor-lite')) . '</p></section>');
+        echo '<details class="rnl-panel"><summary>' . esc_html(__('Kortkoder for kampanjesider', 'reginor-lite')) . '</summary><p>' . esc_html(__('Vis fremhevede introkurs først, og øvrige kurs i en egen oversikt nedenfor. Lim inn hver kortkode i sitt eget tekstelement.', 'reginor-lite')) . '</p>';
+        echo '<p><code>' . esc_html('[reginor_courses levels="intro" featured="only" default_view="list" show_header="0" show_filters="0" show_view_switch="0"]') . '</code></p>';
+        echo '<p><code>' . esc_html('[reginor_courses exclude_levels="intro" default_view="week" show_header="0"]') . '</code></p>';
+        echo '<p>' . esc_html(__('Nivånavnene må finnes under Kursinnhold og ressurser → Kursnivåer. Bruk komma mellom flere navn, for eksempel «nybegynner,intro». Du kan også bruke nivå-ID. Utelatte nivåer skjules fra både kursutvalget og nivåfilteret.', 'reginor-lite')) . '</p><dl>';
+        foreach ([
+            'levels / exclude_levels' => __('Vis bare / utelat de oppgitte nivåene.', 'reginor-lite'),
+            'featured="only"' => __('Vis bare kurs merket Fremhev. Standard er alle kurs; «exclude» utelater fremhevede kurs.', 'reginor-lite'),
+            'default_view="list" / "week"' => __('Start med kort / kalender. «site» følger felles utseendevalg, «period» følger kursperioden.', 'reginor-lite'),
+            'allowed_views="list" / "week" / "list,week"' => __('Tillat kort, kalender eller begge visninger.', 'reginor-lite'),
+            'show_header="0"' => __('Skjul innledning, periodeoverskrift og synlig antall treff.', 'reginor-lite'),
+            'show_filters="0"' => __('Skjul periode-, nivå- og dagfilter.', 'reginor-lite'),
+            'show_view_switch="0"' => __('Skjul visningsvalget og bruk startvisningen fast.', 'reginor-lite'),
+        ] as $attribute => $help) { echo '<dt><code>' . esc_html($attribute) . '</code></dt><dd>' . esc_html($help) . '</dd>'; }
+        echo '</dl></details>';
         $url = \RegiNor\Lite\Frontend\PublicSite::url();
         if ($url) { echo '<p><a class="rnl-button" href="' . esc_url($url) . ('">' . esc_html(__('Åpne kursoversikten →', 'reginor-lite')) . '</a></p>'); }
         SharingSettings::render();

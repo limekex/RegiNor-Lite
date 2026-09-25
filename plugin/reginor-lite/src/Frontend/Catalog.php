@@ -78,6 +78,7 @@ final class Catalog
                 'registration_url' => $url, 'registration_scope' => $g['registration_scope'], 'editorial_status' => $g['registration_status'],
                 'sessions' => $sessions, 'first' => $active ? min(array_column($active, 'starts_at')) : null, 'last' => $active ? max(array_column($active, 'ends_at')) : null,
                 'delayed_start' => $active && min(array_column($active, 'date')) > $expectedFirst,
+                'early_start' => $active && min(array_column($active, 'date')) < $periods[$g['period_id']]['start_date'],
                 'count' => count($active), 'breaks' => array_map(static fn ($b) => array_intersect_key($b, array_flip(['from', 'until', 'reason'])), array_merge($periods[$g['period_id']]['breaks'], $g['breaks'])),
                 'changed' => (bool) array_filter($sessions, static fn ($s) => $s['status'] !== 'scheduled')];
         }

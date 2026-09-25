@@ -5,6 +5,7 @@ use RegiNor\Lite\Domain\Publication\Clock;
 use RegiNor\Lite\Frontend\JourneyTracking;
 use RegiNor\Lite\Admin\AnalyticsPage;
 if (!defined('WP_CLI') || !WP_CLI || wp_get_environment_type() !== 'local') { throw new RuntimeException('Kun lokalt WordPress.'); }
+if (function_exists('wp_has_consent')) { throw new RuntimeException('Kjør i isolert testmiljø uten ekte WP Consent API; denne testen bruker samtykkestub.'); }
 if (function_exists('cmplz_has_consent')) { throw new RuntimeException('Kjør i isolert testmiljø uten ekte Complianz; denne testen bruker samtykkestub.'); }
 if (!function_exists('cmplz_has_consent')) { function cmplz_has_consent($category) { return $GLOBALS['rnl_test_consent'][$category] ?? false; } }
 $GLOBALS['rnl_test_consent'] = ['statistics' => false, 'marketing' => false];
@@ -76,11 +77,35 @@ try {
     $assert($call($old)->get_status() === 204, 'Nytt uavhengig besøk ble blokkert.');
     $wpdb->update($table, ['created_at' => gmdate('Y-m-d H:i:s', time() - 31 * DAY_IN_SECONDS)], ['event_id' => $old['event_id']]); JourneyStore::purge();
     $assert(!$wpdb->get_var($wpdb->prepare("SELECT event_id FROM $table WHERE event_id=%s", $old['event_id'])), 'Gamle måledata ble ikke slettet.');
+    // Existing checks above exercise Complianz without WP Consent API installed.
+    if (!function_exists('wp_has_consent')) {
+        function wp_has_consent($category) { return $GLOBALS['rnl_test_wp_consent'][$category] ?? false; }
+    }
+    $GLOBALS['rnl_test_consent'] = ['statistics' => true, 'marketing' => true];
+    $GLOBALS['rnl_test_wp_consent'] = ['statistics' => false, 'marketing' => true];
+    $apiJourney = $journeys[] = wp_generate_uuid4();
+    $apiEvent = array_replace($data, ['event_id' => wp_generate_uuid4(), 'journey_id' => $apiJourney, 'stage' => 'course_view']);
+    $assert($call($apiEvent)->get_status() === 403, 'Consent API-avslag overstyres av Complianz på server.');
+    $assert(!$wpdb->get_var($wpdb->prepare("SELECT event_id FROM $table WHERE event_id=%s", $apiEvent['event_id'])), 'Avvist Consent API-hendelse ble lagret.');
+    $GLOBALS['rnl_test_wp_consent'] = ['statistics' => true, 'marketing' => false];
+    $assert($call($apiEvent)->get_status() === 204, 'Felles statistikksamtykke blir blokkert.');
+    $apiDetail = json_decode($wpdb->get_var($wpdb->prepare("SELECT detail FROM $table WHERE event_id=%s", $apiEvent['event_id'])), true);
+    $assert($apiDetail['click_ids'] === [], 'Consent API-avslag for markedsføring tillater annonse-ID.');
+    $GLOBALS['rnl_test_wp_consent']['marketing'] = true;
+    $apiEvent['event_id'] = wp_generate_uuid4();
+    $assert($call($apiEvent)->get_status() === 204, 'Felles markedsføringssamtykke blir blokkert.');
+    $apiDetail = json_decode($wpdb->get_var($wpdb->prepare("SELECT detail FROM $table WHERE event_id=%s", $apiEvent['event_id'])), true);
+    $assert($apiDetail['click_ids']['gclid'] === 'synthetic-click', 'Annonse-ID mangler når begge API-er tillater den.');
+    $GLOBALS['rnl_test_consent']['statistics'] = false;
+    $assert($call($apiEvent)->get_status() === 403, 'Consent API alene overstyrer manglende Complianz-samtykke.');
+    $GLOBALS['rnl_test_wp_consent']['statistics'] = false;
+    $assert($call(['operation' => 'forget', 'journey_id' => $apiJourney])->get_status() === 204, 'Consent API-avslag blokkerer sletting ved tilbaketrekking.');
+    $assert((int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table WHERE journey=%s", JourneyStore::hash($apiJourney))) === 0, 'Consent API-tilbaketrekking beholder egne måledata.');
     $tooLarge = array_replace($data, ['ignored' => str_repeat('x', 8192)]); $assert($call($tooLarge)->get_status() === 403, 'For stor nyttelast ble tillatt.');
 } finally {
     wp_set_current_user($admin); foreach (array_reverse($created) as $id) { wp_delete_post($id, true); }
     foreach ($journeys as $id) { $wpdb->delete(JourneyStore::table(), ['journey' => JourneyStore::hash($id)]); delete_transient('rnl_revoked_' . JourneyStore::hash($id)); }
     if ($oldEnabled === null) delete_option('rnl_journey_enabled'); else update_option('rnl_journey_enabled', $oldEnabled);
-    wp_set_current_user($original); unset($GLOBALS['rnl_test_consent']);
+    wp_set_current_user($original); unset($GLOBALS['rnl_test_consent'], $GLOBALS['rnl_test_wp_consent']);
 }
-WP_CLI::success("$checks analytics checks passed (Complianz API stub).");
+WP_CLI::success("$checks analytics checks passed (Complianz and WP Consent API stubs).");

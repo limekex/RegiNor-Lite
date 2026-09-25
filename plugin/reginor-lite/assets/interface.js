@@ -27,7 +27,7 @@
         check(); window.addEventListener('pageshow', check); document.addEventListener('visibilitychange', check);
     });
     const restoreFocus = () => {
-        if (!/^#rnl-(course-\d+|results)$/.test(location.hash)) return;
+        if (!/^#rnl-(course-\d+(?:-embed-\d+)?|results(?:-\d+)?)$/.test(location.hash)) return;
         const target = document.getElementById(location.hash.slice(1));
         if (target) target.focus({ preventScroll: true });
     };

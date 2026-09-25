@@ -24,7 +24,8 @@ final class CapacityStore
     public static function boot(): void
     {
         add_filter('cron_schedules', static function (array $schedules): array {
-            $schedules['rnl_minute'] = ['interval' => 60, 'display' => __('RegiNor kapasitetskontroll', 'reginor-lite')]; return $schedules;
+            // Keep early scheduling possible; translate the label only after init.
+            $schedules['rnl_minute'] = ['interval' => 60, 'display' => did_action('init') ? __('RegiNor kapasitetskontroll', 'reginor-lite') : 'RegiNor kapasitetskontroll']; return $schedules;
         });
         add_action('init', static function (): void {
             register_post_meta('rnl_group', self::META, ['type' => 'object', 'single' => true, 'show_in_rest' => false, 'auth_callback' => '__return_false']);

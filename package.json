@@ -1,6 +1,6 @@
 {
   "name": "reginor-lite",
-  "version": "0.1.14",
+  "version": "0.1.24",
   "private": true,
   "description": "Lokale utviklingsverktøy for RegiNor Lite WordPress-plugin.",
   "engines": {
@@ -15,6 +15,9 @@
     "env:stop": "wp-env stop",
     "lint": "php scripts/lint.php",
     "test:wordpress": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-smoke.php",
+    "test:translations": "wp-env run cli wp --require=/var/www/html/rnl-tests/bootstrap-translations.php eval-file /var/www/html/rnl-tests/wordpress-translations.php",
+    "test:mutation-cache": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-mutation-cache.php",
+    "test:mutation-trace": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-mutation-trace.php",
     "test:storage": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-storage.php",
     "inspect:wordpress": "wp-env run cli wp eval-file /var/www/html/rnl-tools/inspect-wordpress.php",
     "package": "python3 scripts/package.py",
@@ -22,7 +25,7 @@
     "test:http": "python3 scripts/test-http.py",
     "test:public": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-public.php",
     "test:public-http": "python3 scripts/test-public-http.py",
-    "test:interface": "node tests/interface.test.cjs && node tests/admin-form.test.cjs && node tests/category-suggestions.test.cjs && node tests/appearance.test.cjs && node tests/map.test.cjs && node tests/letsreg-picker.test.cjs && node tests/course-editor.test.cjs && node tests/letsreg-import.test.cjs && node tests/letsreg-bulk.test.cjs && node tests/letsreg-template.test.cjs && node tests/registration-status.test.cjs && node tests/sharing.test.cjs && node --test tests/course-tools.test.cjs && node tests/rich-text.test.cjs",
+    "test:interface": "node tests/interface.test.cjs && node tests/admin-form.test.cjs && node tests/category-suggestions.test.cjs && node tests/appearance.test.cjs && node tests/map.test.cjs && node tests/letsreg-picker.test.cjs && node tests/course-editor.test.cjs && node tests/letsreg-import.test.cjs && node tests/letsreg-bulk.test.cjs && node tests/letsreg-template.test.cjs && node tests/registration-status.test.cjs && node tests/sharing.test.cjs && node --test tests/course-tools.test.cjs && node tests/rich-text.test.cjs && node tests/block.test.cjs",
     "test:capacity": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-capacity.php",
     "test:api-transport": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-api-transport.php",
     "test:letsreg": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-letsreg.php",

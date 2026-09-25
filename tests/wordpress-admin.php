@@ -212,6 +212,71 @@ try {
     $assert(str_contains($formHtml, 'class="rnl-session-tools" open') && str_contains($formHtml, 'value="Behold forklaring ved feil"'), 'Feil lukker kurskvelden eller mister utfylt forklaring.');
     $assert(str_contains($formHtml, 'data-period-end="2030-01-14"'), 'Direktelenke til kurs mistet periodegrensene.');
     $reflection->getProperty('error')->setValue(null, ''); $reflection->getProperty('submitted')->setValue(null, []);
+
+    // A one-off intro before the normal period requires an explicit, course-local approval.
+    $clock->time = '2029-12-01T12:00:00Z';
+    $introPeriod = $created[] = $repo->create('period', array_replace($p, ['title' => 'Periode med intro',
+        'end_date' => '2030-01-21', 'visible_from' => '2029-12-01T00:00:00Z', 'visible_until' => '2030-02-01T00:00:00Z']));
+    $introFields = ['title' => 'Introkurs', 'weekday' => 1, 'first_date' => '2029-12-03', 'latest_date' => '2029-12-03', 'session_count' => 1,
+        'start_time' => '11:00', 'end_time' => '13:30', 'registration_status' => 'available',
+        'registration_url' => 'https://www.letsreg.com/event/synthetic-intro'];
+    $reject(fn () => $repo->createGroup($introPeriod, $course, $introFields), 'Tidlig kursstart uten bekreftelse ble tillatt.');
+    $reject(fn () => $repo->createGroup($introPeriod, $course, $introFields + ['allow_early_start' => false]), 'Avslått unntak ble tillatt.');
+    $intro = $created[] = $repo->createGroup($introPeriod, $course, $introFields + ['allow_early_start' => true]);
+    $periodBeforeIntro = $repo->get($introPeriod);
+    $introPreview = $repo->previewGroup($intro, 1, []);
+    $assert($introPreview['issues'] === [] && array_column($introPreview['data']['sessions'], 'date') === ['2029-12-03'], 'Godkjent introkurs får feil dato/antall.');
+    $assert(str_contains(implode(' ', $introPreview['warnings']), 'Bekreftet unntak'), 'Forhåndsvisning mangler bekreftet datounntak.');
+    $repo->confirm($introPreview);
+    $introState = $repo->get($intro);
+    $assert($introState['data']['allow_early_start'] === true && $repo->get($introPeriod) === $periodBeforeIntro, 'Datounntaket lagres ikke lokalt eller endrer perioden.');
+    foreach ([['allow_early_start' => false], ['first_date' => '2029-12-04'], ['first_date' => '2030-01-28'],
+        ['breaks' => [array_replace($break, ['from' => '2029-12-02', 'until' => '2029-12-02'])]]] as $badIntro) {
+        $reject(fn () => $repo->previewGroup($intro, 2, $badIntro), 'Datounntaket omgår bekreftelse, ukedag eller datogrenser.');
+    }
+    $assert($repo->get($intro) === $introState, 'Avvist endring skrev til introkurset.');
+    $introSession = $introState['data']['sessions'][0]['id'];
+    $tooEarly = $repo->previewSessionChange($intro, 2, $introSession, ['date' => '2029-12-02', 'status' => 'moved', 'reason' => 'Prøve']);
+    $assert($tooEarly['issues'] !== [], 'Flytting før godkjent første dato ble tillatt.');
+    $normal = $created[] = $repo->createGroup($introPeriod, $course, ['weekday' => 1, 'start_time' => '09:00', 'end_time' => '10:00', 'registration_status' => 'closed']);
+    $normalPreview = $repo->previewGroup($normal, 1, []); $repo->confirm($normalPreview);
+    $assert($normalPreview['data']['sessions'][0]['date'] === '2030-01-07' && !$normalPreview['data']['allow_early_start'], 'Introkurset endrer de vanlige kursene.');
+    $introCopy = $repo->copyPeriod($introPeriod, 1, 'Ny introperiode', '2030-04-01'); $created[] = $introCopy;
+    foreach ($repo->groups($introCopy) as $copiedId => $copiedState) {
+        $created[] = $copiedId;
+        $assert(!$copiedState['data']['allow_early_start'] && $copiedState['data']['first_date'] === null, 'Kopi beholder godkjenning av datounntak.');
+    }
+    $_GET = ['page' => 'reginor-lite', 'group' => (string) $intro]; $_POST = [];
+    ob_start(); CoursePage::render(); $introForm = ob_get_clean();
+    $assert(str_contains($introForm, 'name="data[allow_early_start]" value="0"') && preg_match('/type="checkbox"[^>]*name="data\[allow_early_start\]"[^>]*checked/', $introForm) === 1, 'Bekreftet unntak mangler avkryssing eller verdi ved fjerning.');
+    $assert(str_contains($introForm, 'data-course-start="2029-12-03"'), 'Øktredigering mangler godkjent datogrense.');
+    $formRaw = array_diff_key($introState['data'], array_flip(['period_id', 'course_id', 'period_version', 'sessions', 'letsreg_mapping']));
+    $formRaw = array_map(static fn ($value) => is_array($value) ? $value : (string) $value, $formRaw);
+    $formRaw['price_minor'] = '1200'; $formRaw['allow_early_start'] = '0';
+    $parsed = \RegiNor\Lite\Admin\CourseActions::parse('group', $formRaw, $introState['data']);
+    $assert($parsed['allow_early_start'] === false, 'Uavkrysset skjema tolkes som godkjent unntak.');
+    $formRaw['allow_early_start'] = '1';
+    $assert(\RegiNor\Lite\Admin\CourseActions::parse('group', $formRaw, $introState['data'])['allow_early_start'] === true, 'Avkrysset skjema mister unntaket.');
+    $overlap = $created[] = $repo->createGroup($introPeriod, $course, $introFields + ['allow_early_start' => true]);
+    $overlapPreview = $repo->previewGroup($overlap, 1, []);
+    $assert($overlapPreview['conflicts'] !== [], 'Godkjent datounntak omgår salkollisjoner.');
+    $repo->confirm($overlapPreview);
+    $assert($repo->previewPublication($introPeriod, 1, true)['errors'] !== [], 'Godkjent datounntak tillater publisering med kollisjon.');
+    $repo->groupLifecycle($overlap, 2, 1, false);
+    $publication = $repo->previewPublication($introPeriod, 1, true);
+    $assert($publication['errors'] === [] && str_contains(implode(' ', $publication['warnings']), 'Introkurs: Bekreftet unntak'), 'Publisering stopper godkjent intro eller mangler kursnavn og unntak.');
+    $repo->publish($publication);
+    $introCatalog = (new Catalog($clock))->read(); $introPublic = $introCatalog['groups'][$intro];
+    $assert($introPublic['early_start'] && $introPublic['count'] === 1 && $introPublic['first'] === '2029-12-03T10:00:00Z', 'Offentlig dato eller antall for introkurs er feil.');
+    $introSchema = SchemaPresenter::group($introPublic, PublicSite::url($intro));
+    $assert($introSchema['hasCourseInstance']['startDate'] === $introPublic['first'] && count($introSchema['hasCourseInstance']['courseSchedule']) === 1, 'Schema bruker periodestart i stedet for introøkten.');
+    $introWeek = (new Renderer())->render($introCatalog, ['rnl_period' => $introPeriod, 'rnl_view' => 'week']);
+    $assert(str_contains($introWeek, 'Dato: 3. desember 2029'), 'Ukeskalenderen mangler den faktiske datoen for introøkten før perioden.');
+    $calendarEvents = get_post_meta($intro, \RegiNor\Lite\Infrastructure\CourseCalendar::META, true)['default'];
+    $ics = \RegiNor\Lite\Domain\Calendar\ICalendar::render('Intro', 'synthetic-intro', $calendarEvents);
+    $assert(str_contains($ics, 'DTSTART:20291203T100000Z') && substr_count($ics, 'BEGIN:VEVENT') === 1, 'Kalenderfilen bruker ikke den ene faktiske introøkten.');
+    $clock->time = '2029-11-30T23:59:59Z';
+    $assert(!isset((new Catalog($clock))->read()['groups'][$intro]), 'Datounntaket omgår synlighetsvinduet.');
 } finally {
     remove_action('wpml_register_single_string', $register, 10); remove_filter('gettext', $strings, 10); remove_filter('wpml_translate_single_string', $dynamic, 10);
     if ($pageFilter) { remove_filter('wpml_object_id', $pageFilter, 10); }

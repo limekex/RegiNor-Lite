@@ -2,7 +2,7 @@
 
 WordPress-plugin for SalsaNors kursoversikt og kursadministrasjon. WordPress eier kursinnhold og timeplan; LetsReg håndterer påmelding og betaling.
 
-**Status 23. september 2026: M0–M4 og M4.1 implementert lokalt, pluginversjon 0.1.14.** Kursadministrasjon, frontend, navnebaserte permalenker og delingsmetadata er levert. M5 har kurskobling/import, automatisk påmeldingsstatus og kategoriers øvre kapasitetsgrenser, med avgrenset faktisk lesetest. Faktisk Avada/WPML/SEO-staging, cache/CDN, brukertest og produksjonsdrift for API-et gjenstår. [Roadmapen](docs/ROADMAP.md) skiller leverte funksjoner fra åpne godkjenningspunkter.
+**Status 25. september 2026: M0–M4 og M4.1 implementert lokalt, pluginversjon 0.1.24.** Kursadministrasjon, frontend, navnebaserte permalenker og delingsmetadata er levert. M5 har kurskobling/import, automatisk påmeldingsstatus og kategoriers øvre kapasitetsgrenser, med avgrenset faktisk lesetest. Faktisk Avada/WPML/SEO-staging, cache/CDN, brukertest og produksjonsdrift for API-et gjenstår. [Roadmapen](docs/ROADMAP.md) skiller leverte funksjoner fra åpne godkjenningspunkter.
 
 **Styrende UI-krav:** Løsningen skal være intuitiv for brukere med lite eller ingen digital kompetanse, og samtidig elegant. Se [krav til brukeropplevelse](docs/BRUKEROPPLEVELSE.md).
 
@@ -14,7 +14,15 @@ WordPress-plugin for SalsaNors kursoversikt og kursadministrasjon. WordPress eie
 
 - [LetsReg-endringer og beskrivelsesgjenbruk](docs/LETSREG-ENDRINGER-OG-BESKRIVELSER.md) – kildevarsler, før/etter, delte beskrivelser og vern av lokale endringer.
 
-- [Nyeste testutgave – 0.1.14](docs/releases/0.1.14.md) – kontroll av faktisk TEC-lagring og reserveoppdatering av samme oppføring. Faktisk Pro-stage må bekreftes.
+- [Nyeste testutgave – 0.1.24](docs/releases/0.1.24.md) – entallsdag og dato for én kveld, med egen tidsakse per kalenderdag.
+- [Testutgave – 0.1.22](docs/releases/0.1.22.md) – formell Consent API-erklæring og direkte kontroll av API-samtykke i nettleser og server.
+- [Testutgave – 0.1.21](docs/releases/0.1.21.md) – kortkoder for kampanjesider med nivåutvalg, fremheving og uavhengige visningsvalg. Kladdrettingen fra 0.1.20 følger med.
+- [Testutgave – 0.1.19](docs/releases/0.1.19.md) – valgfri sporing av kurslagring og databaseforbindelse; produksjonsblokkeringen er fortsatt åpen.
+- [Testutgave – 0.1.18](docs/releases/0.1.18.md) – konkret kødiagnose og lesende kontroll for webhotellet; 504-årsaken er fortsatt uavklart.
+- [Testutgave – 0.1.17](docs/releases/0.1.17.md) – kalenderoppdatering i bakgrunnen og konkret skille mellom lagringsfeil og versjonskonflikt.
+- [Testutgave – 0.1.16](docs/releases/0.1.16.md) – separate låser for kalenderoppdatering og kurslagring, med tydeligere databasefeil.
+- [Testutgave – 0.1.15](docs/releases/0.1.15.md) – samtykkerekkefølge og samlet tilbaketrekking.
+- [Testutgave – 0.1.14](docs/releases/0.1.14.md) – kontroll av faktisk TEC-lagring og reserveoppdatering av samme oppføring. Faktisk Pro-stage må bekreftes.
 - [Cache og kursoppdatering](docs/CACHE-OG-KURSOPPDATERING.md) – konkrete funn og oppsett for Cloudflare/LiteSpeed.
 - [Kurs uten LetsReg](docs/LOKAL-PAMELDING-OG-DROPIN.md) – egen lenke og kun drop-in.
 - [Felles LetsReg-mal](docs/LETSREG-BESKRIVELSESMAL.md) – markører og ferdig Rueda-eksempel. [E-postutkast til Erik](docs/EPOST-ERIK-BESKRIVELSESMAL.md).
@@ -28,6 +36,7 @@ WordPress-plugin for SalsaNors kursoversikt og kursadministrasjon. WordPress eie
 
 - [Påmeldingsstatus](docs/PAMELDINGSSTATUS.md) – AJAX-meny per kurs uten ny publisering, automatisk LetsReg-status, manuell overstyring og oppdateringsintervaller.
 
+- [Kortkoder for kampanjesider](docs/KORTKODER-OG-KAMPANJESIDER.md) – egne nivåutvalg, fremhevede kurs og visningsvalg per innbygging.
 - [Kursnivåer](docs/KURSNIVAER.md) – eget nivåutvalg, nivå på enkeltkurs og frontendfilter som erstatter målgruppevalget.
 - [Backend: UI- og stilgjennomgang](docs/BACKEND-STILGJENNOMGANG.md) – konkrete avvik, rettelser og gjenstående visuell kontroll.
 
@@ -79,7 +88,10 @@ npm run lint
 npm run test:local-config
 composer test
 npm run test:wordpress
+npm run test:translations
 npm run test:storage
+npm run test:mutation-trace
+npm run test:mutation-cache
 npm run test:calendar
 npm run test:levels
 npm run test:capacity

@@ -22,18 +22,19 @@ Periodesiden viser status for kalenderdelingen og en direkte lenke til kursrekke
 
 Under **RegiNor Lite → Nettsidevisning → Arrangementskalender** kan administrator velge én fast arrangementskategori fra TECs eksisterende taksonomi `tribe_events_cat`, samt et valgfritt standard fremhevet bilde fra WordPress-mediebiblioteket. En lenke åpner TECs kategoriadministrasjon dersom kategorien må opprettes først. Ingen kategori eller bildefil opprettes automatisk.
 
-Valgene lagres separat fra kurssidevalget og gjelder alle RegiNor-koblede kalenderoppføringer. Lagre oppdaterer allerede synlige oppføringer uten å opprette nye arrangementer. Skjulte oppføringer får gjeldende valg når de blir synlige igjen. «Ingen fast kategori» og «Fjern bilde» fjerner det tidligere valget fra oppføringene ved lagring. Slettede kategorier og mediebilder behandles som tomme valg ved neste synkronisering. Uavhengige TEC-arrangementer endres ikke.
+Valgene lagres separat fra kurssidevalget og gjelder alle RegiNor-koblede kalenderoppføringer. Lagre legger oppdateringen i bakgrunnskø. Allerede synlige oppføringer oppdateres uten å opprette nye arrangementer. Skjulte oppføringer får gjeldende valg når de blir synlige igjen. «Ingen fast kategori» og «Fjern bilde» fjerner det tidligere valget fra oppføringene ved neste bakgrunnskontroll. Slettede kategorier og mediebilder behandles som tomme valg ved neste synkronisering. Uavhengige TEC-arrangementer endres ikke.
 
 Bildet settes som arrangementets vanlige WordPress-fremhevede bilde, slik at TEC/temaets bildevisninger kan bruke det. Kalenderens valgte visning avgjør hvor bildet vises; det påtvinges ikke alle månedskalenderruter. Se [TECs bildefunksjon](https://docs.theeventscalendar.com/reference/functions/tribe_event_featured_image/). Det er ingen ekstra bildeoverstyring per periode i denne leveransen.
 
 ### Oppdatering
 
 - Opprettelse og oppdatering bruker TECs ORM. Stabil kobling mellom periode-ID og arrangement-ID hindrer duplikater. Koblingen kan gjenfinnes fra arrangementet hvis lagringen ble avbrutt. [TECs API for opprettelse](https://docs.theeventscalendar.com/apis/orm/create/events/).
-- Synkronisering kjøres før offentlige WordPress-spørringer og etter fullført RegiNor-skriving ved requestens slutt. Samme databaselås som kurslagringen hindrer at mellomtilstander leses under publisering. Dette krever ingen ekstern webhook.
-- Ved kladd, avkrysset kalenderdeling, avlysning, slettet periode eller utløpt synlighetsvindu settes egne TEC-oppføringer til kladd. Ingen kalenderfiler som besøkende allerede har lastet ned kan tilbakekalles.
+- Fra **0.1.17** skjer TEC-skriving bare i bakgrunnsjobben, ikke i sidelasting, innsendt skjema eller avslutningshook. RegiNor-endringer legger én deduplisert jobb i kø, tidligst fem sekunder senere. En periodisk kontroll hvert femte minutt håndterer også tidsvinduer og nye forsøk. Tidspunktene avhenger av at WordPress-cron faktisk kjører.
+- Kalenderarbeidet bruker egen lås. Kurslagringens lås beskytter bare lesing av kildegrunnlaget; opptatte låser gir plass til annet arbeid. En nyere kladdstatus gjelder ved offentlig lesing selv om kalenderkopien venter på oppdatering.
+- Ved kladd, avkrysset kalenderdeling, avlysning, slettet periode eller utløpt synlighetsvindu skjules egne TEC-oppføringer fra offentlig lesing; bakgrunnsjobben setter også kalenderkopien til kladd. Oppføringen og dens ID beholdes og gjenbrukes ved republisering. Ingen kalenderfiler som besøkende allerede har lastet ned kan tilbakekalles.
 - Offentlige spørringer og direkte REST-oppslag har tilleggskontroll mot RegiNors synlighet. En foreldet publisert kopi skal ikke bli offentlig hvis en synkronisering feiler.
 - Kalenderens HTML-cache omgås når den inneholder RegiNor-oppføringer. Kalender-/REST-svar får `no-store`. Ekstern sidecache/CDN og Avadas eventuelle egen caching må fortsatt kontrolleres i staging.
-- Feil ved opprettelse/oppdatering rapporteres på perioden; kursdataene beholdes. Ny lasting prøver igjen. Det er ingen separat bakgrunnskø; neste request håndterer også åpning og lukking av tidsvinduer.
+- Feil ved opprettelse/oppdatering rapporteres på perioden; kursdataene beholdes. Neste bakgrunnsjobb prøver igjen. Kø som har ventet over ti minutter, manglende registrert fullføring etter tre minutter og mislykket kølegging får egne kontrollkoder. Åpning av synlighetsvindu kan vises først etter neste vellykkede jobb; lukking og kladd håndheves også uten kalenderlagring.
 - Kopiering lager en ny periode uten gammel arrangement-ID. Kalenderdeling kan følge med som valg, men kopien er kladd med nullstilte synlighetsvinduer og vises derfor ikke før ordinær publisering.
 
 ## Språk og avgrensning
@@ -73,3 +74,17 @@ TEC oppgir selv problemet BTRIA-2310 i [ORM-oppdateringsdokumentasjonen](https:/
 Det samme gjelder avpublisering. Ingen ekstra oppføring opprettes ved mislykket oppdatering. En mislykket reserveoppdatering gir et varsel med arrangements-ID, navn på avvikende felt og resultatkoder, uten rå unntak, innhold eller serverhemmeligheter. Kladd/synlighet og eierskapsvern beholdes.
 
 Dette er lokalt testet ved feilinjeksjon i faktisk TEC. Den eksakte feilårsaken i Pro-stage er fortsatt ikke verifisert.
+
+## Drift av bakgrunnsjobben – 0.1.17
+
+Jobbene heter `rnl_tec_sync_soon` og `rnl_tec_sync_periodic`. De fjernes ved deaktivering. Administrator må sikre fungerende WP-Cron eller servercron, særlig hvis `DISABLE_WP_CRON` brukes. RegiNor endrer ikke hostingens cron-oppsett. Se [WordPress om cron](https://developer.wordpress.org/plugins/cron/) og [serverbasert kjøring](https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/).
+
+Det opprettes **én TEC-oppføring per kursperiode**, ingen oppføring per enkeltkurs. Lokal tilbakeføring til kladd oppdaterer status og historikk på eksisterende kurs etter tur i én transaksjon. Dette oppretter ikke kursene på nytt. WordPress-lagringshooks kjøres fortsatt, slik at andre utvidelser kan påvirke varigheten. Bakgrunnsflyttingen av TEC er ikke en garanti mot andre database- eller hookproblemer.
+
+Lokal HTTP-test avdekket også at reserveoppdateringen feilet når TECs datovelgerformat var tomt. RegiNor bruker nå standardformatet i dette tilfellet, uten å endre TEC-innstillingen. Dette forklarer en lokal feil, ikke nødvendigvis tidsavbruddet i produksjon.
+
+## Kødiagnose – 0.1.18
+
+`RNL-TEC-SCHEDULE` er en feilkode, ikke en cron-hook. RegiNor-jobbene ligger i WordPress-cron, ikke TECs Action Scheduler. Under kalenderoppsettet finnes en sammenleggbar teknisk status med faktisk køtid for de to jobbene, siste start/avslutning, nettsteds-ID og informasjon om besøksutløst cron. I flernettstedsoppsett må riktig nettstedsadresse velges også i WP-CLI.
+
+En køfeil viser nå om WordPress ikke fikk lagret cron-optionen, et filter avviste planleggingen, eller en annen feil oppstod. Eksisterende jobb etter en konkurrerende planlegging godtas, men ikke en ubekreftet duplikatmelding alene. Dette løser ikke aktive databaseblokkeringer. Se [hostingkontrollen](HOSTING-DATABASEKONTROLL.md).

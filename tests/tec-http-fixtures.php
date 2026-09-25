@@ -46,6 +46,7 @@ add_filter('tribe_repository_events_update_callback', $failedOrm);
 try { $repo->publish($repo->previewPublication($period, 1, true)); TecBridge::sync(); }
 finally { remove_filter('tribe_repository_events_update_callback', $failedOrm); }
 $event = (int) get_post_meta($period, TecBridge::EVENT, true); if (!$event) throw new RuntimeException('TEC projection failed');
+if (get_post_status($event) !== 'publish' || get_post_meta($period, TecBridge::ERROR, true)) throw new RuntimeException('TEC worker did not finish; HTTP must not repair it synchronously.');
 WP_CLI::line(wp_json_encode(['period' => $period, 'event' => $event, 'title' => $repo->get($period)['data']['title'], 'url' => PublicSite::url(null, ['rnl_period' => $period]),
     'calendar' => add_query_arg(['eventDisplay' => 'month', 'eventDate' => $date->format('Y-m')], tribe_get_events_link()),
     'start' => $date->format('Y-m-d'), 'end' => $end]));

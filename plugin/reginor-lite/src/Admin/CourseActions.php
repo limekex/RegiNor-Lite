@@ -183,7 +183,7 @@ final class CourseActions
                 if ($value !== '' && !preg_match('/^-?\d{1,3}(?:\.\d{1,10})?$/D', $value)) { throw new InvalidArgumentException(__('Oppgi en gyldig koordinat, for eksempel 59.913900.', 'reginor-lite')); }
                 $data[$key] = $value === '' ? null : (float) $value;
             } elseif ($key === 'instructor_ids') { $data[$key] = self::ids($raw[$key] ?? []);
-            } elseif (in_array($key, ['appearance_custom', 'featured', 'dropin_enabled', 'calendar_enabled', 'price_from'], true)) { $data[$key] = in_array($raw[$key] ?? false, [true, 1, '1'], true);
+            } elseif (in_array($key, ['appearance_custom', 'featured', 'dropin_enabled', 'calendar_enabled', 'price_from', 'allow_early_start'], true)) { $data[$key] = in_array($raw[$key] ?? false, [true, 1, '1'], true);
             } elseif (($schema['type'] ?? '') === 'boolean') { $data[$key] = isset($raw[$key]);
             } elseif (str_ends_with($key, 'price_minor')) {
                 $price = str_replace(',', '.', self::scalar($raw, $key));

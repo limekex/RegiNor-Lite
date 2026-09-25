@@ -343,9 +343,19 @@ final class CourseRepository
         if (strlen(serialize($next)) > 2 * 1024 * 1024) {
             throw new RuntimeException(__('Historikken har nådd lagringsgrensen. Ingen data er overskrevet; kontakt administrator.', 'reginor-lite'));
         }
+        global $wpdb;
+        $wpdb->last_error = '';
+        MutationTrace::phase('metadata.write', $id);
         if (!update_post_meta($id, ContentTypes::META, wp_slash($next), $previous)) {
-            throw new VersionConflict();
+            $databaseError = $wpdb->last_error !== '';
+            wp_cache_delete($id, 'post_meta');
+            $current = get_post_meta($id, ContentTypes::META, true);
+            if ($databaseError || $current === $previous) {
+                throw new RuntimeException(sprintf(/* translators: %d: course object ID for support. */ __('Lagringen av kursobjekt #%d ble avvist. Dette bekrefter ikke at en annen bruker har endret oppsettet. Last siden på nytt og kontroller lagret status. Hvis feilen gjentar seg, må administrator undersøke databasefeil og utvidelser som påvirker lagring. Kontrollkode: RNL-DB-WRITE.', 'reginor-lite'), $id), 503);
+            }
+            throw new VersionConflict(sprintf(/* translators: %d: course object ID. */ __('Kursobjekt #%d ble endret under lagringen. Ingen eldre versjon er skrevet over. Last siden på nytt og sammenlign oppsettet før du prøver igjen. Kontrollkode: RNL-WRITE-CONFLICT.', 'reginor-lite'), $id));
         }
+        MutationTrace::phase('metadata.done', $id);
         return $next;
     }
 
@@ -406,7 +416,7 @@ final class CourseRepository
     private function assertVersion(array $state, int $expected): void
     {
         if ($state['version'] !== $expected) {
-            throw new VersionConflict();
+            throw new VersionConflict(sprintf(/* translators: 1: course object title, 2: submitted version, 3: current version. */ __('«%1$s» er endret siden siden ble åpnet. Du sendte versjon %2$d, mens lagret versjon er %3$d. Last siden på nytt og kontroller endringene før du prøver igjen. Kontrollkode: RNL-VERSION.', 'reginor-lite'), $state['data']['title'], $expected, $state['version']));
         }
     }
 
@@ -511,6 +521,7 @@ final class CourseRepository
 
     private function windowWarnings(array $group, array $period): array
     {
+        $warnings = PlanningBounds::warnings($group, $period);
         $outside = [];
         foreach ($group['sessions'] as $session) {
             if ($session['status'] === 'cancelled') { continue; }
@@ -519,15 +530,16 @@ final class CourseRepository
                 $outside[] = $session['date'];
             }
         }
-        if (!$outside) { return []; }
+        if (!$outside) { return $warnings; }
         sort($outside);
         $local = static fn (string $utc): string => (new DateTimeImmutable($utc))->setTimezone(new \DateTimeZone($period['timezone']))->format('d.m.Y H:i');
-        return [sprintf(
+        $warnings[] = sprintf(
             /* translators: 1: number of sessions, 2: earliest affected date, 3: latest affected date, 4: visibility start, 5: visibility end, 6: timezone. */
             __('%1$d kurskvelder (første berørte dato: %2$s, siste: %3$s) ligger helt eller delvis utenfor tidsrommet kursoversikten vises på nettsiden: %4$s – %5$s (%6$s). Dette er informasjon og blokkerer ikke lagring eller publisering. Kursdatoene beholdes. Endre «Synlig fra» eller «Synlig til» i kursperioden bare hvis oversikten skal vises tidligere eller senere.', 'reginor-lite'),
             count($outside), $outside[0], $outside[count($outside) - 1],
             $period['visible_from'] ? $local($period['visible_from']) : __('ingen fast start', 'reginor-lite'),
             $period['visible_until'] ? $local($period['visible_until']) : __('ingen fast slutt', 'reginor-lite'), $period['timezone']
-        )];
+        );
+        return $warnings;
     }
 }

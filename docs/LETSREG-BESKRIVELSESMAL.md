@@ -23,6 +23,12 @@ Dato, sal, instruktører, varighet, faktisk pris og kursnivå styres fortsatt av
 
 Eksisterende importert ren tekst får ikke tilbake tapt formatering automatisk. Hent arrangementet på nytt og gjennomgå tekstforskjellen under Endringer hos LetsReg før oppdatering av eksisterende beskrivelse. Lokale redigeringer og delte beskrivelser beskyttes fortsatt. Forhåndsvisning og før/etter viser den rike teksten; tekstfeltene kan inneholde enkel HTML. Fra 0.1.10 har tekstfeltene en visuell editor med fanene Visuell og HTML. Avsnitt, lenker og formatering synkroniseres med vanlige skjemaer og enkelt-/bulkimport.
 
+## Introkurs med én samling
+
+Bruk [introkursvarianten med enkel HTML](SALSA-INTROKURS-LETSREG.md) for en 2,5-timers introduksjon til salsa. Den bruker de samme fem markørene og gjenkjennes av eksisterende import. Ingen egen markør eller ny kurstype er nødvendig for tekstfordelingen. Partnerinformasjon kan stå tom når ordningen ikke er oppgitt; behold overskriften.
+
+Lokalt skal kurset ha én faktisk økt med riktig dato, start/slutt og sal. Kontroller **antall kurskvelder = 1** i importen, også når kursperioden varer flere uker. Filterets kursnivå velges separat; et aktivt nivå med navnet «Introkurs» kan foreslås fra arrangementsnavnet ved entydig treff. Beskrivelsen setter ikke timeplan eller nivåvalg automatisk. Introkurseksemplet har en egen tabell for lokalt oppsett.
+
 ## Ferdig eksempel for Rueda
 
 Kopier innholdet nedenfor fra «Kursbeskrivelse». Fet skrift på markørene er valgfritt. Eksemplet bygger på oppgitt kurs; kontroller datoer, personer, rabattvilkår og lenker før bruk på et annet arrangement.

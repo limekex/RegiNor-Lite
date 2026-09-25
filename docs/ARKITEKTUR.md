@@ -57,6 +57,9 @@ Rå REST-skriving og generiske CPT-editorer er slått av. Sprint 3 har publiseri
 
 `CourseWorkflow` utvider repository med avgrensede ressursoppslag, erstatningskvelder, publiseringsforslag, kopiering og statusendringer. `Mutation` låser alle repository-skrivere på tvers av perioder og bruker InnoDB-transaksjoner ved samlede operasjoner. Både gruppeversjoner, relevante ressursopplysninger og konflikter kontrolleres på nytt før publisering. Vindusbekreftelser er en del av det signerte forslaget.
 
+Fra 0.1.20 beholdes WordPress' standard, forespørselslokale objektcache under transaksjonen. Tidligere global sperre mot cache-priming ga gjentatte SQL-oppslag i lagringshooks. Standard minnecache ryddes ved transaksjonsgrensen før objektspesifikk opprydding, også etter rollback, slik at ubekreftede leseresultater ikke lever videre i forespørselen. Ekstern/ikke-standard objektcache beholder eksisterende policy. Sidecache/CDN og øvrige WordPress-hooks endres ikke. Se [testbevis og avgrensning](releases/0.1.20.md).
+
+
 Publisert oppsett tas eksplisitt tilbake til kladd før redigering. Ingen skjult kopi av en publisert versjon holdes offentlig under redigering i denne første arbeidsflyten. Avlyste økter kan beholdes uten erstatning eller få en separat erstatningsøkt; den gamle identiteten bevares.
 
 Kursansvarligrollen opprettes uten generelle redaktørrettigheter. Bare perioder og grupper kan endres; profiloppslag returnerer ID/navn og ressursoppslag bare definerte presentasjonsfelter. Tilgangskontroll bygger på [WordPress-capabilities](https://developer.wordpress.org/plugins/users/roles-and-capabilities/) og eksplisitt [CPT-mapping](https://developer.wordpress.org/reference/functions/register_post_type/). Se [sprint 3](SPRINT-03.md) for driftspremisser og manglende staging-/brukertester.

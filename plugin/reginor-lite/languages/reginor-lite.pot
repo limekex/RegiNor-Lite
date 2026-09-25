@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the RegiNor Lite plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: RegiNor Lite 0.1.14\n"
+"Project-Id-Version: RegiNor Lite 0.1.24\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/reginor-lite\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-23T05:32:27+00:00\n"
+"POT-Creation-Date: 2026-09-25T19:08:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: reginor-lite\n"
@@ -188,8 +188,8 @@ msgid "Interesse per kurs"
 msgstr ""
 
 #: src/Admin/AnalyticsPage.php:48
-#: src/Admin/CoursePage.php:458
-#: src/Admin/CoursePage.php:717
+#: src/Admin/CoursePage.php:461
+#: src/Admin/CoursePage.php:720
 #: src/Infrastructure/ContentTypes.php:33
 msgid "Kurs"
 msgstr ""
@@ -211,7 +211,7 @@ msgid "Full kjøpskobling krever verifisert referanse og bekreftelse fra LetsReg
 msgstr ""
 
 #: src/Admin/AppearancePage.php:16
-#: src/Admin/CoursePage.php:573
+#: src/Admin/CoursePage.php:576
 msgid "Utseende"
 msgstr ""
 
@@ -326,6 +326,7 @@ msgid "Vanlig bakgrunn for kurs i liste, kalender og detaljer."
 msgstr ""
 
 #: src/Admin/AppearancePage.php:58
+#: assets/block.js:29
 msgid "Fremhevede kurs"
 msgstr ""
 
@@ -364,56 +365,56 @@ msgstr ""
 #: src/Admin/AppearancePage.php:64
 #: src/Admin/AppearancePage.php:76
 #: src/Admin/CapacityPage.php:74
-#: src/Admin/CoursePage.php:322
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:325
+#: src/Admin/CoursePage.php:475
 #: src/Frontend/Renderer.php:15
 msgid "Mandag"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:64
 #: src/Admin/CapacityPage.php:74
-#: src/Admin/CoursePage.php:322
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:325
+#: src/Admin/CoursePage.php:475
 #: src/Frontend/Renderer.php:15
 msgid "Tirsdag"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:64
 #: src/Admin/CapacityPage.php:74
-#: src/Admin/CoursePage.php:322
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:325
+#: src/Admin/CoursePage.php:475
 #: src/Frontend/Renderer.php:15
 msgid "Onsdag"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:64
 #: src/Admin/CapacityPage.php:74
-#: src/Admin/CoursePage.php:322
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:325
+#: src/Admin/CoursePage.php:475
 #: src/Frontend/Renderer.php:15
 msgid "Torsdag"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:64
 #: src/Admin/CapacityPage.php:74
-#: src/Admin/CoursePage.php:322
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:325
+#: src/Admin/CoursePage.php:475
 #: src/Frontend/Renderer.php:15
 msgid "Fredag"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:64
 #: src/Admin/CapacityPage.php:74
-#: src/Admin/CoursePage.php:322
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:325
+#: src/Admin/CoursePage.php:475
 #: src/Frontend/Renderer.php:15
 msgid "Lørdag"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:64
 #: src/Admin/CapacityPage.php:74
-#: src/Admin/CoursePage.php:322
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:325
+#: src/Admin/CoursePage.php:475
 #: src/Frontend/Renderer.php:15
 msgid "Søndag"
 msgstr ""
@@ -439,19 +440,19 @@ msgid "Hva skal besøkende se først?"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:72
-#: assets/block.js:13
+#: assets/block.js:18
 msgid "Bruk kursperiodens valg"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:72
-#: src/Frontend/Renderer.php:86
+#: src/Frontend/Renderer.php:111
 msgid "Kursliste"
 msgstr ""
 
 #: src/Admin/AppearancePage.php:72
-#: src/Admin/CoursePage.php:97
-#: src/Frontend/Renderer.php:86
-#: assets/block.js:13
+#: src/Admin/CoursePage.php:98
+#: src/Frontend/Renderer.php:111
+#: assets/block.js:18
 msgid "Ukeskalender"
 msgstr ""
 
@@ -526,7 +527,7 @@ msgid "Avadas globale farger hentes fra nettstedet. Kontroller resultatet på ku
 msgstr ""
 
 #: src/Admin/AppearancePage.php:83
-#: src/Admin/CoursePage.php:349
+#: src/Admin/CoursePage.php:352
 msgid "Henter nettstedets globale farger"
 msgstr ""
 
@@ -605,7 +606,7 @@ msgid "Fjern bilde"
 msgstr ""
 
 #: src/Admin/CalendarSettings.php:74
-msgid "Kalenderdeling aktiveres fortsatt på hver kursperiode. Når du lagrer, oppdateres kalenderoppføringene som allerede er synlige. Fjerner du kategori eller bilde her, fjernes det også fra disse oppføringene."
+msgid "Kalenderdeling aktiveres fortsatt på hver kursperiode. Når du lagrer, legges kalenderoppdateringen i kø og utføres i bakgrunnen. Fjerner du kategori eller bilde her, fjernes det også fra disse oppføringene ved neste kontroll."
 msgstr ""
 
 #: src/Admin/CalendarSettings.php:75
@@ -626,7 +627,7 @@ msgstr ""
 
 #: src/Admin/CalendarSettings.php:82
 #: src/Admin/CapacityPage.php:73
-#: src/Frontend/Renderer.php:71
+#: src/Frontend/Renderer.php:94
 msgid "Kursperiode"
 msgstr ""
 
@@ -636,6 +637,40 @@ msgstr ""
 
 #: src/Admin/CalendarSettings.php:82
 msgid "Lenker"
+msgstr ""
+
+#: src/Admin/CalendarSettings.php:96
+msgid "Ikke registrert"
+msgstr ""
+
+#: src/Admin/CalendarSettings.php:97
+msgid "Teknisk status for kalenderkøen"
+msgstr ""
+
+#: src/Admin/CalendarSettings.php:97
+msgid "RegiNor bruker WordPress-cron. Jobbene nedenfor vises ikke i Action Scheduler. Tidspunkt i køen bekrefter ikke at jobben har kjørt."
+msgstr ""
+
+#. translators: %d: WordPress site ID.
+#: src/Admin/CalendarSettings.php:98
+#, php-format
+msgid "Nettsteds-ID: %d. Kontroller køen for dette nettstedet hvis installasjonen har flere nettsteder."
+msgstr ""
+
+#: src/Admin/CalendarSettings.php:104
+msgid "Siste start"
+msgstr ""
+
+#: src/Admin/CalendarSettings.php:104
+msgid "Siste avslutning eller køfeil"
+msgstr ""
+
+#: src/Admin/CalendarSettings.php:108
+msgid "Besøksutløst WordPress-cron er slått av. Administrator må bekrefte at servercron kjører; dette kan ikke avgjøres fra denne innstillingen alene."
+msgstr ""
+
+#: src/Admin/CalendarSettings.php:109
+msgid "Besøksutløst WordPress-cron er ikke slått av. Dette bekrefter ikke at serverens tilbakekall fungerer."
 msgstr ""
 
 #: src/Admin/CapacityPage.php:20
@@ -941,7 +976,7 @@ msgid "Ugyldig lokalt tidspunkt."
 msgstr ""
 
 #: src/Admin/CoursePage.php:29
-#: src/Frontend/Renderer.php:74
+#: src/Frontend/Renderer.php:97
 #: assets/letsreg-picker.js:139
 msgid "Kursnivå"
 msgstr ""
@@ -976,7 +1011,7 @@ msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
 #: src/Admin/CoursePage.php:32
-#: src/Admin/CoursePage.php:535
+#: src/Admin/CoursePage.php:538
 #: src/Admin/LetsRegChangesPanel.php:42
 #: src/Admin/LetsRegPage.php:128
 #: assets/letsreg-picker.js:139
@@ -985,36 +1020,36 @@ msgstr ""
 
 #: src/Admin/CoursePage.php:32
 #: src/Admin/CoursePage.php:33
-#: src/Admin/CoursePage.php:512
-#: src/Admin/CoursePage.php:543
+#: src/Admin/CoursePage.php:515
+#: src/Admin/CoursePage.php:546
 #: src/Admin/LetsRegChangesPanel.php:42
 #: src/Admin/LetsRegChangesPanel.php:93
-#: src/Frontend/Renderer.php:169
+#: src/Frontend/Renderer.php:226
 msgid "Kursbeskrivelse"
 msgstr ""
 
 #: src/Admin/CoursePage.php:32
-#: src/Admin/CoursePage.php:543
+#: src/Admin/CoursePage.php:546
 #: src/Admin/LetsRegChangesPanel.php:93
-#: src/Frontend/Renderer.php:170
+#: src/Frontend/Renderer.php:227
 msgid "Nivå og forkunnskaper"
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
 #: src/Admin/CoursePage.php:32
-#: src/Admin/CoursePage.php:535
-#: src/Admin/CoursePage.php:543
+#: src/Admin/CoursePage.php:538
+#: src/Admin/CoursePage.php:546
 #: src/Admin/LetsRegChangesPanel.php:93
-#: src/Frontend/Renderer.php:112
+#: src/Frontend/Renderer.php:169
 msgid "Dansestil"
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
 #: src/Admin/CoursePage.php:32
-#: src/Admin/CoursePage.php:535
-#: src/Admin/CoursePage.php:543
+#: src/Admin/CoursePage.php:538
+#: src/Admin/CoursePage.php:546
 #: src/Admin/LetsRegChangesPanel.php:93
-#: src/Frontend/Renderer.php:171
+#: src/Frontend/Renderer.php:228
 msgid "Partnerinformasjon"
 msgstr ""
 
@@ -1100,6 +1135,10 @@ msgid "En annen første kursdato (valgfritt)"
 msgstr ""
 
 #: src/Admin/CoursePage.php:38
+msgid "Tillat kursstart før kursperioden"
+msgstr ""
+
+#: src/Admin/CoursePage.php:38
 msgid "Absolutt siste dato (valgfritt)"
 msgstr ""
 
@@ -1124,13 +1163,13 @@ msgid "Antall undervisningskvelder"
 msgstr ""
 
 #: src/Admin/CoursePage.php:39
-#: src/Admin/CoursePage.php:458
-#: src/Admin/CoursePage.php:673
+#: src/Admin/CoursePage.php:461
+#: src/Admin/CoursePage.php:676
 msgid "Sal"
 msgstr ""
 
 #: src/Admin/CoursePage.php:40
-#: src/Admin/CoursePage.php:271
+#: src/Admin/CoursePage.php:274
 msgid "Instruktører (valgfritt)"
 msgstr ""
 
@@ -1148,7 +1187,7 @@ msgstr ""
 
 #: src/Admin/CoursePage.php:40
 #: src/Admin/LetsRegChangesPanel.php:103
-#: src/Frontend/Renderer.php:172
+#: src/Frontend/Renderer.php:229
 #: assets/letsreg-picker.js:139
 msgid "Prisvilkår og tillegg"
 msgstr ""
@@ -1176,9 +1215,10 @@ msgid "Forklaring"
 msgstr ""
 
 #: src/Admin/CoursePage.php:41
-#: src/Admin/CoursePage.php:673
+#: src/Admin/CoursePage.php:676
 #: src/Admin/SalesHistoryPanel.php:83
 #: src/Admin/SalesHistoryPanel.php:86
+#: src/Frontend/Renderer.php:188
 msgid "Dato"
 msgstr ""
 
@@ -1223,7 +1263,7 @@ msgid "Undervisning og kursfrie dager må være innenfor denne datoen. La stå t
 msgstr ""
 
 #: src/Admin/CoursePage.php:54
-msgid "Første kursfrie dato, innenfor kursperioden. Eksempel: første dag i høstferien."
+msgid "Første kursfrie dato, innenfor tillatt tidsrom. Et godkjent unntak for tidligere kursstart gjelder også kursets egne fridager. Eksempel: første dag i høstferien."
 msgstr ""
 
 #: src/Admin/CoursePage.php:55
@@ -1235,7 +1275,7 @@ msgid "Forklar kort hvorfor. Eksempel: Høstferie eller salen er opptatt."
 msgstr ""
 
 #: src/Admin/CoursePage.php:57
-msgid "Velg ny kursdato innenfor perioden. Eksempel: neste ledige undervisningsdag."
+msgid "Velg ny kursdato innenfor kursets tillatte tidsrom. En manuelt godkjent første kursdato før perioden utvider tidsrommet for dette kurset. Eksempel: neste ledige undervisningsdag."
 msgstr ""
 
 #: src/Admin/CoursePage.php:58
@@ -1367,424 +1407,428 @@ msgid "Lim inn hele HTTPS-lenken til påmelding. Velg Egen påmeldingslenke for 
 msgstr ""
 
 #: src/Admin/CoursePage.php:90
-msgid "La stå tomt for første valgte ukedag fra kursperiodens start. Fyll bare ut hvis kurset starter senere. Datoen må passe med ukedagen og være innenfor perioden."
+msgid "Jeg bekrefter at dette kurset kan starte før kursperiodens vanlige start. Gjelder bare dette kurset, for eksempel et introkurs. Velg dato i «En annen første kursdato». Sluttdato, synlighet og kollisjonskontroll gjelder fortsatt."
 msgstr ""
 
 #: src/Admin/CoursePage.php:91
-msgid "Valgfritt. Bruk dette hvis undervisningen må være ferdig innen en bestemt dato."
+msgid "La stå tomt for første valgte ukedag fra kursperiodens start. Velg en egen dato hvis kurset starter tidligere eller senere, for eksempel et introkurs før perioden. Tidligere oppstart må bekreftes med avkryssingen nedenfor. Datoen må passe med ukedagen. Periodens sluttdato og synlighetsvindu gjelder fortsatt."
 msgstr ""
 
 #: src/Admin/CoursePage.php:92
-msgid "Forklar hvem kurset passer for med vanlige ord, ikke bare en nivåkode."
+msgid "Valgfritt. Bruk dette hvis undervisningen må være ferdig innen en bestemt dato."
 msgstr ""
 
 #: src/Admin/CoursePage.php:93
-msgid "Forklar om man kan komme alene, og hvordan partnerbytte fungerer."
+msgid "Forklar hvem kurset passer for med vanlige ord, ikke bare en nivåkode."
 msgstr ""
 
 #: src/Admin/CoursePage.php:94
+msgid "Forklar om man kan komme alene, og hvordan partnerbytte fungerer."
+msgstr ""
+
+#: src/Admin/CoursePage.php:95
 msgid "Kursliste er enklest for nye deltakere. Besøkende kan alltid bytte visning selv."
 msgstr ""
 
-#: src/Admin/CoursePage.php:96
+#: src/Admin/CoursePage.php:97
 msgid "Per person"
 msgstr ""
 
-#: src/Admin/CoursePage.php:96
+#: src/Admin/CoursePage.php:97
 msgid "Per par"
 msgstr ""
 
-#: src/Admin/CoursePage.php:96
+#: src/Admin/CoursePage.php:97
 msgid "Valgt kurs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:96
+#: src/Admin/CoursePage.php:97
 msgid "Felles periode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 msgid "Flere nivåer / må avklares"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 msgid "Nybegynnere"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 msgid "Deltakere med erfaring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 msgid "Kursliste – anbefalt"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:18
 #: src/Admin/RegistrationStatusControl.php:62
-#: src/Frontend/Renderer.php:18
-#: src/Frontend/Renderer.php:100
+#: src/Frontend/Renderer.php:19
+#: src/Frontend/Renderer.php:157
 msgid "Må avklares"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:15
 msgid "Egen påmeldingslenke"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:15
 msgid "Kun drop-in"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:15
 msgid "Automatisk fra LetsReg"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:61
 #: src/Frontend/CategoryCapacityPresenter.php:29
 msgid "Åpner senere"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:61
 msgid "Påmelding tilgjengelig"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:61
 #: src/Domain/Capacity/CapacityView.php:32
 #: src/Frontend/CategoryCapacityPresenter.php:29
-#: src/Frontend/Renderer.php:17
+#: src/Frontend/Renderer.php:18
 msgid "Fullt"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:62
 msgid "Venteliste"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
+#: src/Admin/CoursePage.php:98
 #: src/Admin/RegistrationStatusControl.php:62
 #: src/Frontend/CategoryCapacityPresenter.php:30
-#: src/Frontend/Renderer.php:18
+#: src/Frontend/Renderer.php:19
 msgid "Stengt"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
-#: src/Admin/CoursePage.php:383
-#: src/Admin/CoursePage.php:627
+#: src/Admin/CoursePage.php:98
+#: src/Admin/CoursePage.php:386
+#: src/Admin/CoursePage.php:630
 #: src/Admin/LetsRegChangesPanel.php:42
 #: src/Admin/LetsRegPage.php:123
 #: src/Admin/LetsRegPage.php:160
 #: src/Admin/RegistrationStatusControl.php:62
 #: src/Frontend/CategoryCapacityPresenter.php:30
-#: src/Frontend/Renderer.php:18
+#: src/Frontend/Renderer.php:19
 #: assets/letsreg-picker.js:88
 msgid "Avlyst"
 msgstr ""
 
-#: src/Admin/CoursePage.php:97
-#: src/Admin/CoursePage.php:627
+#: src/Admin/CoursePage.php:98
+#: src/Admin/CoursePage.php:630
 msgid "Flyttet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:105
-#: src/Admin/CoursePage.php:122
+#: src/Admin/CoursePage.php:106
+#: src/Admin/CoursePage.php:123
 #: src/Infrastructure/ContentTypes.php:33
 msgid "Kursperioder"
 msgstr ""
 
-#: src/Admin/CoursePage.php:106
-#: src/Admin/CoursePage.php:122
+#: src/Admin/CoursePage.php:107
+#: src/Admin/CoursePage.php:123
 msgid "Kursinnhold og ressurser"
 msgstr ""
 
-#: src/Admin/CoursePage.php:112
+#: src/Admin/CoursePage.php:113
 msgid "Du har ikke tilgang til kursoppsettet."
 msgstr ""
 
-#: src/Admin/CoursePage.php:113
-#: src/Admin/CoursePage.php:146
+#: src/Admin/CoursePage.php:114
+#: src/Admin/CoursePage.php:147
 #: src/Infrastructure/LetsRegMapping.php:48
 msgid "Du har ikke tilgang til å importere kurs fra LetsReg."
 msgstr ""
 
-#: src/Admin/CoursePage.php:122
+#: src/Admin/CoursePage.php:123
 msgid "RegiNor Lite · Kursadministrasjon"
 msgstr ""
 
-#: src/Admin/CoursePage.php:122
+#: src/Admin/CoursePage.php:123
 msgid "Lag et godt kurstilbud, ett steg om gangen. Du kan lagre underveis og kontrollere alt før kursene blir synlige."
 msgstr ""
 
-#: src/Admin/CoursePage.php:123
+#: src/Admin/CoursePage.php:124
 msgid "Alle perioder"
 msgstr ""
 
-#: src/Admin/CoursePage.php:124
-msgid "Endringen er ikke bekreftet. Rett feltene og prøv igjen. Ved versjonskonflikt: åpne siden på nytt og sammenlign med siste lagrede oppsett."
+#: src/Admin/CoursePage.php:125
+msgid "Endringen er ikke bekreftet. Følg beskjeden over før du prøver igjen."
 msgstr ""
 
-#: src/Admin/CoursePage.php:125
+#: src/Admin/CoursePage.php:126
 msgid "Handlingen er fullført. Oppsettet nedenfor viser lagrede verdier."
 msgstr ""
 
-#: src/Admin/CoursePage.php:133
+#: src/Admin/CoursePage.php:134
 #: src/Admin/RegistrationStatusControl.php:53
 msgid "Kurset tilhører en annen periode."
 msgstr ""
 
-#: src/Admin/CoursePage.php:171
+#: src/Admin/CoursePage.php:174
 msgid "ingen sluttdato valgt"
 msgstr ""
 
-#. translators: 1: first allowed teaching date; 2: last allowed date or an unset explanation.
-#: src/Admin/CoursePage.php:172
+#. translators: 1: normal period start; 2: last allowed date or an unset explanation.
+#: src/Admin/CoursePage.php:175
 #, php-format
-msgid "Kursperiodens datogrenser: %1$s – %2$s. Datoer utenfor grensen krever at perioden endres først."
+msgid "Kursperiodens vanlige tidsrom: %1$s – %2$s. Tidligere kursstart velges med «En annen første kursdato» og bekreftes med «Tillat kursstart før kursperioden» under Flere valg. Sluttdatoen gjelder fortsatt."
 msgstr ""
 
-#: src/Admin/CoursePage.php:203
+#: src/Admin/CoursePage.php:206
 msgid "Valgfritt. Forklar nivået med vanlige ord. Forklaringen vises på kursdetaljen når dette nivået er valgt."
 msgstr ""
 
-#: src/Admin/CoursePage.php:204
-msgid "Tidligste undervisningsdag i perioden. Kurs og kursfrie dager må være på eller etter denne datoen."
+#: src/Admin/CoursePage.php:207
+msgid "Vanlig oppstart for kursene i perioden. Et enkeltkurs kan starte tidligere ved å fylle ut «En annen første kursdato» og krysse av «Tillat kursstart før kursperioden» i kursoppsettet. Felles kursfrie dager må være på eller etter periodens start."
 msgstr ""
 
-#: src/Admin/CoursePage.php:212
+#: src/Admin/CoursePage.php:215
 msgid "Eksempel: Salsa nybegynner – høst"
 msgstr ""
 
-#: src/Admin/CoursePage.php:213
+#: src/Admin/CoursePage.php:216
 msgid "Eksempel: Høstferie"
 msgstr ""
 
-#: src/Admin/CoursePage.php:214
+#: src/Admin/CoursePage.php:217
 msgid "Eksempel: Seks kurskvelder. Medlemskap kommer i tillegg."
 msgstr ""
 
-#: src/Admin/CoursePage.php:215
+#: src/Admin/CoursePage.php:218
 msgid "Eksempel: Du trenger ingen danseerfaring."
 msgstr ""
 
-#: src/Admin/CoursePage.php:215
+#: src/Admin/CoursePage.php:218
 msgid "Eksempel: Du kan komme alene. Vi bytter partner underveis."
 msgstr ""
 
-#: src/Admin/CoursePage.php:216
+#: src/Admin/CoursePage.php:219
 msgid "Eksempel: Lær grunnsteg og enkle turer i salsa."
 msgstr ""
 
-#: src/Admin/CoursePage.php:216
+#: src/Admin/CoursePage.php:219
 msgid "Eksempel: Dansegata 12, Trondheim"
 msgstr ""
 
-#: src/Admin/CoursePage.php:217
+#: src/Admin/CoursePage.php:220
 msgid "Eksempel: Øvet 1"
 msgstr ""
 
-#: src/Admin/CoursePage.php:217
+#: src/Admin/CoursePage.php:220
 msgid "Eksempel: For deg som har fullført nybegynnerkurset."
 msgstr ""
 
-#: src/Admin/CoursePage.php:218
+#: src/Admin/CoursePage.php:221
 msgid "Eksempel: Høst 2030 – Trondheim"
 msgstr ""
 
-#: src/Admin/CoursePage.php:223
+#: src/Admin/CoursePage.php:226
 msgid "Kort forklaring av nivået"
 msgstr ""
 
-#: src/Admin/CoursePage.php:228
+#: src/Admin/CoursePage.php:231
 msgid "Bruk Visuell for avsnitt, fet/kursiv tekst, lister og lenker. HTML-fanen viser koden. Lenker åpnes i en ny fane på kurssiden."
 msgstr ""
 
-#: src/Admin/CoursePage.php:231
+#: src/Admin/CoursePage.php:234
 msgid " (påkrevd)"
 msgstr ""
 
-#: src/Admin/CoursePage.php:249
+#: src/Admin/CoursePage.php:252
 msgid "Valget gjelder bare denne oppføringen."
 msgstr ""
 
-#: src/Admin/CoursePage.php:253
+#: src/Admin/CoursePage.php:256
 msgid "Velg …"
 msgstr ""
 
-#: src/Admin/CoursePage.php:259
-#: src/Admin/CoursePage.php:715
+#: src/Admin/CoursePage.php:262
+#: src/Admin/CoursePage.php:718
 msgid "Ikke valgt"
 msgstr ""
 
-#: src/Admin/CoursePage.php:264
+#: src/Admin/CoursePage.php:267
 msgid " (ikke tilgjengelig for nye kurs)"
 msgstr ""
 
-#: src/Admin/CoursePage.php:266
+#: src/Admin/CoursePage.php:269
 msgid "Nivået finnes ikke lenger – velg et annet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:271
+#: src/Admin/CoursePage.php:274
 msgid "Du kan publisere kurset uten å velge instruktør."
 msgstr ""
 
-#: src/Admin/CoursePage.php:273
+#: src/Admin/CoursePage.php:276
 msgid "Ingen instruktørprofiler er valgt. Du kan fortsette uten instruktør."
 msgstr ""
 
-#: src/Admin/CoursePage.php:285
+#: src/Admin/CoursePage.php:288
 msgid "Om kursperioden"
 msgstr ""
 
-#: src/Admin/CoursePage.php:286
+#: src/Admin/CoursePage.php:289
 msgid "Synlighet og påmelding"
 msgstr ""
 
-#: src/Admin/CoursePage.php:287
 #: src/Admin/CoursePage.php:290
-#: src/Admin/CoursePage.php:300
+#: src/Admin/CoursePage.php:293
+#: src/Admin/CoursePage.php:303
 msgid "Flere valg"
 msgstr ""
 
-#: src/Admin/CoursePage.php:288
+#: src/Admin/CoursePage.php:291
 msgid "Undervisning"
 msgstr ""
 
-#: src/Admin/CoursePage.php:289
-#: src/Frontend/Renderer.php:191
+#: src/Admin/CoursePage.php:292
+#: src/Frontend/Renderer.php:248
 msgid "Pris og påmelding"
 msgstr ""
 
-#: src/Admin/CoursePage.php:291
+#: src/Admin/CoursePage.php:294
 msgid "Om kursstedet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:292
+#: src/Admin/CoursePage.php:295
 msgid "Om salen"
 msgstr ""
 
-#: src/Admin/CoursePage.php:293
+#: src/Admin/CoursePage.php:296
 msgid "Om oppføringen"
 msgstr ""
 
-#: src/Admin/CoursePage.php:301
+#: src/Admin/CoursePage.php:304
 msgid "Kursfrie dager og flere valg"
 msgstr ""
 
-#: src/Admin/CoursePage.php:306
+#: src/Admin/CoursePage.php:309
 msgid "Egne påmeldingsdatoer (valgfritt)"
 msgstr ""
 
-#: src/Admin/CoursePage.php:306
+#: src/Admin/CoursePage.php:309
 msgid "La datoene stå tomme for å følge LetsReg i automatisk modus, eller perioden ved manuell status. Egne datoer begrenser dette vinduet."
 msgstr ""
 
-#: src/Admin/CoursePage.php:343
+#: src/Admin/CoursePage.php:346
 msgid "Salens farge i kalenderen"
 msgstr ""
 
-#: src/Admin/CoursePage.php:345
+#: src/Admin/CoursePage.php:348
 msgid "Bruk egen farge for denne salen"
 msgstr ""
 
-#: src/Admin/CoursePage.php:348
+#: src/Admin/CoursePage.php:351
 msgid "Salbakgrunn"
 msgstr ""
 
-#: src/Admin/CoursePage.php:348
+#: src/Admin/CoursePage.php:351
 msgid "Gjelder denne salen på alle dager. Fjern haken for å bruke standardfargen under Utseende."
 msgstr ""
 
-#: src/Admin/CoursePage.php:355
+#: src/Admin/CoursePage.php:358
 msgid "Kursfrie dager og perioder"
 msgstr ""
 
-#: src/Admin/CoursePage.php:355
+#: src/Admin/CoursePage.php:358
 msgid "Legg til ett opphold om gangen, for eksempel høstferien. Datoene må ligge innenfor kursperioden. Opphold kan flytte siste kurskveld; kontroller forslaget før du lagrer."
 msgstr ""
 
-#: src/Admin/CoursePage.php:360
-#: src/Admin/CoursePage.php:362
+#: src/Admin/CoursePage.php:363
+#: src/Admin/CoursePage.php:365
 msgid "Legg til kursfri dag eller periode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:362
+#: src/Admin/CoursePage.php:365
 msgid "Uten JavaScript: legg til ett opphold, lagre og åpne skjemaet igjen for å legge til flere."
 msgstr ""
 
-#: src/Admin/CoursePage.php:371
+#: src/Admin/CoursePage.php:374
 msgid "Fjern dette oppholdet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:377
+#: src/Admin/CoursePage.php:380
 msgid " Opprett kursperiode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:379
+#: src/Admin/CoursePage.php:382
 msgid "Ingen kursperioder ennå. Start med å opprette den første perioden."
 msgstr ""
 
-#: src/Admin/CoursePage.php:381
+#: src/Admin/CoursePage.php:384
 msgid "Alle kursperioder"
 msgstr ""
 
-#: src/Admin/CoursePage.php:381
+#: src/Admin/CoursePage.php:384
 msgid "Alle kursperioder – nyeste øverst"
 msgstr ""
 
-#: src/Admin/CoursePage.php:381
+#: src/Admin/CoursePage.php:384
 msgid "Periode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:381
+#: src/Admin/CoursePage.php:384
 msgid "Sted"
 msgstr ""
 
-#: src/Admin/CoursePage.php:381
+#: src/Admin/CoursePage.php:384
 msgid "Status"
 msgstr ""
 
-#: src/Admin/CoursePage.php:381
+#: src/Admin/CoursePage.php:384
 msgid "Dager"
 msgstr ""
 
-#: src/Admin/CoursePage.php:381
-#: src/Admin/CoursePage.php:458
+#: src/Admin/CoursePage.php:384
+#: src/Admin/CoursePage.php:461
 msgid "Handlinger"
 msgstr ""
 
-#: src/Admin/CoursePage.php:383
+#: src/Admin/CoursePage.php:386
 msgid "Aktiv nå"
 msgstr ""
 
-#: src/Admin/CoursePage.php:383
+#: src/Admin/CoursePage.php:386
 msgid "Neste"
 msgstr ""
 
-#: src/Admin/CoursePage.php:383
+#: src/Admin/CoursePage.php:386
 msgid "Kommende"
 msgstr ""
 
-#: src/Admin/CoursePage.php:383
+#: src/Admin/CoursePage.php:386
 #: src/Admin/RegistrationStatusControl.php:62
-#: src/Frontend/Renderer.php:18
+#: src/Frontend/Renderer.php:19
 msgid "Avsluttet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:384
+#: src/Admin/CoursePage.php:387
 msgid "Neste · "
 msgstr ""
 
-#: src/Admin/CoursePage.php:384
-#: src/Admin/CoursePage.php:433
+#: src/Admin/CoursePage.php:387
+#: src/Admin/CoursePage.php:436
 msgid "Kladd"
 msgstr ""
 
 #. translators: %d: calendar days remaining in the course period.
-#: src/Admin/CoursePage.php:386
+#: src/Admin/CoursePage.php:389
 #, php-format
 msgid "%d dag igjen"
 msgid_plural "%d dager igjen"
@@ -1792,7 +1836,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: calendar days until the course period starts.
-#: src/Admin/CoursePage.php:387
+#: src/Admin/CoursePage.php:390
 #, php-format
 msgid "Oppstart om %d dag"
 msgid_plural "Oppstart om %d dager"
@@ -1800,712 +1844,712 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: calendar days until the course period starts.
-#: src/Admin/CoursePage.php:388
+#: src/Admin/CoursePage.php:391
 msgid "Siste kursdag i dag"
 msgstr ""
 
-#: src/Admin/CoursePage.php:389
+#: src/Admin/CoursePage.php:392
 msgid "Sted velges senere"
 msgstr ""
 
-#: src/Admin/CoursePage.php:389
+#: src/Admin/CoursePage.php:392
 msgid "Sluttdato beregnes fra kursene"
 msgstr ""
 
-#: src/Admin/CoursePage.php:390
+#: src/Admin/CoursePage.php:393
 msgid "Åpne"
 msgstr ""
 
-#: src/Admin/CoursePage.php:390
+#: src/Admin/CoursePage.php:393
 msgid "Se kursene og følg opp denne kursperioden."
 msgstr ""
 
-#: src/Admin/CoursePage.php:391
+#: src/Admin/CoursePage.php:394
 msgid "Rediger"
 msgstr ""
 
-#: src/Admin/CoursePage.php:391
+#: src/Admin/CoursePage.php:394
 msgid "Endre periodens datoer, standardvalg og kursfrie dager."
 msgstr ""
 
-#: src/Admin/CoursePage.php:392
+#: src/Admin/CoursePage.php:395
 msgid "Kopier"
 msgstr ""
 
-#: src/Admin/CoursePage.php:392
+#: src/Admin/CoursePage.php:395
 msgid "Lag en ny periode som kladd. Påmeldingslenker og tidsvinduer fylles ut på nytt."
 msgstr ""
 
-#: src/Admin/CoursePage.php:393
-#: src/Admin/CoursePage.php:398
+#: src/Admin/CoursePage.php:396
+#: src/Admin/CoursePage.php:401
 msgid "Papirkurv"
 msgstr ""
 
-#: src/Admin/CoursePage.php:402
+#: src/Admin/CoursePage.php:405
 msgid "Gjenopprett som kladd"
 msgstr ""
 
-#: src/Admin/CoursePage.php:414
+#: src/Admin/CoursePage.php:417
 msgid "Fremhevet kurs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:414
+#: src/Admin/CoursePage.php:417
 msgid "Dette kurset er fremhevet i kursoversikten."
 msgstr ""
 
-#: src/Admin/CoursePage.php:415
-#: src/Frontend/Renderer.php:17
-#: src/Frontend/Renderer.php:107
+#: src/Admin/CoursePage.php:418
+#: src/Frontend/Renderer.php:18
+#: src/Frontend/Renderer.php:164
 msgid "Drop-in"
 msgstr ""
 
 #. translators: %s: drop-in price in NOK.
-#: src/Admin/CoursePage.php:415
+#: src/Admin/CoursePage.php:418
 #, php-format
 msgid "Dette kurset tilbyr drop-in. %s kr per person og kurskveld."
 msgstr ""
 
-#: src/Admin/CoursePage.php:421
+#: src/Admin/CoursePage.php:424
 msgid "Ingen merker"
 msgstr ""
 
-#: src/Admin/CoursePage.php:425
+#: src/Admin/CoursePage.php:428
 msgid "1. Opprett kursperiode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:425
+#: src/Admin/CoursePage.php:428
 msgid "Fyll ut perioden én gang. Nye kurs får disse forslagene automatisk."
 msgstr ""
 
-#: src/Admin/CoursePage.php:428
+#: src/Admin/CoursePage.php:431
 msgid "Lagre og legg til kurs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:433
+#: src/Admin/CoursePage.php:436
 msgid "Publisert i kursoppsettet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:434
+#: src/Admin/CoursePage.php:437
 msgid "Oppsett av kursperioden"
 msgstr ""
 
-#: src/Admin/CoursePage.php:435
+#: src/Admin/CoursePage.php:438
 msgid "1. Periode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:435
+#: src/Admin/CoursePage.php:438
 msgid "2. Kurs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:435
+#: src/Admin/CoursePage.php:438
 msgid "3. Publiser"
 msgstr ""
 
-#: src/Admin/CoursePage.php:445
+#: src/Admin/CoursePage.php:448
 msgid "Neste steg"
 msgstr ""
 
-#: src/Admin/CoursePage.php:445
+#: src/Admin/CoursePage.php:448
 msgid "Åpne kursene for å kontrollere datoene. Når alt er klart, bruker du publiseringskontrollen nedenfor."
 msgstr ""
 
-#: src/Admin/CoursePage.php:445
+#: src/Admin/CoursePage.php:448
 msgid "Legg til det første kurset nedenfor. Perioden er lagret som kladd og vises ikke for deltakerne."
 msgstr ""
 
-#: src/Admin/CoursePage.php:446
+#: src/Admin/CoursePage.php:449
 msgid "Kursene er tilgjengelige på den valgte kurssiden innenfor tidspunktene du har valgt."
 msgstr ""
 
-#: src/Admin/CoursePage.php:451
+#: src/Admin/CoursePage.php:454
 msgid "Rediger perioden og felles opphold"
 msgstr ""
 
-#: src/Admin/CoursePage.php:452
+#: src/Admin/CoursePage.php:455
 msgid "Lagre og gå til kurs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:453
+#: src/Admin/CoursePage.php:456
 msgid "Ta hele perioden tilbake til kladd"
 msgstr ""
 
-#: src/Admin/CoursePage.php:457
-#: src/Admin/CoursePage.php:507
+#: src/Admin/CoursePage.php:460
+#: src/Admin/CoursePage.php:510
 msgid "Hent nytt kurs fra LetsReg"
 msgstr ""
 
-#: src/Admin/CoursePage.php:458
+#: src/Admin/CoursePage.php:461
 msgid "Kurs i perioden"
-msgstr ""
-
-#: src/Admin/CoursePage.php:458
-#: src/Admin/CoursePage.php:673
-#: src/Admin/CoursePage.php:695
-#: src/Admin/CoursePage.php:751
-#: src/Frontend/Renderer.php:35
-#: src/Frontend/SchemaPresenter.php:52
-msgid "Kursoversikt"
-msgstr ""
-
-#: src/Admin/CoursePage.php:458
-msgid "Dag"
-msgstr ""
-
-#: src/Admin/CoursePage.php:458
-msgid "Tid"
-msgstr ""
-
-#: src/Admin/CoursePage.php:458
-msgid "Merker"
-msgstr ""
-
-#: src/Admin/CoursePage.php:458
-#: src/Admin/CoursePage.php:719
-msgid "Påmelding"
-msgstr ""
-
-#: src/Admin/CoursePage.php:458
-msgid "Kontroll"
 msgstr ""
 
 #: src/Admin/CoursePage.php:461
 #: src/Admin/CoursePage.php:676
+#: src/Admin/CoursePage.php:698
+#: src/Admin/CoursePage.php:754
+#: src/Frontend/Renderer.php:40
+#: src/Frontend/SchemaPresenter.php:52
+msgid "Kursoversikt"
+msgstr ""
+
+#: src/Admin/CoursePage.php:461
+msgid "Dag"
+msgstr ""
+
+#: src/Admin/CoursePage.php:461
+msgid "Tid"
+msgstr ""
+
+#: src/Admin/CoursePage.php:461
+msgid "Merker"
+msgstr ""
+
+#: src/Admin/CoursePage.php:461
+#: src/Admin/CoursePage.php:722
+msgid "Påmelding"
+msgstr ""
+
+#: src/Admin/CoursePage.php:461
+msgid "Kontroll"
+msgstr ""
+
+#: src/Admin/CoursePage.php:464
+#: src/Admin/CoursePage.php:679
 msgid "Mangler"
 msgstr ""
 
 #. translators: %s: course title.
-#: src/Admin/CoursePage.php:464
+#: src/Admin/CoursePage.php:467
 #, php-format
 msgid "Åpne %s hos LetsReg (ny fane)"
 msgstr ""
 
 #. translators: %s: course title.
-#: src/Admin/CoursePage.php:464
+#: src/Admin/CoursePage.php:467
 msgid "Kontroller kursets påmeldingsside hos LetsReg. Åpnes i en ny fane."
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Man"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Tirs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Ons"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Tors"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Fre"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Lør"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Søn"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Må gjennomgås etter periodeendring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:466
+#: src/Admin/CoursePage.php:469
 msgid "Planen er oppdatert"
 msgstr ""
 
-#: src/Admin/CoursePage.php:467
+#: src/Admin/CoursePage.php:470
 msgid "Åpne kurset"
 msgstr ""
 
-#: src/Admin/CoursePage.php:471
+#: src/Admin/CoursePage.php:474
 msgid "Legg til kurs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:471
+#: src/Admin/CoursePage.php:474
 msgid "Velg kurset deltakerne skal gå på, og hvilken dag dere underviser."
 msgstr ""
 
-#: src/Admin/CoursePage.php:472
+#: src/Admin/CoursePage.php:475
 msgid "Opprett kurs"
 msgstr ""
 
-#: src/Admin/CoursePage.php:474
+#: src/Admin/CoursePage.php:477
 msgid "Gå til publisering →"
 msgstr ""
 
-#: src/Admin/CoursePage.php:477
+#: src/Admin/CoursePage.php:480
 msgid "Kontroll før publisering"
 msgstr ""
 
-#: src/Admin/CoursePage.php:477
+#: src/Admin/CoursePage.php:480
 msgid "Kontroller alle kurs, faktiske datoer og vinduer før hele perioden publiseres."
 msgstr ""
 
-#: src/Admin/CoursePage.php:481
+#: src/Admin/CoursePage.php:484
 msgid "Kontroller og forhåndsvis publisering"
 msgstr ""
 
-#: src/Admin/CoursePage.php:483
+#: src/Admin/CoursePage.php:486
 msgid "Kopiering, historikk og papirkurv"
 msgstr ""
 
-#: src/Admin/CoursePage.php:484
+#: src/Admin/CoursePage.php:487
 msgid "Flytt kladd og kurs til papirkurven"
 msgstr ""
 
-#: src/Admin/CoursePage.php:486
+#: src/Admin/CoursePage.php:489
 msgid "Enkeltkurs i papirkurven"
 msgstr ""
 
-#: src/Admin/CoursePage.php:490
+#: src/Admin/CoursePage.php:493
 msgid "Gjenopprett kurset"
 msgstr ""
 
-#: src/Admin/CoursePage.php:493
+#: src/Admin/CoursePage.php:496
 msgid "Kopier til neste periode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:493
+#: src/Admin/CoursePage.php:496
 msgid "Du får en ny kladd med nye datoer. Påmeldingslenker og tidsvinduer fylles ut på nytt."
 msgstr ""
 
-#: src/Admin/CoursePage.php:493
+#: src/Admin/CoursePage.php:496
 msgid "Opprett ny kopi som kladd"
 msgstr ""
 
-#: src/Admin/CoursePage.php:496
-#: src/Admin/CoursePage.php:762
+#: src/Admin/CoursePage.php:499
+#: src/Admin/CoursePage.php:765
 msgid "Ikke satt"
 msgstr ""
 
-#: src/Admin/CoursePage.php:500
+#: src/Admin/CoursePage.php:503
 msgid "Flytt perioden til papirkurven"
 msgstr ""
 
-#: src/Admin/CoursePage.php:500
+#: src/Admin/CoursePage.php:503
 msgid "Rediger en publisert periode"
 msgstr ""
 
-#: src/Admin/CoursePage.php:500
+#: src/Admin/CoursePage.php:503
 msgid "Hele kladden og kursene i den flyttes til papirkurven. Du kan gjenopprette den senere."
 msgstr ""
 
-#: src/Admin/CoursePage.php:500
+#: src/Admin/CoursePage.php:503
 msgid "Perioden blir skjult for deltakerne mens du redigerer. Kontroller og publiser den på nytt når du er ferdig."
 msgstr ""
 
-#: src/Admin/CoursePage.php:507
+#: src/Admin/CoursePage.php:510
 msgid "Tilbake til kursene i perioden"
 msgstr ""
 
-#: src/Admin/CoursePage.php:507
+#: src/Admin/CoursePage.php:510
 msgid "Velg ett eller flere arrangementer. Kontroller beskrivelse, sal og datoer for hvert kurs før du oppretter kursutkastene samlet. Ingenting publiseres automatisk."
 msgstr ""
 
-#: src/Admin/CoursePage.php:508
+#: src/Admin/CoursePage.php:511
 msgid "Import krever JavaScript. Du kan også gå tilbake og bruke Legg til kurs for å opprette kurset manuelt."
 msgstr ""
 
-#: src/Admin/CoursePage.php:510
+#: src/Admin/CoursePage.php:513
 msgid "Kursoppsett for det nye utkastet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:512
+#: src/Admin/CoursePage.php:515
 msgid "Beskrivelsen deltakerne skal se"
 msgstr ""
 
-#: src/Admin/CoursePage.php:512
+#: src/Admin/CoursePage.php:515
 msgid "Hent og gjenbruk fra LetsReg"
 msgstr ""
 
-#: src/Admin/CoursePage.php:512
+#: src/Admin/CoursePage.php:515
 msgid "Bruk eksisterende lokal beskrivelse"
 msgstr ""
 
-#: src/Admin/CoursePage.php:514
+#: src/Admin/CoursePage.php:517
 msgid "Teksten hentes som ren tekst. Identiske importerte beskrivelser gjenbrukes. Endringer på samme arrangement vises før lagring; lokale redigeringer beskyttes. Oppgi dansestil og kontroller nivå og partnerinformasjon."
 msgstr ""
 
-#: src/Admin/CoursePage.php:517
+#: src/Admin/CoursePage.php:520
 msgid "Når beskrivelsen finnes fra før"
 msgstr ""
 
-#: src/Admin/CoursePage.php:517
+#: src/Admin/CoursePage.php:520
 msgid "Foreslå gjenbruk eller oppdatering"
 msgstr ""
 
-#: src/Admin/CoursePage.php:517
+#: src/Admin/CoursePage.php:520
 msgid "Oppdater eksisterende også ved større avvik"
 msgstr ""
 
-#: src/Admin/CoursePage.php:517
+#: src/Admin/CoursePage.php:520
 msgid "Opprett separat hvis teksten er forskjellig"
 msgstr ""
 
-#: src/Admin/CoursePage.php:517
+#: src/Admin/CoursePage.php:520
 msgid "Du får se hva som skjer før import. Identisk tekst lager aldri en ny kopi. Lokalt redigerte beskrivelser må flettes manuelt eller beholdes med en separat import."
 msgstr ""
 
-#: src/Admin/CoursePage.php:520
+#: src/Admin/CoursePage.php:523
 msgid "Forhåndsvis kursutkastet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:527
+#: src/Admin/CoursePage.php:530
 msgid "Kontroller kursutkastet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:531
+#: src/Admin/CoursePage.php:534
 msgid "Ny kursbeskrivelse"
 msgstr ""
 
-#: src/Admin/CoursePage.php:531
+#: src/Admin/CoursePage.php:534
 msgid "Eksisterende beskrivelse gjenbrukes uten endring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:531
+#: src/Admin/CoursePage.php:534
 msgid "Eksisterende beskrivelse oppdateres ved bekreftelse"
 msgstr ""
 
-#: src/Admin/CoursePage.php:531
+#: src/Admin/CoursePage.php:534
 msgid "Velg hvordan beskrivelsen skal behandles"
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
-#: src/Admin/CoursePage.php:534
+#: src/Admin/CoursePage.php:537
 #, php-format
 msgid "Denne beskrivelsen brukes av %d lokale kurs. En oppdatering påvirker alle, også publiserte kurs. Sammenlign feltene før du bekrefter."
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
-#: src/Admin/CoursePage.php:534
+#: src/Admin/CoursePage.php:537
 #: src/Admin/LetsRegChangesPanel.php:83
 #: src/Admin/LetsRegChangesPanel.php:92
 msgid "Felt"
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
-#: src/Admin/CoursePage.php:534
+#: src/Admin/CoursePage.php:537
 #: src/Admin/LetsRegChangesPanel.php:92
 #: src/Admin/LetsRegChangesPanel.php:103
 msgid "Lokalt nå"
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
-#: src/Admin/CoursePage.php:534
+#: src/Admin/CoursePage.php:537
 #: src/Admin/LetsRegChangesPanel.php:92
 #: src/Admin/LetsRegChangesPanel.php:103
 msgid "Etter godkjenning"
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
-#: src/Admin/CoursePage.php:535
+#: src/Admin/CoursePage.php:538
 msgid "Beskrivelse"
 msgstr ""
 
 #. translators: %d: number of local courses sharing this description.
-#: src/Admin/CoursePage.php:535
+#: src/Admin/CoursePage.php:538
 msgid "Nivåforklaring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:550
+#: src/Admin/CoursePage.php:553
 msgid "Dette må rettes før import"
 msgstr ""
 
-#: src/Admin/CoursePage.php:554
+#: src/Admin/CoursePage.php:557
 msgid "Til informasjon – disse punktene blokkerer ikke import"
 msgstr ""
 
-#: src/Admin/CoursePage.php:557
+#: src/Admin/CoursePage.php:560
 msgid "Timeplanen har en sal- eller instruktørkonflikt. Du kan opprette kladden, men konflikten må løses før publisering."
 msgstr ""
 
-#: src/Admin/CoursePage.php:558
+#: src/Admin/CoursePage.php:561
 msgid "Opprett kursutkast"
 msgstr ""
 
-#: src/Admin/CoursePage.php:565
+#: src/Admin/CoursePage.php:568
 msgid "Fremhev dette kurset"
 msgstr ""
 
-#: src/Admin/CoursePage.php:565
+#: src/Admin/CoursePage.php:568
 msgid "Dette kurset tilbyr drop-in"
 msgstr ""
 
-#: src/Admin/CoursePage.php:573
+#: src/Admin/CoursePage.php:576
 msgid "Velg en egen bakgrunn for dette kurset. Fremheving velges under Undervisning og bruker fremhevingsfargen fra nettstedets Utseende-oppsett."
 msgstr ""
 
-#: src/Admin/CoursePage.php:575
+#: src/Admin/CoursePage.php:578
 msgid "Bruk egen bakgrunn på kurset"
 msgstr ""
 
-#: src/Admin/CoursePage.php:577
+#: src/Admin/CoursePage.php:580
 msgid "Kursets bakgrunnsfarge"
 msgstr ""
 
-#: src/Admin/CoursePage.php:577
+#: src/Admin/CoursePage.php:580
 msgid "Velg egen farge eller global fargeprøve. Fjern avkrysningen for egen bakgrunn for å bruke standardfargen igjen."
 msgstr ""
 
-#: src/Admin/CoursePage.php:578
+#: src/Admin/CoursePage.php:581
 msgid "Henter globale farger"
 msgstr ""
 
-#: src/Admin/CoursePage.php:585
-#: src/Admin/CoursePage.php:746
+#: src/Admin/CoursePage.php:588
+#: src/Admin/CoursePage.php:749
 msgid "Tilbake til perioden"
 msgstr ""
 
-#: src/Admin/CoursePage.php:586
+#: src/Admin/CoursePage.php:589
 msgid "Deltakerne ser nå: "
 msgstr ""
 
-#: src/Admin/CoursePage.php:586
+#: src/Admin/CoursePage.php:589
 msgid "Skjult"
 msgstr ""
 
-#: src/Admin/CoursePage.php:590
+#: src/Admin/CoursePage.php:593
 msgid "Se lagrede kursdatoer"
 msgstr ""
 
-#: src/Admin/CoursePage.php:592
+#: src/Admin/CoursePage.php:595
 msgid "Kursoppsett"
 msgstr ""
 
-#: src/Admin/CoursePage.php:618
+#: src/Admin/CoursePage.php:621
 msgid "Forhåndsvis endringer og datoer"
 msgstr ""
 
-#: src/Admin/CoursePage.php:620
+#: src/Admin/CoursePage.php:623
 msgid "Behold kursdatoene etter en periodeendring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:620
+#: src/Admin/CoursePage.php:623
 msgid "Etter en periodeendring kan du beholde den faktiske planen, inkludert avlysninger og erstatningskvelder. Opphold kontrolleres på nytt."
 msgstr ""
 
-#: src/Admin/CoursePage.php:620
+#: src/Admin/CoursePage.php:623
 msgid "Kontroller og behold datoene"
 msgstr ""
 
-#: src/Admin/CoursePage.php:621
+#: src/Admin/CoursePage.php:624
 msgid "Endre én kurskveld"
 msgstr ""
 
-#: src/Admin/CoursePage.php:621
+#: src/Admin/CoursePage.php:624
 msgid "Velg datoen du vil flytte eller avlyse. Resten av kursplanen beholdes. Endringen vises før du bekrefter."
 msgstr ""
 
-#: src/Admin/CoursePage.php:627
+#: src/Admin/CoursePage.php:630
 msgid "Forhåndsvis øktendring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:629
+#: src/Admin/CoursePage.php:632
 msgid "Forhåndsvis erstatningskveld"
 msgstr ""
 
-#: src/Admin/CoursePage.php:635
+#: src/Admin/CoursePage.php:638
 msgid "Fjern dette kursutkastet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:635
+#: src/Admin/CoursePage.php:638
 msgid "Flytt dette kursutkastet til papirkurven"
 msgstr ""
 
-#: src/Admin/CoursePage.php:636
+#: src/Admin/CoursePage.php:639
 msgid "Du kan godkjenne LetsReg-tekster og redigere beskrivelsen mens kurset er publisert. Endringer i timeplan og øvrig kursoppsett krever at perioden tas tilbake til kladd."
 msgstr ""
 
-#: src/Admin/CoursePage.php:645
+#: src/Admin/CoursePage.php:648
 msgid "Kursbeskrivelse, nivå og forkunnskaper"
 msgstr ""
 
-#: src/Admin/CoursePage.php:645
+#: src/Admin/CoursePage.php:648
 msgid "Dette er tekstene deltakerne ser. På publiserte kurs vises lagrede endringer straks, uten ny publisering. Kursbeskrivelse og nivåforklaring må være utfylt."
 msgstr ""
 
 #. translators: %d: number of courses sharing this description.
-#: src/Admin/CoursePage.php:648
+#: src/Admin/CoursePage.php:651
 #, php-format
 msgid "Denne beskrivelsen brukes av %d kurs. Endringer i tekstene gjelder alle disse kursene."
 msgstr ""
 
-#: src/Admin/CoursePage.php:659
+#: src/Admin/CoursePage.php:662
 msgid "Prisvilkår og tillegg gjelder bare dette kurset. Prisbeløp og påmeldingsoppsett endres ikke her."
 msgstr ""
 
-#: src/Admin/CoursePage.php:660
+#: src/Admin/CoursePage.php:663
 msgid "Lagre beskrivelsestekster"
 msgstr ""
 
-#: src/Admin/CoursePage.php:666
+#: src/Admin/CoursePage.php:669
 msgid "Be en administrator fylle ut eller endre disse felles tekstene. Administrator finner feltene her på kurssiden og under Kursinnhold og ressurser."
 msgstr ""
 
-#: src/Admin/CoursePage.php:668
+#: src/Admin/CoursePage.php:671
 msgid "Til publiseringskontrollen"
 msgstr ""
 
-#: src/Admin/CoursePage.php:673
+#: src/Admin/CoursePage.php:676
 msgid "Kursdatoer"
 msgstr ""
 
-#: src/Admin/CoursePage.php:673
+#: src/Admin/CoursePage.php:676
 msgid "Lokal tid"
 msgstr ""
 
-#: src/Admin/CoursePage.php:673
-#: src/Frontend/Renderer.php:173
+#: src/Admin/CoursePage.php:676
+#: src/Frontend/Renderer.php:230
 msgid "Instruktører"
 msgstr ""
 
-#: src/Admin/CoursePage.php:673
+#: src/Admin/CoursePage.php:676
 msgid "Status og forklaring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:677
-#: src/Admin/CoursePage.php:696
+#: src/Admin/CoursePage.php:680
+#: src/Admin/CoursePage.php:699
 msgid "Planlagt"
 msgstr ""
 
-#: src/Admin/CoursePage.php:681
+#: src/Admin/CoursePage.php:684
 msgid "Siste undervisningsdag: "
 msgstr ""
 
 #. translators: %d: number of teaching evenings.
-#: src/Admin/CoursePage.php:681
+#: src/Admin/CoursePage.php:684
 #, php-format
 msgid "%d undervisningskveld."
 msgid_plural "%d undervisningskvelder."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Admin/CoursePage.php:686
+#: src/Admin/CoursePage.php:689
 msgid "Kontroller LetsReg-koblingen før lagring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:686
+#: src/Admin/CoursePage.php:689
 msgid "Nåværende kobling"
 msgstr ""
 
-#: src/Admin/CoursePage.php:688
+#: src/Admin/CoursePage.php:691
 msgid "Etter lagring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:690
+#: src/Admin/CoursePage.php:693
 msgid "Lagre LetsReg-koblingen"
 msgstr ""
 
-#: src/Admin/CoursePage.php:691
-#: src/Admin/CoursePage.php:700
+#: src/Admin/CoursePage.php:694
+#: src/Admin/CoursePage.php:703
 msgid "Tilbake uten å lagre"
 msgstr ""
 
-#: src/Admin/CoursePage.php:693
+#: src/Admin/CoursePage.php:696
 msgid "Forhåndsvisning – ikke lagret"
 msgstr ""
 
-#: src/Admin/CoursePage.php:695
+#: src/Admin/CoursePage.php:698
 msgid "Endringer"
 msgstr ""
 
-#: src/Admin/CoursePage.php:695
+#: src/Admin/CoursePage.php:698
 msgid "Før"
 msgstr ""
 
-#: src/Admin/CoursePage.php:695
+#: src/Admin/CoursePage.php:698
 msgid "Etter"
 msgstr ""
 
-#: src/Admin/CoursePage.php:696
+#: src/Admin/CoursePage.php:699
 msgid "Ny økt"
 msgstr ""
 
-#: src/Admin/CoursePage.php:696
+#: src/Admin/CoursePage.php:699
 msgid "Fjernes"
 msgstr ""
 
-#: src/Admin/CoursePage.php:698
+#: src/Admin/CoursePage.php:701
 msgid "Ressurskonflikter"
 msgstr ""
 
-#: src/Admin/CoursePage.php:698
+#: src/Admin/CoursePage.php:701
 msgid "Kan lagres i kladd, men må avklares før publisering."
 msgstr ""
 
-#: src/Admin/CoursePage.php:698
+#: src/Admin/CoursePage.php:701
 msgid " og "
 msgstr ""
 
-#: src/Admin/CoursePage.php:698
+#: src/Admin/CoursePage.php:701
 msgid " bruker samme sal samtidig."
 msgstr ""
 
-#: src/Admin/CoursePage.php:698
+#: src/Admin/CoursePage.php:701
 msgid " har samme instruktør samtidig."
 msgstr ""
 
-#: src/Admin/CoursePage.php:699
+#: src/Admin/CoursePage.php:702
 msgid "Lagre disse endringene"
 msgstr ""
 
-#: src/Admin/CoursePage.php:707
-#: src/Frontend/Renderer.php:202
+#: src/Admin/CoursePage.php:710
+#: src/Frontend/Renderer.php:259
 msgid " kl. "
 msgstr ""
 
-#: src/Admin/CoursePage.php:716
+#: src/Admin/CoursePage.php:719
 msgid "Kursnivå:"
 msgstr ""
 
-#: src/Admin/CoursePage.php:717
-#: src/Frontend/Renderer.php:113
+#: src/Admin/CoursePage.php:720
+#: src/Frontend/Renderer.php:170
 msgid "Nivå"
 msgstr ""
 
-#: src/Admin/CoursePage.php:717
+#: src/Admin/CoursePage.php:720
 msgid "Pris"
 msgstr ""
 
 #. translators: %s: price per evening.
-#: src/Admin/CoursePage.php:718
-#: src/Frontend/Renderer.php:97
+#: src/Admin/CoursePage.php:721
+#: src/Frontend/Renderer.php:154
 msgid "Fra "
 msgstr ""
 
-#: src/Admin/CoursePage.php:718
+#: src/Admin/CoursePage.php:721
 msgid " kr "
 msgstr ""
 
-#: src/Admin/CoursePage.php:721
+#: src/Admin/CoursePage.php:724
 msgid "Kursets påmeldingsdatoer:"
 msgstr ""
 
-#: src/Admin/CoursePage.php:721
+#: src/Admin/CoursePage.php:724
 msgid "Ved automatisk status gjelder LetsRegs salgsvindu. Ved manuell status gjelder periodens påmeldingsvindu."
 msgstr ""
 
-#: src/Admin/CoursePage.php:723
+#: src/Admin/CoursePage.php:726
 msgid "Fremhevet kurs:"
 msgstr ""
 
-#: src/Admin/CoursePage.php:723
-#: src/Admin/CoursePage.php:763
+#: src/Admin/CoursePage.php:726
+#: src/Admin/CoursePage.php:766
 #: src/Admin/LetsRegChangesPanel.php:47
 #: src/Admin/LetsRegPage.php:124
 #: src/Admin/LetsRegPage.php:129
 msgid "Ja"
 msgstr ""
 
-#: src/Admin/CoursePage.php:723
-#: src/Admin/CoursePage.php:763
+#: src/Admin/CoursePage.php:726
+#: src/Admin/CoursePage.php:766
 #: src/Admin/LetsRegChangesPanel.php:47
 #: src/Admin/LetsRegPage.php:124
 #: src/Admin/LetsRegPage.php:129
@@ -2513,156 +2557,156 @@ msgid "Nei"
 msgstr ""
 
 #. translators: %s: drop-in price in NOK.
-#: src/Admin/CoursePage.php:724
+#: src/Admin/CoursePage.php:727
 #, php-format
 msgid "Drop-in: %s kr per person og kurskveld."
 msgstr ""
 
 #. translators: %s: drop-in price in NOK.
-#: src/Admin/CoursePage.php:724
+#: src/Admin/CoursePage.php:727
 msgid "Drop-in er ikke aktivert."
 msgstr ""
 
 #. translators: %s: drop-in price in NOK.
-#: src/Admin/CoursePage.php:725
+#: src/Admin/CoursePage.php:728
 #: src/Admin/LetsRegCoursePanel.php:36
 msgid "LetsReg-kobling"
 msgstr ""
 
-#: src/Admin/CoursePage.php:730
+#: src/Admin/CoursePage.php:733
 msgid "Publiseringskontroll"
 msgstr ""
 
-#: src/Admin/CoursePage.php:732
+#: src/Admin/CoursePage.php:735
 msgid "Dette må rettes før publisering"
 msgstr ""
 
-#: src/Admin/CoursePage.php:743
+#: src/Admin/CoursePage.php:746
 msgid "Til informasjon – hindrer ikke publisering"
 msgstr ""
 
-#: src/Admin/CoursePage.php:745
+#: src/Admin/CoursePage.php:748
 msgid "Kontrollene er bestått. Periode og kurs publiseres samlet. Kursene vises på kurssiden innenfor det valgte synlighetsvinduet."
 msgstr ""
 
-#: src/Admin/CoursePage.php:745
+#: src/Admin/CoursePage.php:748
 msgid "Bekreft publisering av hele perioden"
 msgstr ""
 
-#: src/Admin/CoursePage.php:751
+#: src/Admin/CoursePage.php:754
 msgid "Endringshistorikk"
 msgstr ""
 
-#: src/Admin/CoursePage.php:751
+#: src/Admin/CoursePage.php:754
 msgid "Versjon"
 msgstr ""
 
-#: src/Admin/CoursePage.php:751
+#: src/Admin/CoursePage.php:754
 msgid "Tid (UTC)"
 msgstr ""
 
-#: src/Admin/CoursePage.php:751
+#: src/Admin/CoursePage.php:754
 msgid "Endret av"
 msgstr ""
 
-#: src/Admin/CoursePage.php:751
+#: src/Admin/CoursePage.php:754
 msgid "Handling"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 msgid "Tidligere bruker"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 #: assets/registration-status.js:32
 msgid "Lagret"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 msgid "Publisert"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 msgid "Avpublisert"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 msgid "Til papirkurv"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 msgid "Gjenopprettet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 msgid "Kurs til papirkurv"
 msgstr ""
 
-#: src/Admin/CoursePage.php:752
+#: src/Admin/CoursePage.php:755
 msgid "Kurs gjenopprettet"
 msgstr ""
 
-#: src/Admin/CoursePage.php:755
+#: src/Admin/CoursePage.php:758
 msgid "Vis oppsett i versjon "
 msgstr ""
 
-#: src/Admin/CoursePage.php:767
+#: src/Admin/CoursePage.php:770
 msgid "Opphold: "
 msgstr ""
 
-#: src/Admin/CoursePage.php:774
+#: src/Admin/CoursePage.php:777
 msgid "Denne siden krever administratorrettigheter."
 msgstr ""
 
-#: src/Admin/CoursePage.php:775
+#: src/Admin/CoursePage.php:778
 msgid "Her samler du nivåer, kursbeskrivelser, steder og saler. Kursansvarlige kan velge disse oppføringene. Bare administrator kan opprette og endre dem."
 msgstr ""
 
-#: src/Admin/CoursePage.php:776
+#: src/Admin/CoursePage.php:779
 #: src/Infrastructure/ContentTypes.php:33
 msgid "Kursnivåer"
 msgstr ""
 
-#: src/Admin/CoursePage.php:776
+#: src/Admin/CoursePage.php:779
 #: src/Infrastructure/ContentTypes.php:33
 msgid "Kurssteder"
 msgstr ""
 
-#: src/Admin/CoursePage.php:776
+#: src/Admin/CoursePage.php:779
 #: src/Infrastructure/ContentTypes.php:33
 msgid "Saler"
 msgstr ""
 
-#: src/Admin/CoursePage.php:776
+#: src/Admin/CoursePage.php:779
 #: src/Infrastructure/ContentTypes.php:33
 msgid "Kursbeskrivelser"
 msgstr ""
 
-#: src/Admin/CoursePage.php:778
+#: src/Admin/CoursePage.php:781
 msgid "Lag nivåene deltakerne skal kunne velge mellom, for eksempel Nybegynner, Øvet 1 og Videregående. Velg deretter et nivå under Undervisning på hvert kurs. Forklaringen er valgfri."
 msgstr ""
 
-#: src/Admin/CoursePage.php:783
+#: src/Admin/CoursePage.php:786
 msgid "Lagre oppføring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:785
+#: src/Admin/CoursePage.php:788
 msgid "Opprett ny oppføring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:785
+#: src/Admin/CoursePage.php:788
 msgid "Opprett oppføring"
 msgstr ""
 
-#: src/Admin/CoursePage.php:787
+#: src/Admin/CoursePage.php:790
 msgid "Eksisterende instruktørprofiler"
 msgstr ""
 
-#: src/Admin/CoursePage.php:787
+#: src/Admin/CoursePage.php:790
 msgid "Velg profiltypen etter kartlegging. Ingen profiler importeres eller dupliseres."
 msgstr ""
 
-#: src/Admin/CoursePage.php:792
+#: src/Admin/CoursePage.php:795
 msgid "Lagre tillatte profiltyper"
 msgstr ""
 
@@ -2756,7 +2800,7 @@ msgid "Lokale kursopplysninger er beholdt."
 msgstr ""
 
 #: src/Admin/LetsRegChangesPanel.php:42
-#: src/Frontend/Renderer.php:131
+#: src/Frontend/Renderer.php:188
 msgid "Oppstart"
 msgstr ""
 
@@ -3877,7 +3921,7 @@ msgstr ""
 
 #: src/Admin/SiteSettings.php:35
 #: assets/block.js:6
-#: assets/block.js:10
+#: assets/block.js:15
 msgid "RegiNor kursoversikt"
 msgstr ""
 
@@ -3889,15 +3933,55 @@ msgstr ""
 msgid "Kontroller at elementet tolker shortcodes i den installerte Avada-versjonen. Ingen eksisterende ACF-kurs flyttes eller endres."
 msgstr ""
 
-#: src/Admin/SiteSettings.php:37
+#: src/Admin/SiteSettings.php:36
+msgid "Kortkoder for kampanjesider"
+msgstr ""
+
+#: src/Admin/SiteSettings.php:36
+msgid "Vis fremhevede introkurs først, og øvrige kurs i en egen oversikt nedenfor. Lim inn hver kortkode i sitt eget tekstelement."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:39
+msgid "Nivånavnene må finnes under Kursinnhold og ressurser → Kursnivåer. Bruk komma mellom flere navn, for eksempel «nybegynner,intro». Du kan også bruke nivå-ID. Utelatte nivåer skjules fra både kursutvalget og nivåfilteret."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:41
+msgid "Vis bare / utelat de oppgitte nivåene."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:42
+msgid "Vis bare kurs merket Fremhev. Standard er alle kurs; «exclude» utelater fremhevede kurs."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:43
+msgid "Start med kort / kalender. «site» følger felles utseendevalg, «period» følger kursperioden."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:44
+msgid "Tillat kort, kalender eller begge visninger."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:45
+msgid "Skjul innledning, periodeoverskrift og synlig antall treff."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:46
+msgid "Skjul periode-, nivå- og dagfilter."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:47
+msgid "Skjul visningsvalget og bruk startvisningen fast."
+msgstr ""
+
+#: src/Admin/SiteSettings.php:51
 msgid "Åpne kursoversikten →"
 msgstr ""
 
-#: src/Admin/SiteSettings.php:40
+#: src/Admin/SiteSettings.php:54
 msgid "Teknisk kontroll før lansering"
 msgstr ""
 
-#: src/Admin/SiteSettings.php:40
+#: src/Admin/SiteSettings.php:54
 msgid "Unnta den valgte siden, kursparametrene og RegiNor-sitemap fra fullsidecache og CDN-cache. Kontroller at SEO-pluginen bruker riktig canonical og ikke lager motstridende kursmerking. Avada og The Events Calendar må prøves i staging."
 msgstr ""
 
@@ -4213,41 +4297,41 @@ msgstr ""
 msgid "Kopier lenke"
 msgstr ""
 
-#: src/Frontend/JourneyTracking.php:40
+#: src/Frontend/JourneyTracking.php:46
 msgid "Du har ikke tilgang til denne målingen."
 msgstr ""
 
-#: src/Frontend/JourneyTracking.php:43
+#: src/Frontend/JourneyTracking.php:49
 msgid "Målingen krever samtykke til statistikk."
 msgstr ""
 
-#: src/Frontend/JourneyTracking.php:53
-#: src/Frontend/JourneyTracking.php:62
+#: src/Frontend/JourneyTracking.php:59
+#: src/Frontend/JourneyTracking.php:68
 msgid "Målingen er midlertidig utilgjengelig."
 msgstr ""
 
-#: src/Frontend/JourneyTracking.php:56
+#: src/Frontend/JourneyTracking.php:62
 msgid "Målehendelsen har ugyldig format."
 msgstr ""
 
-#: src/Frontend/JourneyTracking.php:59
+#: src/Frontend/JourneyTracking.php:65
 msgid "Kurset eller påmeldingen er ikke offentlig tilgjengelig."
 msgstr ""
 
-#: src/Frontend/PublicSite.php:83
-#: src/Frontend/Renderer.php:39
+#: src/Frontend/PublicSite.php:87
+#: src/Frontend/Renderer.php:44
 msgid "Dette kurset er ikke tilgjengelig nå"
 msgstr ""
 
-#: src/Frontend/PublicSite.php:83
+#: src/Frontend/PublicSite.php:87
 msgid "Du kan se hvilke kurs som er tilgjengelige i kursoversikten."
 msgstr ""
 
-#: src/Frontend/PublicSite.php:83
+#: src/Frontend/PublicSite.php:87
 msgid "Se tilgjengelige kurs"
 msgstr ""
 
-#: src/Frontend/PublicSite.php:122
+#: src/Frontend/PublicSite.php:126
 msgid "Velg siden for kursoversikten under RegiNor Lite → Nettsidevisning."
 msgstr ""
 
@@ -4279,44 +4363,44 @@ msgstr ""
 msgid "Søndager"
 msgstr ""
 
-#: src/Frontend/Renderer.php:17
+#: src/Frontend/Renderer.php:18
 msgid "Påmelding Tilgjengelig"
 msgstr ""
 
-#: src/Frontend/Renderer.php:17
+#: src/Frontend/Renderer.php:18
 msgid "Fullt - Venteliste aktiv"
 msgstr ""
 
-#: src/Frontend/Renderer.php:17
+#: src/Frontend/Renderer.php:18
 msgid "Åpner snart"
 msgstr ""
 
-#: src/Frontend/Renderer.php:39
+#: src/Frontend/Renderer.php:44
 msgid "Se kursoversikten for andre muligheter."
 msgstr ""
 
-#: src/Frontend/Renderer.php:42
+#: src/Frontend/Renderer.php:47
 msgid "SalsaNor · Dans sammen"
 msgstr ""
 
-#: src/Frontend/Renderer.php:42
+#: src/Frontend/Renderer.php:47
 msgid "Finn et kurs som passer deg"
 msgstr ""
 
-#: src/Frontend/Renderer.php:42
+#: src/Frontend/Renderer.php:47
 msgid "Du trenger ikke kunne trinnene på forhånd. Finn ditt nivå og en dag som passer – vi hjelper deg i gang."
 msgstr ""
 
-#: src/Frontend/Renderer.php:43
+#: src/Frontend/Renderer.php:48
 msgid "Nye kurs er ikke publisert ennå"
 msgstr ""
 
-#: src/Frontend/Renderer.php:43
+#: src/Frontend/Renderer.php:48
 msgid "Kom gjerne tilbake senere. Her finner du kursene når neste periode er klar."
 msgstr ""
 
 #. translators: %d: number of matching courses.
-#: src/Frontend/Renderer.php:51
+#: src/Frontend/Renderer.php:58
 #, php-format
 msgid "%d kurs passer valgene dine"
 msgid_plural "%d kurs passer valgene dine"
@@ -4324,154 +4408,154 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of matching courses.
-#: src/Frontend/Renderer.php:52
+#: src/Frontend/Renderer.php:59
 msgid "Denne kursperioden er avlyst. Se kursdetaljene for informasjon."
 msgstr ""
 
-#: src/Frontend/Renderer.php:53
+#: src/Frontend/Renderer.php:60
 msgid "Denne kursperioden er avsluttet."
 msgstr ""
 
-#: src/Frontend/Renderer.php:54
+#: src/Frontend/Renderer.php:61
 msgid "Ingen kurs passer akkurat disse valgene"
 msgstr ""
 
-#: src/Frontend/Renderer.php:54
+#: src/Frontend/Renderer.php:61
 msgid "Prøv en annen dag eller velg «Vis alle kurs»."
 msgstr ""
 
-#: src/Frontend/Renderer.php:73
+#: src/Frontend/Renderer.php:96
 msgid " · Pågående"
 msgstr ""
 
-#: src/Frontend/Renderer.php:73
+#: src/Frontend/Renderer.php:96
 msgid " · Kommende"
 msgstr ""
 
-#: src/Frontend/Renderer.php:74
+#: src/Frontend/Renderer.php:97
 msgid "Alle nivåer"
 msgstr ""
 
-#: src/Frontend/Renderer.php:79
+#: src/Frontend/Renderer.php:102
 msgid "Valgt nivå har ingen kurs i denne perioden"
 msgstr ""
 
-#: src/Frontend/Renderer.php:81
+#: src/Frontend/Renderer.php:104
 msgid "Hvilken dag passer?"
 msgstr ""
 
-#: src/Frontend/Renderer.php:81
+#: src/Frontend/Renderer.php:104
 msgid "Alle dager"
 msgstr ""
 
-#: src/Frontend/Renderer.php:84
+#: src/Frontend/Renderer.php:107
 msgid "Vis kurs"
 msgstr ""
 
-#: src/Frontend/Renderer.php:85
+#: src/Frontend/Renderer.php:110
 msgid "Velg visning"
 msgstr ""
 
-#: src/Frontend/Renderer.php:92
+#: src/Frontend/Renderer.php:149
 msgid "Dato avklares"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "januar"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "februar"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "mars"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "april"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "mai"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "juni"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "juli"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "august"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "september"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "oktober"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "november"
 msgstr ""
 
-#: src/Frontend/Renderer.php:94
+#: src/Frontend/Renderer.php:151
 msgid "desember"
 msgstr ""
 
 #. translators: 1: day of month, 2: month name, 3: year.
-#: src/Frontend/Renderer.php:95
+#: src/Frontend/Renderer.php:152
 #, php-format
 msgid "%1$s. %2$s %3$s"
 msgstr ""
 
 #. translators: %s: price per evening.
-#: src/Frontend/Renderer.php:97
+#: src/Frontend/Renderer.php:154
 #, php-format
 msgid "%s kr per person"
 msgstr ""
 
 #. translators: 1: formatted price in NOK, 2: per-person or per-pair price basis.
-#: src/Frontend/Renderer.php:97
+#: src/Frontend/Renderer.php:154
 #, php-format
 msgid "%1$s kr %2$s"
 msgstr ""
 
 #. translators: 1: formatted price in NOK, 2: per-person or per-pair price basis.
-#: src/Frontend/Renderer.php:97
+#: src/Frontend/Renderer.php:154
 msgid "per par"
 msgstr ""
 
 #. translators: 1: formatted price in NOK, 2: per-person or per-pair price basis.
-#: src/Frontend/Renderer.php:97
+#: src/Frontend/Renderer.php:154
 msgid "per person"
 msgstr ""
 
-#: src/Frontend/Renderer.php:107
+#: src/Frontend/Renderer.php:164
 msgid "Drop-in – se pris og informasjon"
 msgstr ""
 
-#: src/Frontend/Renderer.php:107
+#: src/Frontend/Renderer.php:164
 msgid "Dette kurset tilbyr drop-in."
 msgstr ""
 
 #. translators: %s: drop-in price in NOK.
-#: src/Frontend/Renderer.php:107
+#: src/Frontend/Renderer.php:164
 #, php-format
 msgid "%s kr per person og kurskveld."
 msgstr ""
 
-#: src/Frontend/Renderer.php:131
+#: src/Frontend/Renderer.php:188
 msgid "Når"
 msgstr ""
 
 #. translators: %d: number of course evenings.
-#: src/Frontend/Renderer.php:131
+#: src/Frontend/Renderer.php:188
 #, php-format
 msgid "%d kveld"
 msgid_plural "%d kvelder"
@@ -4479,107 +4563,107 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of course evenings.
-#: src/Frontend/Renderer.php:131
+#: src/Frontend/Renderer.php:188
 msgid "Hvor"
 msgstr ""
 
 #. translators: %d: number of course evenings.
-#: src/Frontend/Renderer.php:132
-#: src/Frontend/Renderer.php:191
+#: src/Frontend/Renderer.php:189
+#: src/Frontend/Renderer.php:248
 msgid "per kurskveld"
 msgstr ""
 
 #. translators: %d: number of course evenings.
-#: src/Frontend/Renderer.php:132
-#: src/Frontend/Renderer.php:191
+#: src/Frontend/Renderer.php:189
+#: src/Frontend/Renderer.php:248
 msgid "for hele kurset"
 msgstr ""
 
-#: src/Frontend/Renderer.php:133
+#: src/Frontend/Renderer.php:190
 msgid "Enkelte kurskvelder er endret – se kursdatoene."
 msgstr ""
 
-#: src/Frontend/Renderer.php:145
-#: src/Frontend/Renderer.php:146
+#: src/Frontend/Renderer.php:202
+#: src/Frontend/Renderer.php:203
 msgid "Meld meg på"
 msgstr ""
 
-#: src/Frontend/Renderer.php:145
+#: src/Frontend/Renderer.php:202
 msgid "Se venteliste hos LetsReg"
 msgstr ""
 
-#: src/Frontend/Renderer.php:146
+#: src/Frontend/Renderer.php:203
 msgid "Meld deg på hos LetsReg"
 msgstr ""
 
 #. translators: 1: link action, 2: course title.
-#: src/Frontend/Renderer.php:147
+#: src/Frontend/Renderer.php:204
 #, php-format
 msgid "%1$s – %2$s. Åpnes i en ny fane."
 msgstr ""
 
 #. translators: 1: link action, 2: course title.
-#: src/Frontend/Renderer.php:147
+#: src/Frontend/Renderer.php:204
 #, php-format
 msgid "%1$s – %2$s. Åpnes hos LetsReg i en ny fane."
 msgstr ""
 
 #. translators: %s: course title.
-#: src/Frontend/Renderer.php:157
+#: src/Frontend/Renderer.php:214
 #, php-format
 msgid "Se kurset: %s"
 msgstr ""
 
 #. translators: %s: course title.
-#: src/Frontend/Renderer.php:158
+#: src/Frontend/Renderer.php:215
 msgid "Se kurset"
 msgstr ""
 
 #. translators: %s: course title to choose on LetsReg.
-#: src/Frontend/Renderer.php:161
-#: src/Frontend/Renderer.php:206
+#: src/Frontend/Renderer.php:218
+#: src/Frontend/Renderer.php:263
 #, php-format
 msgid "Lenken viser flere kurs. Velg «%s» på påmeldingssiden."
 msgstr ""
 
-#: src/Frontend/Renderer.php:166
+#: src/Frontend/Renderer.php:223
 msgid "← Tilbake til kursene"
 msgstr ""
 
-#: src/Frontend/Renderer.php:174
+#: src/Frontend/Renderer.php:231
 msgid "Kurssted og kart"
 msgstr ""
 
-#: src/Frontend/Renderer.php:177
+#: src/Frontend/Renderer.php:234
 msgid "Alle kurskveldene"
 msgstr ""
 
-#: src/Frontend/Renderer.php:177
+#: src/Frontend/Renderer.php:234
 msgid "Her ser du datoene du skal møte opp. Eventuelle endringer står ved den enkelte kvelden."
 msgstr ""
 
-#: src/Frontend/Renderer.php:179
+#: src/Frontend/Renderer.php:236
 msgid "Avlyst. "
 msgstr ""
 
-#: src/Frontend/Renderer.php:179
+#: src/Frontend/Renderer.php:236
 msgid "Endret kurskveld. "
 msgstr ""
 
-#: src/Frontend/Renderer.php:179
+#: src/Frontend/Renderer.php:236
 msgid " Opprinnelig dato: "
 msgstr ""
 
-#: src/Frontend/Renderer.php:182
+#: src/Frontend/Renderer.php:239
 msgid "Kursfrie dager"
 msgstr ""
 
-#: src/Frontend/Renderer.php:191
+#: src/Frontend/Renderer.php:248
 msgid "Dette får du"
 msgstr ""
 
 #. translators: %d: number of course evenings.
-#: src/Frontend/Renderer.php:191
+#: src/Frontend/Renderer.php:248
 #, php-format
 msgid "%d kurskveld"
 msgid_plural "%d kurskvelder"
@@ -4587,47 +4671,64 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of course evenings.
-#: src/Frontend/Renderer.php:191
+#: src/Frontend/Renderer.php:248
+msgid "Dato: "
+msgstr ""
+
+#. translators: %d: number of course evenings.
+#: src/Frontend/Renderer.php:248
 #: assets/letsreg-picker.js:85
 msgid "Oppstart: "
 msgstr ""
 
-#: src/Frontend/Renderer.php:202
+#: src/Frontend/Renderer.php:259
 msgid "Påmeldingen åpner "
 msgstr ""
 
-#: src/Frontend/Renderer.php:208
+#: src/Frontend/Renderer.php:265
 msgid "Du går videre til kursets påmeldingsside i en ny fane."
 msgstr ""
 
-#: src/Frontend/Renderer.php:208
+#: src/Frontend/Renderer.php:265
 msgid "Du går videre til LetsReg for påmelding og betaling. Der ser du oppdatert tilgjengelighet."
 msgstr ""
 
-#: src/Frontend/Renderer.php:209
+#: src/Frontend/Renderer.php:266
 msgid "Påmelding avklares"
 msgstr ""
 
-#: src/Frontend/Renderer.php:214
+#: src/Frontend/Renderer.php:271
 msgid "En vanlig kursuke. Kursfrie dager og endringer finner du under «Se kurset»."
 msgstr ""
 
-#: src/Frontend/Renderer.php:228
+#: src/Frontend/Renderer.php:287
 msgid " · samtidig kurs"
 msgstr ""
 
+#. translators: %s: date of the only course evening.
+#: src/Frontend/Renderer.php:300
+#, php-format
+msgid "Dato: %s"
+msgstr ""
+
 #. translators: %s: actual first course date.
-#: src/Frontend/Renderer.php:241
+#: src/Frontend/Renderer.php:301
+#, php-format
+msgid "Tidligere oppstart: %s"
+msgstr ""
+
+#. translators: %s: actual first course date.
+#: src/Frontend/Renderer.php:302
 #, php-format
 msgid "Senere oppstart: %s"
 msgstr ""
 
 #. translators: %s: actual first course date.
-#: src/Frontend/Renderer.php:242
+#: src/Frontend/Renderer.php:303
 msgid "Enkelte kurskvelder er endret eller har fri."
 msgstr ""
 
-#: src/Frontend/Renderer.php:250
+#: src/Frontend/Renderer.php:311
 msgid "Vis alle kurs"
 msgstr ""
 
@@ -4673,52 +4774,52 @@ msgstr ""
 msgid "Kontroller dagens fargevalg."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:27
+#: src/Infrastructure/CapacityStore.php:28
 msgid "RegiNor kapasitetskontroll"
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:44
+#: src/Infrastructure/CapacityStore.php:45
 msgid "Automatisk kontroll kunne ikke startes. Kontakt administrator."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:50
+#: src/Infrastructure/CapacityStore.php:51
 msgid "Du har ikke tilgang til dette kurset."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:51
+#: src/Infrastructure/CapacityStore.php:52
 msgid "Velg et kurs som ikke er slettet."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:61
+#: src/Infrastructure/CapacityStore.php:62
 msgid "Kapasitetsoppsettet må kontrolleres av administrator."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:71
+#: src/Infrastructure/CapacityStore.php:72
 msgid "Kontrollen kunne ikke lagres. Prøv igjen."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:83
+#: src/Infrastructure/CapacityStore.php:84
 msgid "Bare administrator kan endre prøveoppsettet."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:84
+#: src/Infrastructure/CapacityStore.php:85
 #: src/Infrastructure/DemoCapacityAdapter.php:18
 msgid "Velg en av de viste prøvesituasjonene."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:87
+#: src/Infrastructure/CapacityStore.php:88
 msgid "Oppsettet er endret. Last siden på nytt."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:89
+#: src/Infrastructure/CapacityStore.php:90
 msgid "Prøven kunne ikke stoppes."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:107
+#: src/Infrastructure/CapacityStore.php:108
 msgid "Administrator må først velge et prøveoppsett."
 msgstr ""
 
-#: src/Infrastructure/CapacityStore.php:109
+#: src/Infrastructure/CapacityStore.php:110
 msgid "Kontrollen er allerede bestilt, eller venter på neste tillatte forsøk. Prøv igjen senere."
 msgstr ""
 
@@ -4785,79 +4886,79 @@ msgstr ""
 msgid "Ta perioden tilbake til kladd før du legger til kurs."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:34
+#: src/Infrastructure/CourseImport.php:35
 msgid "Navn på kursbeskrivelsen mangler. Skriv et navn, for eksempel Salsa nybegynner."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:35
+#: src/Infrastructure/CourseImport.php:36
 #: assets/admin.js:16
 msgid "Dansestil mangler. LetsReg oppgir ikke denne som et eget felt. Skriv for eksempel Salsa eller Bachata."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:43
-#: assets/admin.js:46
+#: src/Infrastructure/CourseImport.php:44
+#: assets/admin.js:49
 msgid "Sal mangler. LetsReg bestemmer ikke lokal sal. Velg salen der kurset skal holdes under Undervisning."
 msgstr ""
 
 #. translators: 1: total sessions, 2: sessions whose start time has passed, 3: future sessions, 4: time of check in course timezone.
-#: src/Infrastructure/CourseImport.php:64
+#: src/Infrastructure/CourseImport.php:65
 #, php-format
 msgid "Kursrekken har allerede startet. Av totalt %1$d undervisningskvelder har %2$d passert starttidspunktet og %3$d starter senere, regnet per %4$s. Hele planen importeres fra første kursdato, også de tidligere datoene. Dette hindrer ikke import og bekrefter ikke oppmøte eller gjennomføring."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:78
+#: src/Infrastructure/CourseImport.php:79
 msgid "Beskrivelsen er redigert lokalt etter import, eller mangler et sikkert tidligere importgrunnlag. Automatisk overskriving er stoppet for å bevare lokal tekst. Velg «Bruk eksisterende lokal beskrivelse», eller «Opprett separat hvis teksten er forskjellig». Ønskede tekstendringer kan flettes manuelt av administrator."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:79
+#: src/Infrastructure/CourseImport.php:80
 msgid "Flere forskjellige lokale beskrivelser er knyttet til dette LetsReg-arrangementet. Vi kan ikke velge hvilken som skal erstattes. Velg konkret beskrivelse under «Bruk eksisterende lokal beskrivelse», eller opprett en separat beskrivelse."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:80
+#: src/Infrastructure/CourseImport.php:81
 msgid "Beskrivelsen deles med kurs du ikke har rettighet til å endre. Be administrator vurdere oppdateringen, eller opprett en separat beskrivelse for det nye kurset."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:81
+#: src/Infrastructure/CourseImport.php:82
 msgid "Navn, nivå, dansestil, partnerinformasjon eller en stor del av beskrivelsesteksten avviker fra sist import. Sammenlign feltene nedenfor. Velg «Oppdater eksisterende også ved større avvik» eller «Opprett separat hvis teksten er forskjellig», og forhåndsvis på nytt."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:94
+#: src/Infrastructure/CourseImport.php:95
 #: src/Infrastructure/CourseRepository.php:301
 msgid "Forhåndsvisningen er ugyldig. Lag en ny forhåndsvisning."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:97
+#: src/Infrastructure/CourseImport.php:98
 msgid "Forhåndsvisningen er utløpt. Kontroller kursutkastet på nytt."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:100
+#: src/Infrastructure/CourseImport.php:101
 msgid "Perioden må være en kladd for å legge til nye kurs."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:101
+#: src/Infrastructure/CourseImport.php:102
 msgid "Rett punktene i forhåndsvisningen før du oppretter utkastet."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:144
+#: src/Infrastructure/CourseImport.php:145
 msgid "Velg mellom 1 og 20 kurs per import."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:150
+#: src/Infrastructure/CourseImport.php:151
 msgid "Alle kurs må ha et kontrollert importgrunnlag og tilhøre valgt periode."
 msgstr ""
 
-#: src/Infrastructure/CourseImport.php:154
+#: src/Infrastructure/CourseImport.php:155
 msgid "Ukjent kurs"
 msgstr ""
 
 #. translators: 1: course title; 2: reason creation failed.
-#: src/Infrastructure/CourseImport.php:155
+#: src/Infrastructure/CourseImport.php:156
 #, php-format
 msgid "«%1$s»: %2$s Ingen kurs i importlisten er lagret."
 msgstr ""
 
 #. translators: %s: existing local course name.
-#: src/Infrastructure/CourseImport.php:170
+#: src/Infrastructure/CourseImport.php:171
 #, php-format
 msgid "Disse LetsReg-kategoriene er allerede koblet til «%s» i perioden. Åpne eller gjenopprett det kurset i stedet."
 msgstr ""
@@ -4962,29 +5063,47 @@ msgstr ""
 msgid "Historikken har nådd lagringsgrensen. Ingen data er overskrevet; kontakt administrator."
 msgstr ""
 
-#: src/Infrastructure/CourseRepository.php:384
+#. translators: %d: course object ID for support.
+#: src/Infrastructure/CourseRepository.php:354
+#, php-format
+msgid "Lagringen av kursobjekt #%d ble avvist. Dette bekrefter ikke at en annen bruker har endret oppsettet. Last siden på nytt og kontroller lagret status. Hvis feilen gjentar seg, må administrator undersøke databasefeil og utvidelser som påvirker lagring. Kontrollkode: RNL-DB-WRITE."
+msgstr ""
+
+#. translators: %d: course object ID.
+#: src/Infrastructure/CourseRepository.php:356
+#, php-format
+msgid "Kursobjekt #%d ble endret under lagringen. Ingen eldre versjon er skrevet over. Last siden på nytt og sammenlign oppsettet før du prøver igjen. Kontrollkode: RNL-WRITE-CONFLICT."
+msgstr ""
+
+#: src/Infrastructure/CourseRepository.php:394
 msgid "Instruktøren må være en offentlig profil av en konfigurert innholdstype."
 msgstr ""
 
-#: src/Infrastructure/CourseRepository.php:396
+#: src/Infrastructure/CourseRepository.php:406
 msgid "Nivået er ikke tilgjengelig for nye valg. Velg et aktivt nivå, eller be administrator aktivere det under Kursinnhold og ressurser."
 msgstr ""
 
-#: src/Infrastructure/CourseRepository.php:416
+#. translators: 1: course object title, 2: submitted version, 3: current version.
+#: src/Infrastructure/CourseRepository.php:419
+#, php-format
+msgid "«%1$s» er endret siden siden ble åpnet. Du sendte versjon %2$d, mens lagret versjon er %3$d. Last siden på nytt og kontroller endringene før du prøver igjen. Kontrollkode: RNL-VERSION."
+msgstr ""
+
+#: src/Infrastructure/CourseRepository.php:426
 msgid "Du har ikke tilgang til dette kursoppsettet."
 msgstr ""
 
 #. translators: 1: number of sessions, 2: earliest affected date, 3: latest affected date, 4: visibility start, 5: visibility end, 6: timezone.
-#: src/Infrastructure/CourseRepository.php:527
+#: src/Infrastructure/CourseRepository.php:538
 #, php-format
 msgid "%1$d kurskvelder (første berørte dato: %2$s, siste: %3$s) ligger helt eller delvis utenfor tidsrommet kursoversikten vises på nettsiden: %4$s – %5$s (%6$s). Dette er informasjon og blokkerer ikke lagring eller publisering. Kursdatoene beholdes. Endre «Synlig fra» eller «Synlig til» i kursperioden bare hvis oversikten skal vises tidligere eller senere."
 msgstr ""
 
-#: src/Infrastructure/CourseRepository.php:529
+#: src/Infrastructure/CourseRepository.php:540
 msgid "ingen fast start"
 msgstr ""
 
-#: src/Infrastructure/CourseRepository.php:530
+#: src/Infrastructure/CourseRepository.php:541
 msgid "ingen fast slutt"
 msgstr ""
 
@@ -5060,102 +5179,116 @@ msgstr ""
 msgid "Perioden må ha minst ett kurs."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:123
+#: src/Infrastructure/CourseWorkflow.php:124
 msgid "kurset må være kladd."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:124
+#: src/Infrastructure/CourseWorkflow.php:125
 msgid "gjennomgå planen etter periodeendringen."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:129
+#: src/Infrastructure/CourseWorkflow.php:130
 msgid "«Kursbeskrivelse» er tom. Beskriv hva deltakerne lærer, for eksempel grunnsteg og enkle turer i salsa."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:130
+#: src/Infrastructure/CourseWorkflow.php:131
 msgid "«Nivå og forkunnskaper» er tom. Forklar hvilken erfaring som kreves, for eksempel «Du bør ha fullført nybegynnerkurset»."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:131
+#: src/Infrastructure/CourseWorkflow.php:132
 msgid "«Påmeldingsstatus» står på «Må avklares». Velg en status under Pris og påmelding, for eksempel «Påmelding tilgjengelig» eller «Åpner senere»."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:132
+#: src/Infrastructure/CourseWorkflow.php:133
 msgid "Automatisk påmeldingsstatus krever en LetsReg-kobling. Velg arrangement og priskategorier under Påmelding hos LetsReg, eller velg en manuell status."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:137
+#: src/Infrastructure/CourseWorkflow.php:138
 msgid "påmeldingslenke mangler."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:139
+#: src/Infrastructure/CourseWorkflow.php:140
 msgid "påmeldingslenken må bruke et godkjent LetsReg-domene."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:140
+#: src/Infrastructure/CourseWorkflow.php:141
 msgid "påmeldingslenken bruker feil port."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:144
+#: src/Infrastructure/CourseWorkflow.php:145
 msgid "bekreft en komplett øktplan."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:147
+#: src/Infrastructure/CourseWorkflow.php:148
 msgid "hver kurskveld trenger en sal."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:154
+#: src/Infrastructure/CourseWorkflow.php:155
 msgid "en økt ligger etter absolutt siste dato."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:157
+#: src/Infrastructure/CourseWorkflow.php:158
 msgid "en økt treffer et opphold."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:161
+#: src/Infrastructure/CourseWorkflow.php:162
 msgid "en økt ligger utenfor synlighetsvinduet."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:165
+#: src/Infrastructure/CourseWorkflow.php:166
 msgid "påmeldingen stenger etter kursstart."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:170
+#: src/Infrastructure/CourseWorkflow.php:171
 msgid "Uavklart sal- eller instruktørkollisjon: "
 msgstr ""
 
 #. translators: 1: course title, 2: date, 3: start time.
-#: src/Infrastructure/CourseWorkflow.php:185
+#: src/Infrastructure/CourseWorkflow.php:186
 #, php-format
 msgid "%1$s den %2$s kl. %3$s"
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:196
+#: src/Infrastructure/CourseWorkflow.php:197
 msgid "Ugyldig publiseringsforslag."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:206
+#: src/Infrastructure/CourseWorkflow.php:207
 msgid "Ugyldig handling."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:221
+#: src/Infrastructure/CourseWorkflow.php:225
+msgid "Et kurs er fjernet fra perioden."
+msgstr ""
+
+#. translators: %s: names of changed courses, or explanation of removed course.
+#: src/Infrastructure/CourseWorkflow.php:226
+#, php-format
+msgid "Kurslisten er endret etter at siden ble åpnet: %s. Dette kan også skyldes endret påmeldingsstatus. Last periodeoversikten på nytt og prøv handlingen igjen. Kontrollkode: RNL-COURSE-LIST."
+msgstr ""
+
+#: src/Infrastructure/CourseWorkflow.php:230
 msgid "Periodens status er endret. Last siden på nytt."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:226
+#: src/Infrastructure/CourseWorkflow.php:235
 msgid "Historiske perioder skal avpubliseres, ikke slettes av kursansvarlig."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:251
+#: src/Infrastructure/CourseWorkflow.php:263
 msgid "Statusendringen feilet. Hele operasjonen er rullet tilbake."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:263
+#: src/Infrastructure/CourseWorkflow.php:276
 msgid "Bare enkeltkurs i en kladdperiode kan flyttes til eller fra papirkurven."
 msgstr ""
 
-#: src/Infrastructure/CourseWorkflow.php:267
+#: src/Infrastructure/CourseWorkflow.php:280
 msgid "Et tidligere publisert kurs skal avlyses, ikke slettes av kursansvarlig."
+msgstr ""
+
+#: src/Infrastructure/DatabaseLock.php:25
+msgid "Databasen kunne ikke sikre lagringen. Endringen er ikke startet. Last siden på nytt og prøv igjen. Hvis feilen fortsetter, må administrator kontrollere databasetilkoblingen og feilloggen. Kontrollkode: RNL-DB-LOCK."
 msgstr ""
 
 #: src/Infrastructure/DemoCapacityAdapter.php:12
@@ -5352,30 +5485,43 @@ msgstr ""
 msgid "En priskategori kan bare velges én gang per kurs."
 msgstr ""
 
-#: src/Infrastructure/Mutation.php:30
+#: src/Infrastructure/Mutation.php:44
 msgid "En annen kursendring pågår. Prøv igjen."
 msgstr ""
 
-#: src/Infrastructure/Mutation.php:40
+#: src/Infrastructure/Mutation.php:57
 msgid "Samlet publisering krever InnoDB-lagring. Kontakt administrator."
 msgstr ""
 
-#: src/Infrastructure/Mutation.php:44
+#: src/Infrastructure/Mutation.php:62
 msgid "Kunne ikke starte samlet lagring."
 msgstr ""
 
-#: src/Infrastructure/Mutation.php:51
+#: src/Infrastructure/Mutation.php:81
 msgid "Kunne ikke fullføre samlet lagring."
 msgstr ""
 
-#. translators: 1: valgt dato, 2: periodestart, 3: periodeslutt eller tekst om åpen slutt.
+#. translators: 1: valgt dato, 2: første tillatte dato, 3: siste tillatte dato eller tekst om åpen slutt.
 #: src/Infrastructure/PlanningBounds.php:18
 #, php-format
-msgid "Datoen %1$s ligger utenfor kursperioden, som starter %2$s og slutter %3$s. Velg en dato innenfor perioden, eller endre periodens datoer først."
+msgid "Datoen %1$s ligger utenfor tillatt tidsrom: %2$s – %3$s. Kontroller første kursdato og sluttdato i kursoppsettet eller kursperioden."
 msgstr ""
 
 #: src/Infrastructure/PlanningBounds.php:19
 msgid "uten fast sluttdato"
+msgstr ""
+
+#. translators: 1: selected first date; 2: normal period start.
+#: src/Infrastructure/PlanningBounds.php:40
+#: assets/admin.js:24
+#, php-format,js-format
+msgid "Første kursdato %1$s er før kursperiodens start %2$s. Kryss av «Tillat kursstart før kursperioden» under Flere valg hvis dette er et bevisst unntak, eller velg en dato fra periodens start."
+msgstr ""
+
+#. translators: 1: explicit first course date; 2: normal period start date.
+#: src/Infrastructure/PlanningBounds.php:67
+#, php-format
+msgid "Bekreftet unntak: Kurset starter %1$s, før kursperiodens vanlige start %2$s. Den tidligere datoen gjelder bare dette kurset og blokkerer ikke lagring eller publisering. Periodens datoer og synlighetsvindu er ikke endret."
 msgstr ""
 
 #: src/Infrastructure/RegistrationState.php:32
@@ -5399,195 +5545,203 @@ msgstr ""
 msgid "Ukjent RegiNor-innholdstype."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:126
+#: src/Infrastructure/StateSchema.php:127
 msgid "Ugyldige kursdata: "
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:130
+#: src/Infrastructure/StateSchema.php:131
 msgid "Kursdata kunne ikke normaliseres."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:140
+#: src/Infrastructure/StateSchema.php:141
 msgid "Navn og eventuell adresse kan ikke være tomme."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:150
+#: src/Infrastructure/StateSchema.php:151
 msgid "Opphold trenger unik ID og forklaring."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:165
+#: src/Infrastructure/StateSchema.php:166
 msgid "Tidsvinduet inneholder et ugyldig tidspunkt."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:171
-#: assets/admin.js:42
+#: src/Infrastructure/StateSchema.php:172
+#: assets/admin.js:45
 msgid "Slutten av tidsvinduet må være etter starten."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:179
+#: src/Infrastructure/StateSchema.php:180
 msgid "Påmeldingsdatoen er ugyldig."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:182
+#: src/Infrastructure/StateSchema.php:183
 msgid "Påmeldingen må stenge etter at den åpner."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:185
+#: src/Infrastructure/StateSchema.php:186
 msgid "Velg et punkt i kartet, eller tøm begge koordinatfeltene."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:193
+#: src/Infrastructure/StateSchema.php:194
 msgid "Oppgi drop-in-pris per person og kurskveld. Bruk 0 hvis drop-in er gratis."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:201
+#: src/Infrastructure/StateSchema.php:202
 msgid "Økter trenger unike ID-er og opprinnelige datoer."
 msgstr ""
 
-#: src/Infrastructure/StateSchema.php:208
+#: src/Infrastructure/StateSchema.php:209
 msgid "Et obligatorisk felt er tomt etter tekstkontroll."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:74
+#: src/Infrastructure/TecBridge.php:73
 msgid "Kursperioden er ikke tilgjengelig nå."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:153
-msgid "Kalendersynkroniseringen fikk ikke tilgang til databaselåsen. En annen kursendring kan pågå. Last siden på nytt; hvis dette gjentar seg, må administrator kontrollere databasens støtte for GET_LOCK."
+#: src/Infrastructure/TecBridge.php:156
+msgid "En kalenderoppdatering pågår. Du kan fortsatt redigere kursperioden. En senere bakgrunnskontroll prøver igjen."
 msgstr ""
 
 #: src/Infrastructure/TecBridge.php:173
+msgid "Kalenderen venter til en kursendring er ferdig lagret. En senere bakgrunnskontroll prøver igjen."
+msgstr ""
+
+#: src/Infrastructure/TecBridge.php:189
 msgid "Kursperiode med undervisning på faste kursdager. Se kursoversikten for tider, kursfrie dager og påmelding."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:173
+#: src/Infrastructure/TecBridge.php:189
 msgid "Se alle kursene i perioden"
 msgstr ""
 
 #. translators: %s: course period name.
-#: src/Infrastructure/TecBridge.php:174
+#: src/Infrastructure/TecBridge.php:190
 #, php-format
 msgid "Kursperiode: %s"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:195
+#: src/Infrastructure/TecBridge.php:211
 msgid "TEC kunne ikke opprette arrangementet. Perioden er offentlig og klar for kalenderdeling. Administrator må kontrollere TEC/TEC Pro-versjoner og feilloggen før nytt forsøk."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:196
-msgid "TEC avbrøt oppdateringen av kalenderoppføringen. Kursperioden er beholdt. Last siden på nytt for et nytt forsøk."
+#: src/Infrastructure/TecBridge.php:212
+msgid "TEC avbrøt oppdateringen av kalenderoppføringen. Kursperioden er beholdt. En senere bakgrunnskontroll prøver igjen."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:197
+#: src/Infrastructure/TecBridge.php:213
 msgid "Arrangementet er lagret, men kalenderkategori eller bilde kunne ikke oppdateres. Kontroller valgene under Nettsidevisning → Arrangementskalender."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:198
-msgid "Kalenderoppføringen kunne ikke klargjøres. Last siden på nytt. Hvis feilen fortsetter, må administrator undersøke feilloggen."
+#: src/Infrastructure/TecBridge.php:214
+msgid "Kalenderoppføringen kunne ikke klargjøres. En senere bakgrunnskontroll prøver igjen. Hvis feilen fortsetter, må administrator undersøke feilloggen."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:204
+#: src/Infrastructure/TecBridge.php:220
 msgid "Kalendersynkroniseringen ble avbrutt under lesing eller skjuling av kalenderoppføringer. Administrator må kontrollere feilloggen. Dette er ikke en beskjed om at kursstart ligger frem i tid."
 msgstr ""
 
+#: src/Infrastructure/TecBridge.php:227
+msgid "Kalenderoppdateringen kunne ikke gjenopprette språkinnstillingen. Hvis feilen fortsetter, må administrator kontrollere WPML og feilloggen."
+msgstr ""
+
 #. translators: 1: event ID, 2: fields still different after saving, 3: non-sensitive technical result codes.
-#: src/Infrastructure/TecBridge.php:238
+#: src/Infrastructure/TecBridge.php:267
 #, php-format
 msgid "TEC-oppføring #%1$d ble forsøkt oppdatert med begge lagringsmetodene, men disse feltene stemmer fortsatt ikke: %2$s. Kursperioden er beholdt. Oppgi denne meldingen ved feilsøking. Kontrollkode: %3$s."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:265
+#: src/Infrastructure/TecBridge.php:295
 msgid "arrangementsidentitet"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:266
+#: src/Infrastructure/TecBridge.php:296
 msgid "tittel"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:266
+#: src/Infrastructure/TecBridge.php:296
 msgid "beskrivelse"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:266
+#: src/Infrastructure/TecBridge.php:296
 msgid "publiseringsstatus"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:269
+#: src/Infrastructure/TecBridge.php:299
 msgid "startdato"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:269
+#: src/Infrastructure/TecBridge.php:299
 msgid "sluttdato"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:269
+#: src/Infrastructure/TecBridge.php:299
 msgid "tidssone"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:269
+#: src/Infrastructure/TecBridge.php:299
 msgid "kurslenke"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:276
+#: src/Infrastructure/TecBridge.php:306
 msgid "heldagsvalg"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:276
+#: src/Infrastructure/TecBridge.php:306
 msgid "kartvalg"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:276
+#: src/Infrastructure/TecBridge.php:306
 msgid "kartlenke"
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:285
+#: src/Infrastructure/TecBridge.php:315
 msgid "Kalenderdeling er valgt. The Events Calendar må aktiveres for å vise perioden i kalenderen."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:286
+#: src/Infrastructure/TecBridge.php:316
 msgid "Kalenderoppføringen er skjult fordi kursperioden ikke er publisert. Publiser perioden for å dele den i kalenderen."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:287
+#: src/Infrastructure/TecBridge.php:317
 msgid "Kalenderoppføringen er skjult fordi kursperioden er avlyst."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:288
+#: src/Infrastructure/TecBridge.php:318
 msgid "Kalenderoppføringen mangler en offentlig kursside å lenke til. Velg en publisert side uten passord under Nettsidevisning."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:289
+#: src/Infrastructure/TecBridge.php:319
 msgid "Kalenderoppføringen er skjult fordi kursperioden er passordbeskyttet."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:290
+#: src/Infrastructure/TecBridge.php:320
 msgid "Kalenderoppføringen er skjult fordi perioden mangler Synlig fra eller Synlig til. Fyll ut begge datoene i periodeoppsettet."
 msgstr ""
 
 #. translators: %s: visibility opening date and time in the period timezone.
-#: src/Infrastructure/TecBridge.php:294
+#: src/Infrastructure/TecBridge.php:324
 #, php-format
 msgid "Kalenderoppføringen er skjult frem til Synlig fra: %s. Bruk en tidligere synlighetsdato hvis kursrekken skal vises nå; kursstart og salgsdatoer kan fortsatt ligge frem i tid."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:296
+#: src/Infrastructure/TecBridge.php:326
 msgid "Kalenderoppføringen er skjult fordi Synlig til er passert. Kontroller synlighetsvinduet i periodeoppsettet."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:299
+#: src/Infrastructure/TecBridge.php:330
 msgid "Kalenderoppføringen er skjult fordi perioden ikke har et offentlig tilgjengelig kurs. Kontroller publisering, kursøkter, beskrivelse, sal, sted og eventuelle instruktørreferanser."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:300
+#: src/Infrastructure/TecBridge.php:331
 msgid "Kalenderoppføringen mangler en gyldig sluttdato. Angi periodens sluttdato eller kontroller at en kursøkt gir en sluttdato etter periodens start."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:304
+#: src/Infrastructure/TecBridge.php:335
 msgid "Perioden vises i arrangementskalenderen, med lenke til alle kursene."
 msgstr ""
 
-#: src/Infrastructure/TecBridge.php:305
-msgid "Perioden er klar for kalenderdeling, men ingen publisert TEC-oppføring er bekreftet. Last siden på nytt for et nytt synkroniseringsforsøk. Hvis dette fortsetter, må administrator kontrollere TEC-oppsettet."
+#: src/Infrastructure/TecBridge.php:336
+msgid "Perioden er klar for kalenderdeling og venter på bekreftet bakgrunnskontroll. Hvis oppføringen fortsatt mangler etter noen minutter, må administrator kontrollere automatiske jobber og TEC-oppsettet."
 msgstr ""
 
 #: src/Infrastructure/TecDefaults.php:39
@@ -5596,6 +5750,52 @@ msgstr ""
 
 #: src/Infrastructure/TecDefaults.php:42
 msgid "Kategorien finnes ikke i arrangementskalenderen. Velg en kategori fra listen."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:20
+msgid "RegiNor kalenderkontroll"
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:56
+msgid "WordPress kunne ikke lagre cron-køen. Dette kan skyldes databasefeil eller samtidige oppdateringer; kontroller feilloggen ved dette tidspunktet."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:57
+msgid "En utvidelse eller et filter avviste køleggingen."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:58
+msgid "WordPress meldte at jobben allerede finnes, men RegiNor kunne ikke bekrefte den i køen."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:59
+msgid "WordPress fant ikke kalenderjobbens gjentakelsesintervall."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:60
+msgid "WordPress eller en utvidelse avviste køleggingen. Administrator må undersøke feilloggen."
+msgstr ""
+
+#. translators: 1: explanation, 2: fixed cron hook, 3: safe error code.
+#: src/Infrastructure/TecSyncQueue.php:62
+#, php-format
+msgid "Kalenderkontrollen kunne ikke legges i WordPress-cron (ikke Action Scheduler). %1$s Jobb: %2$s. Kontrollkode: RNL-TEC-SCHEDULE/%3$s. Denne meldingen gjelder kalenderkøen, ikke om kursendringen ble lagret."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:92
+msgid "Kalenderoppdateringen har ventet i over ti minutter. Administrator må kontrollere at automatiske jobber kjører på nettstedet. Kursperioden kan fortsatt redigeres. Kontrollkode: RNL-TEC-DELAYED."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:93
+msgid "Kalenderoppdateringen ligger i kø og utføres i bakgrunnen. Du kan fortsette å redigere kursperioden."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:97
+msgid "Siste kalenderkontroll er ikke registrert som fullført. Kursperioden kan fortsatt redigeres. Administrator må kontrollere automatiske jobber og serverens feillogg. Kontrollkode: RNL-TEC-INCOMPLETE."
+msgstr ""
+
+#: src/Infrastructure/TecSyncQueue.php:98
+msgid "Kalenderkontrollen er startet i bakgrunnen. Du kan fortsatt redigere kursperioden."
 msgstr ""
 
 #: src/Infrastructure/VenueMap.php:33
@@ -5741,103 +5941,159 @@ msgid "Velg en gyldig dato i kalenderen."
 msgstr ""
 
 #. translators: 1: valgt dato, 2: tidligste tillatte dato (ÅÅÅÅ-MM-DD).
-#: assets/admin.js:24
+#: assets/admin.js:27
 #, js-format
-msgid "Datoen %1$s er før tidligste tillatte dato %2$s. Velg denne datoen eller en senere dato innenfor kursperioden."
+msgid "Datoen %1$s er før tidligste tillatte dato %2$s. Velg denne datoen eller en senere dato innenfor tillatt tidsrom."
 msgstr ""
 
 #. translators: 1: valgt dato, 2: siste tillatte dato (ÅÅÅÅ-MM-DD).
-#: assets/admin.js:27
+#: assets/admin.js:30
 #, js-format
 msgid "Datoen %1$s er etter siste tillatte dato %2$s. Velg en tidligere dato, eller endre sluttdatoen i kursoppsettet eller kursperioden først."
 msgstr ""
 
 #. translators: 1: valgt dato, 2: valgt ukedag.
-#: assets/admin.js:30
+#: assets/admin.js:33
 #, js-format
 msgid "Første kursdato %1$s har en annen ukedag enn valgt undervisningsdag (%2$s). Endre datoen eller ukedagen slik at de samsvarer."
 msgstr ""
 
 #. translators: 1: valgt sluttdato, 2: startdato.
-#: assets/admin.js:33
+#: assets/admin.js:36
 #, js-format
 msgid "Sluttdatoen %1$s er før startdatoen %2$s. Velg samme dato eller en senere sluttdato."
 msgstr ""
 
-#: assets/admin.js:36
+#: assets/admin.js:39
 msgid "Bruk en gyldig tidssone, for eksempel Europe/Oslo."
 msgstr ""
 
-#: assets/admin.js:38
+#: assets/admin.js:41
 msgid "Skriv klokkeslett, for eksempel 18:00."
 msgstr ""
 
 #. translators: 1: sluttklokkeslett, 2: startklokkeslett.
-#: assets/admin.js:41
+#: assets/admin.js:44
 #, js-format
 msgid "Slutt %1$s er ikke etter start %2$s. Velg et senere sluttklokkeslett samme dag, for eksempel 19:00 ved start 18:00."
 msgstr ""
 
-#: assets/admin.js:43
+#: assets/admin.js:46
 msgid "Velg et helt antall fra 1 til 104, for eksempel 6."
 msgstr ""
 
-#: assets/admin.js:44
+#: assets/admin.js:47
 msgid "Skriv kroner uten tusenskille, for eksempel 1200 eller 1200,50 (maks 1 000 000)."
 msgstr ""
 
-#: assets/admin.js:45
+#: assets/admin.js:48
 msgid "Velg en kursbeskrivelse, for eksempel Salsa nybegynner."
 msgstr ""
 
-#: assets/admin.js:51
+#: assets/admin.js:54
 msgid "Bruk en full HTTPS-lenke, for eksempel https://www.letsreg.com/event/ditt-kurs."
 msgstr ""
 
-#: assets/admin.js:57
+#: assets/admin.js:60
 msgid "Legg inn en full HTTPS-lenke til påmelding før publisering."
 msgstr ""
 
-#: assets/admin.js:58
+#: assets/admin.js:61
 msgid "LetsReg-lenke mangler. Kladden kan lagres, men lenken må fylles ut før publisering med påmelding eller venteliste."
 msgstr ""
 
-#: assets/admin.js:61
+#: assets/admin.js:64
 msgid "Før publisering: bruk et godkjent LetsReg-domene og vanlig HTTPS-port. Eksempel: https://www.letsreg.com/event/ditt-kurs."
 msgstr ""
 
-#: assets/admin.js:92
+#: assets/admin.js:95
 msgid "Dette må rettes før du fortsetter"
 msgstr ""
 
-#: assets/admin.js:173
+#: assets/admin.js:185
 msgid "Du kan ha opptil 100 opphold. Fjern et opphold før du legger til flere."
 msgstr ""
 
-#: assets/admin.js:182
+#: assets/admin.js:194
 msgid "Nytt opphold er klart. Fyll ut fra-dato og forklaring; til-dato er valgfri."
 msgstr ""
 
 #. translators: %d: number of categories filled from name suggestions.
-#: assets/admin.js:216
+#: assets/admin.js:228
 #, js-format
 msgid "Forslag er fylt inn for %d kategorier. Kategorier som allerede hadde en rolle, er beholdt. Kontroller valgene før lagring."
 msgstr ""
 
-#: assets/block.js:11
+#: assets/block.js:16
 msgid "Viser tilgjengelige kurs automatisk. Velg siden for kursoversikten under RegiNor Lite → Nettsidevisning."
 msgstr ""
 
-#: assets/block.js:12
+#: assets/block.js:17
 msgid "Vis først"
 msgstr ""
 
-#: assets/block.js:13
+#: assets/block.js:18
 msgid "Bruk felles utseendevalg"
 msgstr ""
 
-#: assets/block.js:13
+#: assets/block.js:18
 msgid "Kursliste – anbefalt for nye deltakere"
+msgstr ""
+
+#: assets/block.js:20
+msgid "Tillatte visninger"
+msgstr ""
+
+#: assets/block.js:21
+msgid "Kursliste og ukeskalender"
+msgstr ""
+
+#: assets/block.js:21
+msgid "Bare kursliste"
+msgstr ""
+
+#: assets/block.js:21
+msgid "Bare ukeskalender"
+msgstr ""
+
+#: assets/block.js:23
+msgid "Vis bare disse nivåene"
+msgstr ""
+
+#: assets/block.js:24
+msgid "Skriv nivånavn eller nivå-ID med komma mellom. Tomt felt viser alle nivåer."
+msgstr ""
+
+#: assets/block.js:26
+msgid "Utelat disse nivåene"
+msgstr ""
+
+#: assets/block.js:27
+msgid "For eksempel Intro. Utelatte nivåer skjules også fra nivåfilteret."
+msgstr ""
+
+#: assets/block.js:30
+msgid "Alle kurs"
+msgstr ""
+
+#: assets/block.js:30
+msgid "Bare fremhevede"
+msgstr ""
+
+#: assets/block.js:30
+msgid "Utelat fremhevede"
+msgstr ""
+
+#: assets/block.js:32
+msgid "Vis overskrift og periodeoverskrift"
+msgstr ""
+
+#: assets/block.js:32
+msgid "Vis filtre"
+msgstr ""
+
+#: assets/block.js:32
+msgid "La besøkende velge visning"
 msgstr ""
 
 #: assets/course-tools.js:18

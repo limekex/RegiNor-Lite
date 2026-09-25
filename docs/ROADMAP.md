@@ -1,10 +1,112 @@
 # Roadmap – RegiNor Lite
 
-Oppdatert **23. september 2026**. Grunnlag: spesifikasjon v1.2 og prosjekteiers avklaringer. RegiNor tas i bruk fra neste nye kursperiode uten migrering av gamle ACF-kurs. Avada og The Events Calendar videreføres.
+Oppdatert **25. september 2026**. Grunnlag: spesifikasjon v1.2 og prosjekteiers avklaringer. RegiNor tas i bruk fra neste nye kursperiode uten migrering av gamle ACF-kurs. Avada og The Events Calendar videreføres.
 
 Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfrist er avtalt. Backend og frontend skal være intuitive for personer med lav digital kompetanse og ha et elegant uttrykk; se [brukeropplevelse](BRUKEROPPLEVELSE.md). Leveransehistorikk og lokale testbevis finnes i [endringsloggen](../CHANGELOG.md).
 
-## Siste oppfølging – 0.1.14
+## Oppfølging – 0.1.24
+
+- [x] Kurs med én kveld bruker entallsdag og «Dato» i kort/kursprofil, og viser faktisk dato i kalenderkortet. Dagsoverskriften er i entall når alle viste kurs den dagen har én kveld; gjentakende kurs beholder flertall og oppstart.
+- [x] Kalenderens tidsakse avgrenses til første/siste viste kurs på hver dag. Saler samme dag beholder felles klokke og faktiske opphold. Filtre oppdaterer tidsrommet, og korte dagskolonner strekkes ikke til nabodagens høyde.
+- [x] Lokalt: offentlig 119 / HTTP 83, admin 117, interface/DOM og Composer 230/565 består. Regresjonsprøvene dekker bl.a. enkeltkveld kl. 13 på lørdag og kveldskurs på andre dager. POT og ZIP med 126 runtime-filer kontrollert.
+- [ ] Visuell prøve i faktisk Avada/staging med ulike dagstider og enkeltkvelder.
+
+[Releasenotat og testbevis](releases/0.1.24.md).
+
+## Oppfølging – 0.1.23
+
+- [x] En egen første kursdato før perioden krever aktiv avkryssing på kurset. Server og skjema håndhever dette, også ved import; tillatelsen nullstilles ved kopiering til ny periode.
+- [x] Forhåndsvisning/publiseringskontroll viser unntaket. Andre kurs, periodens datoer og synlighets-/salgsvinduer beholdes. Eksisterende økt-, kollisjons-, sluttdato- og historikkvern gjelder fortsatt.
+- [x] Kursvisning, schema og kalenderfil bruker faktiske datoer; ukeskalenderen viser tidligere oppstart. TECs samleoppføring beholder periodens oppgitte datoer.
+- [x] Lokalt: admin 117, lagring 65, arbeidsflyt 92, HTTP 43, offentlig 99 / HTTP 83, import 117, kalender 43, WordPress, interface/DOM og Composer 230/565 består. Importprøven bruker syntetiske API-svar. POT og ZIP med 126 runtime-filer kontrollert.
+- [ ] Prøv godkjent introkurs før perioden i faktisk Avada/staging, inkludert synlighets- og salgsvindu.
+
+[Releasenotat og testbevis](releases/0.1.23.md).
+
+## Beskrivelsesmal for introkurs – 25. september 2026
+
+- [x] [Introkursbeskrivelse i enkel HTML](SALSA-INTROKURS-LETSREG.md), med eksisterende tekstmarkører og veiledning for én økt på 150 minutter. Ingen ny kurstype eller automatisk timeplantolkning fra brødtekst.
+- [x] Eksisterende maltester (6 / 34 assertions) og 11 direkte kontroller av HTML-eksemplet og nivånavntreff består lokalt. Ingen runtime-endring.
+- [ ] Bekreft arrangementsår, sal, pris/partnerordning og videre kurstilbud; prøv teksten gjennom LetsRegs editor/API og kontroller importert kladd med én økt.
+
+## Oppfølging – 0.1.22
+
+- [x] Erklærer WP Consent API-støtte gjennom den dokumenterte kroken for RegiNors egen pluginfil. Nettstedhelse skal dermed gjenkjenne støtten.
+- [x] API-avslag håndheves direkte for statistikk og markedsføring i nettleser og server. Complianz kreves fortsatt; tilbaketrekking og sletting av måleøkten beholdes.
+- [x] Lokalt: journey 55, analytics 36, WordPress-oppstart og Composer 230/565 består. Prøvene bruker syntetisk samtykke og bekrefter også at andre utvidelser ikke får RegiNors erklæring. POT og ZIP med 126 runtime-filer kontrollert.
+- [ ] Kontroller Nettstedhelse og reelle samtykkevalg/tilbaketrekking med Complianz/GTM etter installasjon. Erklæringen er ikke en full revisjon av nettstedets øvrige utvidelser.
+
+[Releasenotat og lokale testbevis](releases/0.1.22.md).
+
+## Oppfølging – 0.1.21
+
+- [x] Kampanjesider: inkluder/utelat kursnivåer og velg bare fremhevede kurs per kortkode. «Kategorier» betyr kursnivåer, avklart med prosjekteier. Utvalget avgrenses på serveren og gjelder kort, kalender, filtre og schema.
+- [x] Egne brytere for innledning/overskrifter, filtre og visningsvalg; startvisning og tillatte visninger. Flere innbygginger kan ha ulike valg på samme side, med egne filtre/ankre og bevarte kampanjeparametere. Tilsvarende valg i WordPress-blokken og eksempler under Nettsidevisning.
+- [x] Prosjekteier bekrefter at midlertidig lagringssporing er slått av etter vellykket kladdprøve.
+- [x] Lokalt: offentlig 99 / HTTP 83, admin 91, nivåer 37, WordPress, interface/DOM/blokk/fokus, journey og Composer 230/565 består. POT og ZIP med 126 runtime-filer kontrollert.
+- [ ] Visuell kontroll av kampanjelandingsside med to kortkoder i faktisk Avada/staging. Automatisk cron-testing avventes fortsatt.
+
+[Brukerveiledning](KORTKODER-OG-KAMPANJESIDER.md) · [Releasenotat og lokale testbevis](releases/0.1.21.md).
+
+## Oppfølging – 0.1.20
+
+- [x] Første produksjonsspor avgrenser tregheten til sekvensielle kursstatusoppdateringer, 10–32 sekunder per kurs. Kurslåsen tas på under ett millisekund; ingen commit er bekreftet i loggutdraget.
+- [x] Lokal ytelsesfeil gjenskapt og rettet: standard objektcache beholdes gjennom transaksjonen, og lokale cacheverdier ryddes ved transaksjonsgrensen. Syntetisk lagringshook går fra 100 til 2 SQL-kall for 100 gjentatte lesinger, med fortsatt korrekt rollback og alle hooks aktive.
+- [x] Diagnostikken viser antall SQL-kall og cachemodus uten rå SQL. Ekstern/ikke-standard objektcache beholder tidligere policy; ingen delt cache eller sidecache tømmes.
+- [x] Lokalt: cache 15, diagnostikk, arbeidsflyt 92 med/uten sporing, lagring 65, WordPress, HTTP 43, TEC 102, offentlig 99 / HTTP 58, DOM og Composer 230/565. POT og ZIP med 125 runtime-filer kontrollert. [Avgrensninger](releases/0.1.20.md#verifikasjon).
+- [x] Prosjekteier bekrefter LiteSpeed Object Cache av, med deaktivert Redis-/Memcached-utvidelse. Ny runtime-sporing skal bekrefte den faktiske implementasjonen.
+- [x] **Prosjekteier bekrefter 25. september at «Til kladd» fungerer etter 0.1.20 og går «forholdsvis raskt».** Den konkrete blokkerende brukerreisen er dermed bekreftet løst i denne prøven. Eksakt tidsmåling og nytt spor er ikke mottatt.
+- [ ] Republisering og etterfølgende TEC-synkronisering må bekreftes separat i faktisk miljø. Automatisk cron-testing avventes fortsatt; den vellykkede kladdprøven godkjenner ikke hele driftsoppsettet.
+
+> Punktene nedenfor beskriver tidligere utgaver og feilsøking. «Til kladd» er senere bekreftet løst med 0.1.20 som beskrevet over; øvrige driftskontroller beholdes åpne.
+
+## Oppfølging – 0.1.19
+
+- [x] Valgfri lagringsdiagnostikk med operasjons-ID, nettsteds-ID, databaseforbindelse og tidsbruk per trinn. Av som standard; ingen rå SQL, kursinnhold eller innsendte felter. Avgrenses til nettsted 19 under kontrollert forsøk.
+- [x] Tidlige oversettelser av cron-navn rettet, med egen regresjonsprøve. Intervallene er uendret.
+- [x] Lokalt: diagnostikkprøve med 92 arbeidsflytkontroller, arbeidsflyt uten sporing 92, lagring 65, HTTP 43, WordPress, oversettelser og Composer 230/565. POT og ZIP med 125 runtime-filer kontrollert. [Testomfang og avgrensninger](releases/0.1.19.md#verifikasjon).
+- [ ] Produksjonsfeilen er fortsatt åpen: siste logg har 37 låsetidsavbrudd ved Avadas cache og to PHP-stopp etter 120 sekunder. Knytt neste lagringsspor til aktiv ventende/blokkerende forbindelse hos host. Automatisk cron-testing avventes.
+
+## Driftsfunn etter 0.1.18 – nettsted 19
+
+- [x] Ny terminalprøve bekrefter nettsted 19 og manuell kjøring med eksplisitt PHP-CLI og `flock`: én kalenderhendelse returnerte på 0,131 sekunder uten fatalfeil. Første utskrift hadde to kjøringer på 4,928 og 2,146 sekunder; dette beviser ikke dupliserte TEC-oppføringer.
+- [x] Administrasjonens køpanel bekrefter registrert start/avslutning kl. 23:43:51 CEST og neste periodiske jobb kl. 23:48:51, uten den gamle generelle køfeilen. Første nye «Til kladd»-forsøk feilet fortsatt; ny logg bekrefter fortsatt 120-sekunders tidsavbrudd. Videre automatisk cron-prøve avventes etter prosjekteiers beskjed. PHP-innstillingene er vurdert i [feilsøkingsnotatet](FEILSOKING-KLADD-OG-TEC.md#køstatus-kl-234351-cest-og-php-innstillinger).
+- [x] RegiNors varsel om tidlige oversettelser gjenskapt og rettet lokalt. Egen oppstartstest, WordPress, admin 91, kapasitet 39, TEC 102 og Composer 225/518 består. Rettelsen følger 0.1.19; produksjonsstakken er ikke endret her.
+- [x] Køoversikt og ny logg vurdert: periodisk kalenderjobb finnes, men flere RegiNor-jobber er kraftig forsinket og besøksutløst cron er slått av. Gammel kømelding og faktisk køinnhold er skilt i [feilsøkingsnotatet](FEILSOKING-KLADD-OG-TEC.md).
+- [x] Servercron-kommando og konkret oppstartsfeil bekreftet fra cPanel/logg: WP-CLI starter med PHP-CGI og avbryter før hendelseskjøring. [Rettet kommando og avgrenset prøve](HOSTING-DATABASEKONTROLL.md#bekreftet-oppstartsfeil-i-cpanel-cron) er dokumentert.
+- [x] Prosjekteiers terminalprøve bekrefter `/usr/local/bin/php` som PHP 8.3.33 (cli). OPcache-advarsel om dobbel lasting gjenstår separat.
+- [ ] Bekreft periodens TEC-status og «Til kladd» etter den vellykkede manuelle kjøringen. Kontroller gamle planlagte publiseringer før hele cron-køen gjenopptas, og verifiser automatisk fremdrift over flere intervaller. Terminaltesten alene bekrefter ikke at cPanel-jobben er endret eller at kalenderoppføringen ble lagret riktig.
+- [ ] Finn eieren av den aktive databaseblokkeringen. Ny logg viser ti låsetidsavbrudd og PHP-stopp kl. 22:32:42 CEST. Cron-problemet er ikke i seg selv bevis for årsaken til «Til kladd»-feilen.
+
+## Oppfølging – 0.1.18
+
+- [x] Konkret WordPress-cron-feilkode, jobbnavn og administrativ lesestatus. Skiller kalenderkøen fra Action Scheduler og viser nettsteds-ID i flernettstedsoppsett.
+- [x] Bekreftet konkurrerende kølegging gir ikke falsk feil; tidligere køfeil ryddes når samme jobb faktisk finnes. Feil fra kalenderarbeidet beholdes.
+- [x] Lokalt: TEC 102, lagring 65, admin 91, adminmeny HTTP 56, WordPress og Composer 225 tester / 518 assertions; POT og ZIP kontrollert.
+- [ ] **Driftsblokkering fortsatt åpen:** Loggen etter 0.1.17 viser 32 låsetidsavbrudd rundt Avada-cache og PHP-timeout etter 120 sekunder. Identifiser aktiv blokkerende transaksjon med host, se [lesende kontroll](HOSTING-DATABASEKONTROLL.md). Gammel feilet TEC/Shepherd-jobb er ikke bevist som årsak.
+
+## Oppfølging – 0.1.17
+
+- [x] TEC-skriving flyttet fra sidelasting/skjemasvar/avslutning til bakgrunnsjobb, med deduplisering og periodisk kontroll. Samme oppføring gjenbrukes; kladd holdes skjult før jobben fullføres.
+- [x] Skiller avvist lagring fra reell versjonskonflikt. Meldinger identifiserer endret kurs/versjon og kontrollkode. Tom TEC-datovelgerinnstilling håndteres i reserveoppdateringen.
+- [x] Lokalt: TEC 91, arbeidsflyt 92, lagring 65, admin 91, HTTP 43 / TEC HTTP 15 / adminmeny 56, offentlig 99 / HTTP 58, WordPress, DOM og Composer 225 tester / 518 assertions.
+- [ ] Bekreft kladd/republisering og kjørende bakgrunnsjobb på faktisk nettsted. Ny prøve etter 0.1.16 viser fortsatt 120 sekunders tidsavbrudd og databaseventing; original blokkerende operasjon er ikke identifisert. Sikkerhetsutvidelser er ikke bevist som årsak.
+
+## Oppfølging – 0.1.16
+
+- [x] TEC har egen lås under oppdatering. Felles kurslås brukes bare til å lese et konsistent kildegrunnlag; kalenderarbeid venter ikke på andre skrivere.
+- [x] Databasefeil skilles fra opptatt lås. Språk-/oppryddingsfeil frigjør låser, og kladd beskyttes også når en eldre kalenderkopi fortsatt er publisert.
+- [x] Lokalt: TEC 82, arbeidsflyt 90, lagring 61, admin 91, HTTP 43 / TEC HTTP 15, offentlig 99 / HTTP 58, WordPress, DOM, journey 46 og Composer 225 tester / 518 assertions.
+- [ ] Bekreft «Til kladd» for Høst 3 2026 i faktisk miljø etter oppgradering. Loggen viser feil i databaseforbindelsen og WPML-låseventing; den opprinnelige årsaken er ikke bevist. Se [feilsøkingsnotat](FEILSOKING-KLADD-OG-TEC.md).
+
+## Oppfølging – 0.1.15
+
+- [x] RegiNor avventer samlet Complianz-/WP Consent API-oppdatering før nye hendelser, og stopper måling umiddelbart ved tilbaketrekking.
+- [x] Ingen ekstra reisestart ved mellomtilstanden i «Avslå alle»; slettingsforespørsler avbrytes ikke av senere kategoriendringer.
+- [x] Regresjonstest feilet før retting; 46 journey-tester og Composer-kontrollen passerer etter retting.
+- [ ] Verifiser 0.1.15 på salsanor.no med A–D og GA4 DebugView. GTM er integrert, og RegiNor-workspace er konfigurert, men upublisert.
+
+## Oppfølging – 0.1.14
 
 - [x] Lagrede arrangementsfelt leses tilbake etter TEC-oppdatering; et upålitelig retursvar avgjør ikke alene resultatet.
 - [x] Ved manglende oppdatering prøves TECs direkte oppdaterings-API på samme eide arrangements-ID. Vern, synlighetsregler og dublettsikring beholdes.

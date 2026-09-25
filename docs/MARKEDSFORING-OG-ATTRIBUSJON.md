@@ -1,6 +1,6 @@
 # Markedsføring, besøksvei og LetsReg
 
-Oppdatert 21. september 2026. Prosjekteier oppgir **Complianz og GTM, trolig med GA4**. Dette er implementert som en valgfri utvidelse av M5. Faktisk container, GA4-strøm, samtykkeoppsett og LetsReg-kontrakt er ikke kontrollert i staging.
+Oppdatert 23. september 2026. Complianz, WP Consent API og Site Kit brukes på salsanor.no. GTM-KDW4RQJS er integrert, og RegiNor-workspace 7 er konfigurert mot GA4-property 355411161 / G-Z4N25LJ0NH. RegiNor-taggen er upublisert. Første faktiske test fant for tidlige hendelser og en ekstra reisestart under tilbaketrekking; rettingen leveres i 0.1.15. LetsReg-kjøpskobling er fortsatt ikke verifisert.
 
 ## Levert nå
 
@@ -45,7 +45,15 @@ Dette aktiverer ikke ny automatisk overføring av besøks-ID, annonse-ID eller U
 
 ## Complianz og datalagring
 
-JavaScript bruker Complianz-API-et og samtykkehendelsene. En kategori må både være tillatt av `cmplz_has_consent` og ha eksplisitt «allow» gjennom Complianz' egen `cmplz_get_cookie`-funksjon. Cookieprefikser hardkodes ikke. API-et kontrolleres også på server for hver innsending. Dette følger grensesnittene i [Complianz' utviklerveiledning](https://complianz.io/help/wordpress/configuration/developers-guide-for-third-party-integrations/) og [JavaScript-kilden](https://github.com/complianz/complianz-gdpr/blob/master/cookiebanner/js/complianz.js).
+JavaScript bruker Complianz-API-et og samtykkehendelsene. Fra 0.1.15 samles kategoriendringer til neste oppgave i nettleseren før nye målehendelser, slik at Site Kit rekker å legge Googles oppdatering i datalaget. Tilbaketrekking stopper pågående måling straks; ny måling vurderes først mot den endelige tilstanden. Pluginen lytter også til WP Consent API og setter aldri Google-samtykket selv. En kategori må både være tillatt av `cmplz_has_consent` og ha eksplisitt «allow» gjennom Complianz' egen `cmplz_get_cookie`-funksjon. Cookieprefikser hardkodes ikke. API-et kontrolleres også på server for hver innsending. Dette følger grensesnittene i [Complianz' utviklerveiledning](https://complianz.io/help/wordpress/configuration/developers-guide-for-third-party-integrations/) og [JavaScript-kilden](https://github.com/complianz/complianz-gdpr/blob/master/cookiebanner/js/complianz.js).
+
+Fra **0.1.22** erklærer pluginens hovedfil støtte med `wp_consent_api_registered_` + `plugin_basename(__FILE__)`, som beskrevet i [WP Consent API-dokumentasjonen](https://wordpress.org/plugins/wp-consent-api/). Erklæringen gjelder bare RegiNor og registreres også når innsamling er avslått. Den aktiverer ikke sporing og endrer ikke samtykkevalg.
+
+Når `wp_has_consent` finnes, kreves også tillatelse derfra for hver kategori, både i nettleseren og ved mottak på serveren. Avslag på statistikk stopper måling; avslag på markedsføring hindrer annonse-ID-er. Eksisterende krav om Complianz og eksplisitt nettleservalg beholdes. Consent APIs standardtillatelse uten samtykkeløsning starter dermed ikke måling alene. Uten WP Consent API fortsetter eksisterende Complianz-integrasjon. Dette utvider ikke løsningen til andre samtykkebannere.
+
+Tilbaketrekking via `wp_listen_for_consent_change` stanser sendinger og rydder besøksøkten. Sletting av egne data er fortsatt tillatt etter at begge API-er har trukket samtykket tilbake. RegiNor setter ikke Consent API- eller Google-samtykke selv.
+
+Etter installasjon kan **Verktøy → Nettstedhelse** kontrolleres på nytt. RegiNor skal ikke lenger stå på listen over utvidelser uten erklært Consent API-støtte; samlevarselet kan fortsatt vises hvis andre utvidelser mangler erklæring. Dette er en kompatibilitetserklæring, ikke en full gjennomgang av nettstedets måleoppsett.
 
 - **Statistikksamtykke:** en tilfeldig besøks-ID, avgrensede kampanjefelt, kurs-/side-ID og måletrinn. Ingen måling eller lesing av tidligere besøksdata før dette samtykket.
 - **Markedsføringssamtykke i tillegg:** tillater `gclid`, `gbraid`, `wbraid`, `fbclid`, `msclkid`, `ttclid`, `ScCid` og `li_fat_id` fra første målte side. Hvis markedsføringssamtykke gis senere, etterfylles ikke en annen sides ID i den opprinnelige kampanjen; nye besøksøkter kan fange nye ID-er.

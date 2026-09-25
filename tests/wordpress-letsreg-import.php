@@ -129,6 +129,14 @@ try {
     $historicalPeriod=$created[]=$repo->create('period',array_replace($repo->get($period)['data'],['title'=>'Historical import test','visible_from'=>'2031-01-14T12:00:00Z']));
     $fields=array_diff_key($proposal['data'],array_flip(['period_id','course_id','period_version','sessions','letsreg_mapping']));
     $mapping=$proposal['data']['letsreg_mapping'];
+    $introPeriod=$created[]=$repo->create('period',array_replace($repo->get($period)['data'],['title'=>'Early intro import test']));
+    $introFields=array_replace($fields,['first_date'=>'2030-12-30','session_count'=>1]);
+    $reject(static fn()=>$repo->previewImport($introPeriod,1,$course,$introFields,$mapping),0,['Tillat kursstart før kursperioden']);
+    $introProposal=$repo->previewImport($introPeriod,1,$course,array_replace($introFields,['allow_early_start'=>true]),$mapping);
+    $assert($introProposal['issues']===[] && array_column($introProposal['data']['sessions'],'date')===['2030-12-30'],'Approved early intro import lost date');
+    $assert(str_contains(implode(' ',$introProposal['warnings']),'Bekreftet unntak'),'Early import does not explain override');
+    $introGroup=$created[]=$repo->confirmImport($introProposal);
+    $assert($repo->get($introGroup)['data']['allow_early_start']===true && $repo->get($introPeriod)['data']['start_date']==='2031-01-06','Intro import changes period or loses approval');
     $historical=$historicalRepo->previewImport($historicalPeriod,1,$course,$fields,$mapping);
     $assert($historical['issues']===[] && count($historical['data']['sessions'])===5,'Earlier dates block import or reduce total');
     $assert(array_column($historical['data']['sessions'],'date')===['2031-01-06','2031-01-13','2031-01-27','2031-02-03','2031-02-10'],'Import shifts start to today or ignores break');

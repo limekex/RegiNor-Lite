@@ -18,6 +18,7 @@ trait CourseImport
         $p = $period['data'];
         return ['title' => '', 'period_id' => $periodId, 'course_id' => 0, 'period_version' => $period['version'],
             'timezone' => $p['timezone'], 'start_date' => $p['start_date'], 'first_date' => null, 'latest_date' => null,
+            'allow_early_start' => false,
             'session_count' => $p['default_session_count'],
             'room_id' => $p['default_room_id'], 'instructor_ids' => [], 'price_minor' => $p['default_price_minor'],
             'price_basis' => $p['default_price_basis'], 'currency' => 'NOK', 'price_terms' => '',

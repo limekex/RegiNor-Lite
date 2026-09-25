@@ -92,6 +92,7 @@ final class StateSchema
         if ($kind === 'group') {
             $schema['properties'] += [
                 'level_id' => ['type' => 'integer', 'minimum' => 0, 'default' => 0],
+                'allow_early_start' => ['type' => 'boolean', 'default' => false],
                 'letsreg_mapping' => LetsRegMapping::schema(),
                 'price_from' => ['type' => 'boolean', 'default' => false],
                 'registration_from' => $instant, 'registration_until' => $instant,

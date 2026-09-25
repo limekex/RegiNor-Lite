@@ -132,6 +132,8 @@ Runder og redaksjonelle hjelpedata trenger ikke offentlige arkivsider. Kursgrupp
 
 Planleggingsmotoren skal være felles for administrasjon, offentlig visning, schema og eventuell kalenderfil.
 
+**Avklaring 25. september 2026, implementert i 0.1.23:** Et kurs, for eksempel et introkurs med én økt, kan starte før kursperiodens oppgitte start. Kursansvarlig må både angi «En annen første kursdato» og aktivt krysse av «Tillat kursstart før kursperioden». Dato alene er ikke godkjenning, heller ikke ved LetsReg-import. Godkjenningen lagres på kurset i eksisterende historikk og nullstilles ved kopiering til ny periode. Kursets nedre datogrense utvides til den godkjente første datoen; periodens oppgitte datoer og andre kurs endres ikke. Ukedag, kursfrie dager, øktantall, kollisjoner, historikkvern og sluttdato håndheves fortsatt. Synlighets- og salgsvalg er uavhengige og endres ikke. Forhåndsvisning/publiseringskontroll viser unntaket som informasjon. Faktiske økter brukes fortsatt til kursdatoer, offentlig periodesortering, schema og kalenderfiler. TECs samleoppføring beholder kursperiodens oppgitte tidsrom.
+
 1. Finn første valgte ukedag på eller etter ønsket startdato, eller bruk gruppens eksplisitte første kursdato.
 2. Generer ukentlige lokale datoer til ønsket antall undervisningsøkter er nådd. Hopp over opphold for runden og gruppen. Bruk en avgrenset søkehorisont og gi forståelig feil dersom oppsettet ikke kan fullføres.
 3. Vis beregnet sluttdato før lagring. Hvis et opphold skyver siste kveld, skal dette være synlig. En eventuell absolutt sluttdato skal stoppe publisering dersom antallet ikke får plass.
@@ -230,6 +232,8 @@ Prosjektmål: WCAG 2.2 AA i de leverte flatene, bekreftet med både automatisk o
 Implementer som avgrenset WordPress-plugin med moduler for datatilgang, validering, kalenderberegning, publisering, offentlig rendering, admin, schema og migrering. Ingen avhengighet til Supabase eller Vercel i MVP. Ny frontend rendres i PHP, med begrenset JavaScript for filtrering og administrasjon. Unngå en separat SPA for kurslisten.
 
 Lever en dynamisk blokk og en shortcode for innbygging i eksisterende sidebygger. Begge skal bruke samme renderer. Eksakte integrasjonspunkter velges etter kartlegging av aktivt tema og editor. Norsk bokmål i alle synlige tekster og feilmeldinger; engelsk er greit i interne identifikatorer.
+
+**Avklaring 25. september 2026 – kampanjesider:** Kortkoden skal kunne vise eller utelate bestemte kursnivåer og vise bare fremhevede kurs. Hver innbygging på samme side har sitt eget utvalg, startvisning og valg for å skjule innledning, filtre og visningsbytte. Utvalget håndheves på serveren og kan ikke utvides med URL-filtre. Blokk og kortkode bruker samme renderer. Implementasjonen og attributtene er beskrevet i [kortkodeveiledningen](KORTKODER-OG-KAMPANJESIDER.md); visuell Avada-kontroll er separat fra lokale automatiske prøver.
 
 Foreslåtte interne tjenester: `ScheduleGenerator`, `ConflictValidator`, `PublicationService`, `CourseRepository`, `SchemaPresenter` og `MigrationRunner`. De skal ha én felles, normalisert representasjon av en gruppe og dens faktiske økter.
 
@@ -467,16 +471,18 @@ Innbyggingen får `default_view: list | week` og `allowed_views`. Standard skal 
 
 ### 17.2 Oppbygning
 
-- Øverste overskriftsrad: ukedager uten dato, for eksempel «Mandager» og «Onsdager».
+- Øverste overskriftsrad: ukedager uten dato, for eksempel «Mandager» og «Onsdager». Når alle viste kurs på dagen har én kurskveld, brukes entall, for eksempel «Lørdag».
 - Andre overskriftsrad: saler under hver dag, for eksempel «Sal 1» og «Sal 2». Rom identifiseres med stabil ID og stedstilhørighet. Dersom flere steder brukes, vises sted også.
-- Venstre akse: lokale klokkeslett i Europe/Oslo. Kurs plasseres etter reell start/slutt; samtidige kurs i ulike saler skal kunne sammenlignes på samme høyde.
+- Venstre akse: lokale klokkeslett i Europe/Oslo, fra dagens første viste kursstart til dagens siste viste kursslutt. Saler innenfor samme dag deler tidsakse; andre dagers tider gir ikke tomme tidsrader. Kurs plasseres etter fast start/slutt; samtidige kurs i ulike saler samme dag skal kunne sammenlignes på samme høyde. Faktiske opphold mellom kursene beholdes.
 - Kursfelt: navn, nivå når det ikke framgår tydelig av navn, start–slutt, instruktør og kort kapasitet/status fra samme kilde som kurskortet. Klikk åpner samme kursdetalj.
 - Definert rekkefølge for saler, kronologisk rekkefølge for dager. Tom sal beholdes der dette støtter sammenligning; tomt felt merkes ikke som ledig undervisningskapasitet eller påmeldingsplass.
 - Kollisjoner må aldri skjule eller dekke et annet kurs. Administrasjonen varsler; offentlig publisering følger eksisterende kollisjonskontroll.
 
 ### 17.3 Fast timeplan for hele kursperioden
 
-Vis **ingen datoer, ukenumre eller ukevelger i kalendervisningen**. Dagsoverskrifter er «Mandager», «Tirsdager» osv. Vis valgt kursperiodes navn over timeplanen. «Ukeskalender» kan beholdes som visningsnavn; den viser en normal kursuke gjennom perioden, ikke en bestemt kalenderuke.
+Vis ingen ukenumre eller ukevelger i kalendervisningen. Dagsoverskrifter er «Mandager», «Tirsdager» osv., med entall når dagen bare viser kurs med én kveld. Vis valgt kursperiodes navn over timeplanen. «Ukeskalender» kan beholdes som visningsnavn; den viser en normal kursuke gjennom perioden, ikke en bestemt kalenderuke.
+
+**Avklaring 25. september 2026, implementert i 0.1.24:** Kurs med én faktisk, ikke-avlyst økt bruker entallsdag og «Dato» i kurskort og kursprofil. Kalenderkortet viser alltid den faktiske datoen som «Dato: …», også når den ligger før eller etter ordinær periodestart. Kurs over flere kvelder beholder «Oppstart» og flertallsdag. Dersom samme kalenderdag viser både enkeltkvelder og kurs over flere kvelder, beholder dagsoverskriften flertall; enkeltkvelden har fortsatt sin egen dato. Gjentakende kurs som starter tidligere/senere enn normalt, beholder datomerknaden om oppstart. Dette presiserer det opprinnelige ønsket om en kalender uten datoer. Tidsaksen avgrenses per dag etter gjeldende kursutvalg og filtre, og korte dagskolonner strekkes ikke til høyden på nabodagen.
 
 Hver kursgruppe vises én gang på sin faste ukedag, start/slutt og sal, også når perioden inneholder kursfrie uker. Opphold skal ikke fjerne gruppen fra denne oversikten. Vis en kort merknad som «Perioden har kursfrie dager – se kursdatoene» uten konkrete datoer i selve kalenderen. Kursdetaljen viser hele den faktiske datolisten og oppholdene.
 
@@ -494,8 +500,8 @@ Bruk semantiske dag-/saloverskrifter og tydelige navn på kurslenkene, tastaturn
 
 | ID | Bestått når |
 | --- | --- |
-| U1 | Mandager og onsdager er overordnede kolonner med Sal 1 og Sal 2 under hver; ingen datoer eller ukevelger |
-| U2 | Samtidige kurs står på samme tidsrad; ulike start-/sluttider og varigheter håndteres korrekt |
+| U1 | Ukedager er overordnede kolonner med saler under hver; entallsdag når alle viste kurs har én kveld, og dato på enkeltkurskort; ingen ukevelger |
+| U2 | Samtidige kurs samme dag står på samme tidsrad; hver dags tidsakse avgrenses til dagens viste kurs, med riktige start-/sluttider, varigheter og opphold |
 | U3 | Valgt kursperiode, nivå og dag bruker samme datagrunnlag som listen; bytte visning mister ikke valgene |
 | U4 | Opphold endrer ikke fast timeplan; avvik merkes og konkrete datoer vises på kursdetaljen |
 | U5 | Ved 320/390 px og 200 % tekstforstørrelse er innhold og handlinger lesbare uten sidescroll av hovedsiden |

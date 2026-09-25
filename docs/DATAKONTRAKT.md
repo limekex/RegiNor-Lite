@@ -119,6 +119,8 @@ Kursansvarlig bestiller kontroll av et eksisterende oppsett; administrator kan k
 
 Internt `start_date` beholdes for kalenderkontrakten. Kurseditoren avleder dette fra gjeldende periode; bare `first_date` brukes som synlig, valgfritt avvik. Ingen datamigrering er nødvendig. LetsReg-forslag er separat fra koblingsmodellen og blir vanlige lokale felt først når bruker velger å bruke og lagre dem.
 
+Fra 0.1.23: `group.allow_early_start` er en valgfri boolsk verdi, med `false` som standard. Eldre metadata/historikk uten feltet forblir gyldig. `first_date` før `period.start_date` krever `allow_early_start = true`, valgt med en egen avkryssing. Bare dette kursets nedre datogrense utvides til `first_date`, også for egne opphold og aktive økter. Det nedarvede `start_date` følger fortsatt perioden, og øvre grenser beholdes. Tillatelsen inngår i vanlig historikk og signerte forhåndsvisninger. Kopiering nullstiller både tillatelse og første dato. Ingen importforslag setter tillatelsen automatisk, og ingen synlighets-/salgsdato endres.
+
 ## Beskrivelser ved LetsReg-import
 
 Importforslag kan ha en ny, validert kursbeskrivelse og midlertidig `course_id=0`. Dette er kun et privat, signert forslag i nettleseren; det lagrede skjemaet krever fortsatt en reell positiv beskrivelses-ID. Ved bekreftelse opprettes beskrivelsen som kladd først, og kurset valideres med den nye ID-en før samlet commit. Ingen forhåndsvisning skriver midlertidige poster. Eksisterende beskrivelser refereres med ID/versjon og oppdateres ikke av import. Importkilden er signert, brukerbundet og kortlivet; den er ikke en permanent kapasitetstilstand.

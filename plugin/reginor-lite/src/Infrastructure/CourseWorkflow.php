@@ -120,6 +120,7 @@ trait CourseWorkflow
             try { PlanningBounds::group($g, $p, true); }
             catch (InvalidArgumentException $error) { $errors[] = $error->getMessage(); }
             $prefix = $g['title'] . ': ';
+            foreach (PlanningBounds::warnings($g, $p) as $warning) { $warnings[] = $prefix . $warning; }
             if (get_post_status($groupId) !== 'draft') { $errors[] = $prefix . __('kurset må være kladd.', 'reginor-lite'); }
             if ($g['period_version'] !== $period['version']) { $errors[] = $prefix . __('gjennomgå planen etter periodeendringen.', 'reginor-lite'); }
             $course = $this->resource($g['course_id'], 'course');
@@ -209,13 +210,21 @@ trait CourseWorkflow
 
     private function changeLifecycle(int $id, int $version, array $groupVersions, string $target): array
     {
+        MutationTrace::phase('lifecycle.validate', $id);
         $period = $this->get($id, 'period', $target === 'restore');
         $this->assertVersion($period, $version);
         $this->requireCapability('rnl_publish_periods');
         $groups = $target === 'restore' ? array_filter($this->listing('group', true), static fn ($s) => $s['data']['period_id'] === $id && ($s['event'] ?? '') === 'trashed') : $this->groups($id);
         $actual = array_map(static fn ($s) => $s['version'], $groups);
         ksort($actual); ksort($groupVersions);
-        if ($actual !== $groupVersions) { throw new VersionConflict(); }
+        if ($actual !== $groupVersions) {
+            $changed = [];
+            foreach ($actual as $groupId => $currentVersion) {
+                if (($groupVersions[$groupId] ?? null) !== $currentVersion) { $changed[] = $groups[$groupId]['data']['title']; }
+            }
+            $detail = $changed ? implode(', ', array_slice($changed, 0, 3)) : __('Et kurs er fjernet fra perioden.', 'reginor-lite');
+            throw new VersionConflict(sprintf(/* translators: %s: names of changed courses, or explanation of removed course. */ __('Kurslisten er endret etter at siden ble åpnet: %s. Dette kan også skyldes endret påmeldingsstatus. Last periodeoversikten på nytt og prøv handlingen igjen. Kontrollkode: RNL-COURSE-LIST.', 'reginor-lite'), $detail));
+        }
         $from = get_post_status($id);
         if (($target === 'trash' && $from !== 'draft') || ($target === 'restore' && $from !== 'trash') || ($target === 'draft' && $from !== 'publish')) {
             throw new RuntimeException(__('Periodens status er endret. Last siden på nytt.', 'reginor-lite'), 409);
@@ -229,6 +238,7 @@ trait CourseWorkflow
         }
         $event = match ($target) { 'publish' => 'published', 'trash' => 'trashed', 'restore' => 'restored', default => 'unpublished' };
         $status = $target === 'restore' ? 'draft' : $target;
+        MutationTrace::phase('lifecycle.' . $target, $id);
         $period = $this->write($id, $period, $period['data'], $event, true);
         foreach ($groups as $groupId => $state) {
             $this->requireCapability('edit_post', $groupId);
@@ -241,14 +251,17 @@ trait CourseWorkflow
         }
         $this->setStatus($id, $status);
         if ($status === 'publish') { CourseCalendar::published(new \RegiNor\Lite\Frontend\Catalog($this->clock), $id); }
+        MutationTrace::phase('lifecycle.done', $id);
         return $period;
     }
 
     private function setStatus(int $id, string $status): void
     {
         Mutation::touch($id);
+        MutationTrace::phase('status.write', $id);
         $result = wp_update_post(['ID' => $id, 'post_status' => $status], true);
         if (is_wp_error($result) || !$result) { throw new RuntimeException(__('Statusendringen feilet. Hele operasjonen er rullet tilbake.', 'reginor-lite')); }
+        MutationTrace::phase('status.done', $id);
     }
 
     public function groupLifecycle(int $id, int $version, int $periodVersion, bool $restore): array
@@ -293,7 +306,7 @@ trait CourseWorkflow
             foreach ($this->groups($id) as $state) {
                 $g = $state['data'];
                 foreach (['period_id', 'course_id', 'period_version', 'sessions', 'letsreg_mapping'] as $key) { unset($g[$key]); }
-                $g = array_replace($g, ['start_date' => $startDate, 'first_date' => null, 'latest_date' => null, 'breaks' => [],
+                $g = array_replace($g, ['start_date' => $startDate, 'first_date' => null, 'allow_early_start' => false, 'latest_date' => null, 'breaks' => [],
                     'registration_url' => '', 'registration_status' => 'unknown', 'registration_from' => null, 'registration_until' => null]);
                 $groupId = $this->insert('group', $this->groupData($newId, $state['data']['course_id'], $g, null, true));
                 $this->confirm($this->previewGroup($groupId, 1, []));

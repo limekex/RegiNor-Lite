@@ -36,7 +36,7 @@ final class CalendarSettings
         check_admin_referer('rnl_calendar_settings');
         try { TecDefaults::update(wp_unslash($_POST)); }
         catch (\InvalidArgumentException $error) { wp_die(esc_html($error->getMessage()), '', ['response' => 400, 'back_link' => true]); }
-        TecBridge::sync();
+        \RegiNor\Lite\Infrastructure\TecSyncQueue::request();
         wp_safe_redirect(admin_url('admin.php?page=rnl-site&calendar_updated=1#rnl-calendar'), 303); exit;
     }
 
@@ -71,7 +71,7 @@ final class CalendarSettings
         echo '<input type="hidden" id="rnl-calendar-image" name="image_id" value="' . (int) $values['image_id'] . '"><div id="rnl-calendar-image-preview">';
         if ($values['image_id']) { echo wp_get_attachment_image($values['image_id'], 'medium', false, ['class' => 'rnl-image-preview']); }
         echo '</div><p><button type="button" class="rnl-button rnl-button-secondary" id="rnl-calendar-image-choose" aria-describedby="rnl-calendar-image-help">' . esc_html(__('Velg eller bytt bilde', 'reginor-lite')) . '</button> <button type="button" class="rnl-button rnl-button-secondary" id="rnl-calendar-image-remove"' . ($values['image_id'] ? '' : ' hidden') . '>' . esc_html(__('Fjern bilde', 'reginor-lite')) . '</button></p><p id="rnl-calendar-image-status" role="status"></p></div>';
-        echo '<p>' . esc_html(__('Kalenderdeling aktiveres fortsatt på hver kursperiode. Når du lagrer, oppdateres kalenderoppføringene som allerede er synlige. Fjerner du kategori eller bilde her, fjernes det også fra disse oppføringene.', 'reginor-lite')) . '</p>';
+        echo '<p>' . esc_html(__('Kalenderdeling aktiveres fortsatt på hver kursperiode. Når du lagrer, legges kalenderoppdateringen i kø og utføres i bakgrunnen. Fjerner du kategori eller bilde her, fjernes det også fra disse oppføringene ved neste kontroll.', 'reginor-lite')) . '</p>';
         submit_button(__('Lagre kalendervalg', 'reginor-lite'));
         echo '</form>';
         echo '<h3>' . esc_html(__('Kursperioder med kalenderdeling', 'reginor-lite')) . '</h3><p>' . esc_html(__('Også fremtidige kursperioder vises i kalenderen før kursstart, når de er publisert og synlighetsvinduet er åpent. Kalenderoppføringen lenker til den aktuelle kursrekken.', 'reginor-lite')) . '</p>';
@@ -85,6 +85,29 @@ final class CalendarSettings
             }
             echo '</tbody></table></div>';
         }
+        self::queueDetails();
         echo '</section>';
+    }
+
+    private static function queueDetails(): void
+    {
+        $queue = \RegiNor\Lite\Infrastructure\TecSyncQueue::class;
+        $state = (array) get_option($queue::STATUS, []);
+        $date = static fn ($stamp) => $stamp ? wp_date('d.m.Y H:i:s T', (int) $stamp) : __('Ikke registrert', 'reginor-lite');
+        echo '<details class="rnl-panel"><summary>' . esc_html(__('Teknisk status for kalenderkøen', 'reginor-lite')) . '</summary><p>' . esc_html(__('RegiNor bruker WordPress-cron. Jobbene nedenfor vises ikke i Action Scheduler. Tidspunkt i køen bekrefter ikke at jobben har kjørt.', 'reginor-lite')) . '</p>';
+        echo '<p>' . esc_html(sprintf(/* translators: %d: WordPress site ID. */ __('Nettsteds-ID: %d. Kontroller køen for dette nettstedet hvis installasjonen har flere nettsteder.', 'reginor-lite'), get_current_blog_id())) . '</p>';
+        echo '<dl>';
+        foreach ([$queue::SOON, $queue::PERIODIC] as $hook) {
+            $event = wp_get_scheduled_event($hook);
+            echo '<dt><code>' . esc_html($hook) . '</code></dt><dd>' . esc_html($date($event ? $event->timestamp : 0)) . '</dd>';
+        }
+        foreach ([__('Siste start', 'reginor-lite') => $state['started_at'] ?? 0, __('Siste avslutning eller køfeil', 'reginor-lite') => $state['finished_at'] ?? 0] as $label => $stamp) {
+            echo '<dt>' . esc_html($label) . '</dt><dd>' . esc_html($date($stamp)) . '</dd>';
+        }
+        echo '</dl><p>' . esc_html(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON
+            ? __('Besøksutløst WordPress-cron er slått av. Administrator må bekrefte at servercron kjører; dette kan ikke avgjøres fra denne innstillingen alene.', 'reginor-lite')
+            : __('Besøksutløst WordPress-cron er ikke slått av. Dette bekrefter ikke at serverens tilbakekall fungerer.', 'reginor-lite')) . '</p>';
+        if ($message = $queue::message()) { echo '<p>' . esc_html($message) . '</p>'; }
+        echo '</details>';
     }
 }
