@@ -1,5 +1,10 @@
 # M5 – kapasitet per kategori
 
+**Oppdatert 26. september 2026 – 0.1.25:** Etter prosjekteiers avklaring vises tall uten «Opptil», fullt som 0 og ubegrenset som ∞. Manglende/null grense i et gyldig API-svar er ubegrenset, men kjente samlede grenser og parkategoriens partner gjelder fortsatt. Manglende svar/kategori og ugyldige tall er ikke en uspesifisert innstilling. Normaliserte observasjoner har egne markører for manglende felt; eldre tvetydige observasjoner avklares ved neste vellykkede kontroll. Felles merknad om siste kjente kapasitet og LetsReg-kontroll beholdes. Numerisk ordlyd er ikke en ny verifikasjon av delte pooler/reservasjoner; salgsprøven avventes til salg pågår.
+
+Tidligere leveransegrunnlag og testbevis følger nedenfor; eldre formuleringer med «Opptil» erstattes av presiseringen over.
+
+
 Levert 20. september 2026. Prosjekteier valgte visning **både i frontend og administrasjonen**. Bygger på den eksisterende automatiske LetsReg-kontrollen; ingen nye deltaker-/ordrekall eller webhook-abonnementer.
 
 ## Hvor vises det?
@@ -61,3 +66,5 @@ Under faktisk kontroll ble ett vellykket tokenkall etterfulgt av `401 invalid_gr
 Kontrollkøen gjenbruker nå ett gyldig token i minnet for inntil tre arrangementer i samme avgrensede kjøring. Kontoavtrykk og minst 40 sekunders gjenværende oppgitt levetid kontrolleres før gjenbruk; hvert GET-kall beholder sin utløpskontroll. Token fjernes alltid ved rundens slutt eller feil og lagres ikke i database, transients eller logger. Uten oppgitt gyldig levetid utsettes neste arrangement minst ett minutt. Manuelle kontroller beholder egen tilgangskontroll. En syntetisk leverandør som avviser andre tokenutstedelse i samme runde er dekket av regresjonstest.
 
 Etter rettingen ble en faktisk avgrenset runde mot de to allerede koblede lokale arrangementene gjennomført. Ett tokenkall var tilstrekkelig for begge arrangementene. Begge fikk gyldig observasjon, kategorirader og offentlig HTML med kategorivisning. Ingen påmelding, betaling, koblingsendring eller publiseringsendring ble gjort. Dette verifiserer lesing og presentasjon, ikke bestillings-/poolsemantikken under endring av deltakerregistreringer.
+
+**Eksempel på par:** 7 ledige førerplasser og 7 ledige følgerplasser gir 7 par (14 deltakere), forutsatt nok total kapasitet. Hvis bare 7 deltakerplasser er ledige totalt, blir resultatet 3 par. Kategoriene summeres ikke. Parvisningen er merket «To deltakere per par»; 0-grense/ubegrenset begrenser ikke beregningen. Dette er siste kjente tall, ikke reservasjon.

@@ -271,6 +271,8 @@ final class CoursePage
     }
     private function instructors(array $selected): void
     {
+        // Existing translated selections remain checked against their main-language profile.
+        $selected = array_values(array_unique(array_map(\RegiNor\Lite\Infrastructure\Wpml::defaultProfile(...), $selected)));
         echo ('<fieldset><legend>' . esc_html(__('Instruktører (valgfritt)', 'reginor-lite')) . '</legend><p>' . esc_html(__('Du kan publisere kurset uten å velge instruktør.', 'reginor-lite')) . '</p>');
         $profiles = $this->repo->instructors();
         if (!$profiles) { echo ('<p>' . esc_html(__('Ingen instruktørprofiler er valgt. Du kan fortsette uten instruktør.', 'reginor-lite')) . '</p>'); }
@@ -590,6 +592,14 @@ final class CoursePage
         \RegiNor\Lite\Infrastructure\LetsRegAvailabilityStore::summary($d);
         LetsRegCapacityPanel::render($d, true);
         if (get_post_status($id) !== 'draft') { LetsRegCoursePicker::render($id, $state); }
+        if (get_post_status($id) === 'publish') {
+            echo '<section class="rnl-panel"><h3>' . esc_html(__('Instruktører', 'reginor-lite')) . '</h3><p>' . esc_html(__('Valget gjelder alle kommende kurskvelder, også kvelder med egne instruktørvalg. Påbegynte, gjennomførte og avlyste kvelder beholdes. Fjern alle avkrysninger hvis instruktør ikke er bestemt. Kurset forblir publisert.', 'reginor-lite')) . '</p>';
+            $this->start('save_instructors', $id, $state['version']);
+            $selected = self::$error !== '' && (self::$submitted['command'] ?? '') === 'save_instructors' ? array_map('intval', (array) (self::$submitted['data']['instructor_ids'] ?? [])) : $d['instructor_ids'];
+            $this->instructors($selected);
+            $this->end(__('Lagre instruktører', 'reginor-lite'));
+            echo '</section>';
+        }
         if ($d['sessions']) { echo ('<details><summary>' . esc_html(__('Se lagrede kursdatoer', 'reginor-lite')) . '</summary>'); $this->sessions($d['sessions']); echo '</details>'; }
         if (get_post_status($id) === 'draft') {
             echo ('<h2>' . esc_html(__('Kursoppsett', 'reginor-lite')) . '</h2><div data-rnl-course-editor>');
@@ -783,7 +793,9 @@ final class CoursePage
             if ($kind === 'level') { uasort($rows, static fn ($a, $b) => [$a['data']['sort_order'], $a['data']['title']] <=> [$b['data']['sort_order'], $b['data']['title']]); }
             foreach ($rows as $id => $row) {
                 $state = $this->repo->get($id, $kind);
-                echo '<details><summary>' . esc_html($state['data']['title']) . '</summary>'; $this->start('save', $id, $state['version']); $this->hidden('kind', $kind); $this->fields($kind, $state['data']); $this->end(__('Lagre oppføring', 'reginor-lite')); echo '</details>';
+                echo '<details' . ((self::$submitted['command'] ?? '') === 'save_level_archive' && (int) (self::$submitted['id'] ?? 0) === $id ? ' open' : '') . '><summary>' . esc_html($state['data']['title']) . '</summary>'; $this->start('save', $id, $state['version']); $this->hidden('kind', $kind); $this->fields($kind, $state['data']); $this->end(__('Lagre oppføring', 'reginor-lite'));
+                if ($kind === 'level') { LevelArchiveSettings::render($id, $state['data']['title'], self::$submitted ?? []); }
+                echo '</details>';
             }
             echo ('<details><summary>' . esc_html(__('Opprett ny oppføring', 'reginor-lite')) . '</summary>'); $this->start('save'); $this->hidden('kind', $kind); $this->fields($kind, $kind === 'level' ? ['sort_order' => 10, 'active' => true] : []); $this->end(__('Opprett oppføring', 'reginor-lite')); echo '</details>';
         }

@@ -31,7 +31,7 @@ final class LetsRegCategoryCapacityTest extends TestCase
     }
     public function testUnknownCountersNeverBecomeFullOrUnlimited(): void
     {
-        foreach ([null, -1, true, '6', 2147483648] as $unknown) {
+        foreach ([-1, true, '6', 2147483648] as $unknown) {
             self::assertSame('unknown', $this->rows([$unknown])[0]['status']);
             self::assertNull($this->rows([$unknown])[0]['available']);
             self::assertSame([null, null], array_column($this->rows([6, 8], $unknown), 'available'));
@@ -40,14 +40,36 @@ final class LetsRegCategoryCapacityTest extends TestCase
         self::assertSame([null, null], array_column($this->rows([0, 0], 0, 'single', ['maxAllowedRegistrations' => 0]), 'available'));
         self::assertSame([0, 0], array_column($this->rows([0, 0], 0), 'available'));
     }
+    public function testUnspecifiedSettingsAreUnlimitedButMissingResponsesAreNot(): void
+    {
+        self::assertSame(20, $this->rows([null])[0]['available']);
+        self::assertSame(6, $this->rows([6], null, 'single', ['maxAllowedRegistrations'=>null])[0]['available']);
+        self::assertSame('unlimited', $this->rows([null], null, 'single', ['maxAllowedRegistrations'=>null])[0]['status']);
+        self::assertSame('unknown', $this->rows([6], null)[0]['status']); // A known limit with no registration count cannot be calculated.
+        $event = ['active'=>true, 'published'=>true, 'isCancelled'=>false, 'isArchived'=>false, 'registrationStartDate'=>null, 'registrationEndDate'=>null];
+        $prices = [['id'=>1, 'active'=>true, 'availableFrom'=>null, 'availableTill'=>null]];
+        $mapping = ['categories'=>[['id'=>1, 'role'=>'leader', 'registration'=>'single']]];
+        $now = new DateTimeImmutable('2030-01-01T12:00:00Z');
+        $observation = Availability::observation($event, $prices);
+        self::assertSame('unlimited', Categories::project($observation, $mapping, 'Europe/Oslo', $now)[0]['status']);
+        self::assertSame('unknown', Categories::project(null, $mapping, 'Europe/Oslo', $now)[0]['status']);
+        self::assertSame('unknown', Categories::project(Availability::observation($event, []), $mapping, 'Europe/Oslo', $now)[0]['status']);
+        $legacy = $observation; unset($legacy['limit_unspecified'], $legacy['available_unspecified'], $legacy['categories'][1]['available_unspecified']);
+        self::assertSame('unknown', Categories::project($legacy, $mapping, 'Europe/Oslo', $now)[0]['status']);
+        $pairs = Categories::displayRows($this->rows([null, null], null, 'pair', ['maxAllowedRegistrations'=>null]));
+        self::assertCount(1, $pairs); self::assertSame('unlimited', $pairs[0]['status']);
+    }
     public function testPairPlacesArePerParticipantAndBoundedByPartnerAndTotal(): void
     {
         self::assertSame([2, 2], array_column($this->rows([6, 2], 20, 'pair'), 'available'));
         self::assertSame([1, 1], array_column($this->rows([6, 8], 3, 'pair'), 'available'));
+        self::assertSame([7, 7], array_column($this->rows([7, 7], 20, 'pair'), 'available'));
+        self::assertSame([3, 3], array_column($this->rows([7, 7], 7, 'pair'), 'available'));
         self::assertSame([0, 0], array_column($this->rows([6, 8], 1, 'pair'), 'available'));
         self::assertSame([6, 6], array_column($this->rows([6, 0], 20, 'pair'), 'available'));
         self::assertSame([null], array_column($this->rows([6], 20, 'pair'), 'available'));
-        self::assertSame([null, null], array_column($this->rows([6, null], 20, 'pair'), 'available'));
+        self::assertSame([6, 6], array_column($this->rows([6, null], 20, 'pair'), 'available'));
+        self::assertSame([null, null], array_column($this->rows([6, -1], 20, 'pair'), 'available'));
         self::assertSame([3, 2, 3], array_column($this->rows([6, 2, 3], 20, 'pair'), 'available')); // Alternative partner categories are never added.
     }
     public function testZeroPlaceLimitDoesNotRestrictCategoriesOrPairs(): void

@@ -10,11 +10,12 @@ wp_set_current_user($admin);
 $page=$created[]=wp_insert_post(['post_type'=>'page','post_status'=>'publish','post_title'=>'Calendar tests','post_content'=>'[reginor_courses]']);update_option('rnl_course_page_id',$page);
 $venue=$created[]=$repo->create('venue',['title'=>'Dansested','address'=>'Testgata 12']);
 $room=$created[]=$repo->create('room',['title'=>'Sal A','venue_id'=>$venue]);
-$course=$created[]=$repo->create('course',['title'=>'Salsa Øvet','description'=>'Lær å danse.','level_description'=>'Litt erfaring.','dance_style'=>'Salsa','partner_info'=>'Kom alene.']);
+$course=$created[]=$repo->create('course',['title'=>'Salsa Øvet','description'=>'<p>Lær å <strong>danse</strong>.</p><p>Kom på kurs.</p>','level_description'=>'<p>Litt erfaring.</p>','dance_style'=>'Salsa','partner_info'=>'Kom alene.']);
+$level=$created[]=$repo->create('level',['title'=>'Øvet','description'=>'For øvede dansere.','active'=>true,'sort_order'=>20]);
 $p=['title'=>'Høst 2030 kalender','timezone'=>'Europe/Oslo','start_date'=>'2030-10-14','default_session_count'=>3,'default_room_id'=>$room,'default_price_minor'=>120000,'default_price_basis'=>'person','visible_from'=>'2020-01-01T00:00:00Z','visible_until'=>'2031-01-01T00:00:00Z','sales_from'=>'2020-01-01T00:00:00Z','sales_until'=>'2031-01-01T00:00:00Z','show_as_upcoming'=>true,'cancelled'=>false,'breaks'=>[['id'=>wp_generate_uuid4(),'from'=>'2030-11-04','until'=>'2030-11-04','reason'=>'Kursfri kveld']]];
 $period=$created[]=$repo->create('period',$p);
 $group=$created[]=$repo->createGroup($period,$course,['weekday'=>1,'first_date'=>'2030-10-21','start_time'=>'18:30','end_time'=>'20:00','registration_status'=>'available','registration_url'=>'https://www.letsreg.com/event/test']);
-$repo->confirm($repo->previewGroup($group,1,[]));
+$repo->confirm($repo->previewGroup($group,1,['level_id'=>$level]));
 $assert(CourseCalendar::read($group,'default')===null,'Draft calendar leaked');
 $publish=static fn()=>$repo->publish($repo->previewPublication($period,$repo->get($period)['version'],true));
 $draft=static fn()=>$repo->lifecycle($period,$repo->get($period)['version'],array_map(static fn($s)=>$s['version'],$repo->groups($period)),'draft');
@@ -25,6 +26,24 @@ $assert(get_post_status($period)==='draft'&&get_post_status($group)==='draft','F
 $assert(get_post_meta($group,CourseCalendar::ID,true)===''&&get_post_meta($group,CourseCalendar::META,true)==='','Failed publication retained calendar data');
 $publish();$initial=CourseCalendar::read($group,'default');$identity=$initial['identity'];$first=array_key_first($initial['events']);
 $assert(count($initial['events'])===3,'Wrong session count');
+$assert($initial['events'][$first]['title']==='Salsa Øvet · Kurskveld 1 av 3','Level duplicated or ordinal missing');
+$assert($initial['name']===get_bloginfo('name').' · Salsa Øvet · Høst 2030 kalender','Calendar name missing site/course/period');
+$description=$initial['events'][$first]['description'];
+$assert(str_contains($description,'Lær å danse. Kom på kurs.')&&!str_contains($description,'<p>'),'Rich description not converted to readable text');
+$assert(str_contains($description,'Nivå: Øvet')&&str_contains($description,'Nivå og forkunnskaper: Litt erfaring.'),'Level details missing');
+$assert(str_contains($description,'Kursprofil: '.PublicSite::url($group))&&!str_contains($description,'Instruktør:'),'Visible canonical or optional instructor wrong');
+// Projected session details, long HTML and a level absent from the title.
+$projected=(new Catalog())->read()['groups'][$group];$projected['title']='Salsa';$projected['description']='<p>'.str_repeat('Lang tekst ',80).'</p>';$projected['sessions'][0]['instructors']=['Testinstruktør'];
+$save=new ReflectionMethod(CourseCalendar::class,'save');
+$enriched=Mutation::run(static fn()=>$save->invoke(null,$projected,'default'),true);
+$assert($enriched['events'][$first]['title']==='Salsa · Øvet · Kurskveld 1 av 3','Separate level missing');
+$assert(str_contains($enriched['events'][$first]['description'],'Instruktør: Testinstruktør')&&str_contains($enriched['events'][$first]['description'],'…'),'Instructor or bounded excerpt missing');
+$projected['sessions'][1]['status']='cancelled';
+$partial=Mutation::run(static fn()=>$save->invoke(null,$projected,'default'),true);
+$partialEvents=array_values($partial['events']);
+$assert($partialEvents[1]['cancelled']&&!str_contains($partialEvents[1]['title'],'Kurskveld'),'Cancelled evening numbered as active');
+$assert($partialEvents[2]['title']==='Salsa · Øvet · Kurskveld 2 av 2','Active numbering includes cancelled evening');
+$initial=CourseCalendar::read($group,'default');
 $assert(!str_contains($initial['ics'],'DTSTART:20301014')&&!str_contains($initial['ics'],'DTSTART:20301104')&&str_contains($initial['ics'],'DTSTART:20301111'),'Delayed start or course break ignored');
 $pastClock=new class implements \RegiNor\Lite\Domain\Publication\Clock{public function now():DateTimeImmutable{return new DateTimeImmutable('2030-12-01T12:00:00Z');}};
 Mutation::run(static fn()=>CourseCalendar::published(new Catalog($pastClock),$period),true);
@@ -65,6 +84,8 @@ $draft();$repo->confirm($repo->previewGroup($group,$repo->get($group)['version']
 $removed=CourseCalendar::read($group,'default');
 $assert(count($removed['events'])===3,'Removed session disappeared from feed');
 $assert(count(array_filter($removed['events'],static fn($e)=>$e['cancelled']))===1,'Removed session not cancelled');
+$assert($removed['events'][$first]['title']==='Salsa Øvet · Kurskveld 1 av 2','Removed evening still counted');
+foreach($removed['events']as$event){$assert(str_contains($event['description'],PublicSite::url($group)),'Removed event lost visible canonical');}
 $repo->saveRegistrationStatus($group,$repo->get($group)['version'],'cancelled');$cancelled=CourseCalendar::read($group,'default');
 $assert(count(array_filter($cancelled['events'],static fn($e)=>$e['cancelled']))===3,'Course cancellation missing');
 $assert(CourseCalendar::read($group,'default')===$cancelled,'Repeated cancellation increments sequence');

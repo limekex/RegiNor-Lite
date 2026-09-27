@@ -11,6 +11,9 @@ final class SharingMetadata
     public static function boot(): void
     {
         add_filter('pre_get_document_title', static fn ($v) => self::data()['title'] ?? $v, 30);
+        // Older themes print wp_title() themselves instead of using title-tag support.
+        add_filter('wp_title', static fn ($v) => ($data = self::data()) ? esc_html($data['title']) : $v, 30);
+        add_action('wp_head', [self::class, 'title'], 0);
         add_filter('wpseo_title', static fn ($v) => self::data()['title'] ?? $v, 30);
         add_filter('rank_math/frontend/title', static fn ($v) => self::data()['title'] ?? $v, 30);
         // These routes are virtual views of one WP page. Its stored SEO graph/OG image must not leak into every course.
@@ -27,9 +30,36 @@ final class SharingMetadata
         add_filter('robots_txt', static fn ($v) => PublicSite::pageId() ? $v . "\nSitemap: " . add_query_arg('rnl_sitemap', 'index', home_url('/')) . "\n" : $v);
         add_action('template_redirect', [self::class, 'sitemap'], -1);
     }
+    public static function title(): void
+    {
+        $data = self::data();
+        if (!$data) { return; }
+        // Avada 7.x also emits the backing page's description and Open Graph tags.
+        // Only suppress that one callback here; favicons, fonts and other pages remain intact.
+        if (function_exists('Avada')) {
+            $avada = \Avada();
+            if (isset($avada->head) && is_object($avada->head)) {
+                remove_action('wp_head', [$avada->head, 'insert_og_meta'], 5);
+            }
+        }
+        if (!current_theme_supports('title-tag')) { return; }
+        // SEO plugins can remove WordPress's title callback. We suppress their page
+        // presenters on virtual course routes, so must also own the actual title tag.
+        // Remove core here, immediately before its priority-1 callback, to avoid duplicates.
+        remove_action('wp_head', '_wp_render_title_tag', 1);
+        echo '<title>' . esc_html($data['title']) . '</title>' . "\n";
+    }
     public static function data(): ?array
     {
         if (is_404() || !PublicSite::onPage()) { return null; }
+        if (LevelArchive::$selection) {
+            $entry = LevelArchive::$selection;
+            return ['title' => self::plain($entry['title'] . ' – ' . get_bloginfo('name'), 220),
+                'description' => self::plain($entry['description'] ?: $entry['intro'], 180),
+                'url' => LevelArchive::url($entry['id']), 'image' => WebIdentity::image((int) get_option('rnl_sharing_image', 0)),
+                'level' => $entry['id'], 'period' => 0, 'group' => null, 'locale' => get_locale(),
+                'filtered' => (bool) array_intersect(['rnl_period', 'rnl_day', 'rnl_level', 'rnl_view'], array_keys($_GET))];
+        }
         $catalog = (new Catalog())->read(); $gid = PublicSite::integer('rnl_course'); $pid = PublicSite::integer('rnl_period');
         $g = $gid ? ($catalog['groups'][$gid] ?? null) : null;
         $pid = $g['period_id'] ?? $pid; $p = $pid ? ($catalog['periods'][$pid] ?? null) : null;
@@ -64,7 +94,7 @@ final class SharingMetadata
         }
         if (PublicRoutes::enabled()) {
             foreach (WebIdentity::languages() as $code => $language) {
-                echo '<link rel="alternate" hreflang="' . esc_attr(str_replace('_', '-', $language['default_locale'] ?? $code)) . '" href="' . esc_url(PublicRoutes::url($v['period'], $v['group'], $code)) . '">' . "\n";
+                echo '<link rel="alternate" hreflang="' . esc_attr(str_replace('_', '-', $language['default_locale'] ?? $code)) . '" href="' . esc_url(isset($v['level']) ? LevelArchive::url($v['level'], $code) : PublicRoutes::url($v['period'], $v['group'], $code)) . '">' . "\n";
             }
         }
     }

@@ -73,6 +73,43 @@ $assert(!str_contains(wp_json_encode($schema),'InStock'),'Unverified stock claim
 $GLOBALS['wp_query']=new WP_Query(['page_id'=>$page]);$_GET=['rnl_course'=>(string)$group];
 $data=SharingMetadata::data();$assert($data['title']==='Salsa & dans – '.get_bloginfo('name'),'Custom title missing');
 $assert($data['description']==='Trygg kursbeskrivelse "for alle".','Description markup not removed');
+// Missing title callback (SEO takes over) and Avada's page metadata must not leave a
+// virtual course without a title or with a second description/canonical identity.
+$oldHead = clone $GLOBALS['wp_filter']['wp_head'];
+$oldTitleSupport = $GLOBALS['_wp_theme_features']['title-tag'] ?? null;
+if (!function_exists('Avada')) {
+    function Avada() { return $GLOBALS['rnl_test_avada']; }
+    $GLOBALS['rnl_test_avada'] = (object) ['head' => new class {
+        public function insert_og_meta(): void { echo '<meta name="description" content="WRONG backing page"><meta property="og:url" content="WRONG">'; }
+        public function favicon(): void { echo '<link rel="icon" href="/favicon-test.ico">'; }
+    }];
+}
+try {
+    $GLOBALS['_wp_theme_features']['title-tag'] = true;
+    foreach ([true, false] as $coreTitle) {
+        remove_all_actions('wp_head');
+        if ($coreTitle) { add_action('wp_head', '_wp_render_title_tag', 1); }
+        add_action('wp_head', [SharingMetadata::class, 'title'], 0);
+        add_action('wp_head', [SharingMetadata::class, 'head'], 5);
+        add_action('wp_head', [Avada()->head, 'insert_og_meta'], 5);
+        if (isset($GLOBALS['rnl_test_avada'])) { add_action('wp_head', [Avada()->head, 'favicon'], 2); }
+        ob_start(); do_action('wp_head'); $output = ob_get_clean();
+        $assert(substr_count($output, '<title>') === 1 && str_contains($output, '<title>Salsa &amp; dans'), 'Missing/duplicate/unsafe document title');
+        $assert(substr_count($output, 'name="description"') === 1 && !str_contains($output, 'WRONG'), 'Avada page metadata leaked');
+        $assert(str_contains($output, 'favicon-test.ico') || !isset($GLOBALS['rnl_test_avada']), 'Unrelated Avada output removed');
+    }
+    unset($GLOBALS['_wp_theme_features']['title-tag']);
+    ob_start(); SharingMetadata::title(); $output = ob_get_clean();
+    $assert($output === '' && apply_filters('wp_title', 'Old page') === esc_html($data['title']), 'Legacy theme title duplicates or loses course title');
+    $_GET = [];
+    add_action('wp_head', [Avada()->head, 'insert_og_meta'], 5);
+    ob_start(); SharingMetadata::title(); $output = ob_get_clean();
+    $assert($output === '' && has_action('wp_head', [Avada()->head, 'insert_og_meta']) === 5, 'Unrelated page metadata changed');
+} finally {
+    $GLOBALS['wp_filter']['wp_head'] = $oldHead;
+    if ($oldTitleSupport !== null) { $GLOBALS['_wp_theme_features']['title-tag'] = $oldTitleSupport; } else { unset($GLOBALS['_wp_theme_features']['title-tag']); }
+    $_GET = ['rnl_course' => (string) $group];
+}
 $images=[];foreach(['global','period','group'] as $name){
  $id=$created[]=wp_insert_attachment(['post_title'=>'M41 '.$name,'post_status'=>'inherit','post_mime_type'=>'image/png'],'m41-'.$name.'.png');
  update_post_meta($id,'_wp_attached_file','m41-'.$name.'.png');wp_update_attachment_metadata($id,['width'=>100,'height'=>100,'file'=>'m41-'.$name.'.png']);update_post_meta($id,'_wp_attachment_image_alt','Alt '.$name);$images[$name]=$id;

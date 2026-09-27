@@ -1,5 +1,77 @@
 # Endringslogg
 
+## 27. september 2026 – Testutgave 0.1.34: kortkodegenerator og kursutvalg
+
+- Egen kortkodegenerator under RegiNor Lite for administrator og kursansvarlig, med kopiering og valg fra eksisterende kursressurser.
+- Inkluder eller utelat dansestil, nivå, ukedag, sted, sal, instruktør, kursperiode, bestemte kurs, påmeldingsstatus og prisgrunnlag. Pris, starttid og antall kurskvelder kan avgrenses med fra-/til-verdier; fremheving og drop-in kan også velges.
+- Samme filtre støttes i kursblokken. Nybegynnerforslaget bruker nå eksplisitt Salsa-filter.
+- [Releasenotat og testomfang](docs/releases/0.1.34.md).
+
+## 27. september 2026 – Testutgave 0.1.33: automatikk og kursansvarligvarsler
+
+- Aktivt valg per kurs for automatiske klokkeslett-/prisendringer. Eksplisitt priskategori, faktisk timeplan og kollisjonskontroll; lokale avvik, historikk og publisering beskyttes.
+- Tekst godkjennes fortsatt manuelt. E-post kan aktiveres til alle kursansvarlige på nettstedet om ventende og utførte endringer, med vern mot gjentatte varsler og nytt forsøk ved sendefeil.
+- Redaksjonelt nybegynnerutkast med kortkoder og måleplan basert på eksisterende innhold og lest kampanjerapport. Ikke publisert.
+- [Releasenotat, tester og åpne produksjonsprøver](docs/releases/0.1.33.md).
+
+## 27. september 2026 – Testutgave 0.1.32: uthevede LetsReg-endringer
+
+- Ordvis sammenligning fremhever fjernet og ny tekst, også små endringer i klokkeslett og lenkeadresser. Farge kombineres med gjennomstreking/understreking.
+- Gjelder kildeendringer, lokale beskrivelsesfelt og prisvilkår. Full før-/etter-visning med rik tekst beholdes; godkjenning og lagring endres ikke.
+- [Releasenotat og testomfang](docs/releases/0.1.32.md).
+
+## 27. september 2026 – Testutgave 0.1.31: instruktørvalg og WPML
+
+- Instruktørvalg viser kun publiserte, passordfrie profiler i hovedspråket. Oversettelser vises ikke som egne valg, heller ikke ved et annet administrasjonsspråk.
+- Tidligere valgte oversettelser vises avkrysset på hovedprofilen. Frontend beholder språkstyrt navn og profillenke. Ingen masseendring av lagrede kurs eller profiler.
+- [Releasenotat og testomfang](docs/releases/0.1.31.md).
+
+## 27. september 2026 – Testutgave 0.1.30: instruktører
+
+- Instruktører kan legges til, endres og fjernes på publiserte kurs uten kladd. Historiske kvelder beholdes; nye instruktørkollisjoner stoppes.
+- Navn på kurskort og små profilkort på enkeltkurs.
+- `[reginor_instructor_courses]` viser instruktørens offentlige kurs på tvers av perioder uten filtre, med faktiske undervisningsdager og WPML-koblinger.
+- [Releasenotat og testomfang](docs/releases/0.1.30.md).
+
+## 26. september 2026 – Testutgave 0.1.29: artikler og FAQ side om side
+
+- Nivåarkivets artikkelkarusell får 2/3 og FAQ-listen 1/3 av bredden på store skjermer. På mobil/nettbrett stables seksjonene med artikler først. Én synlig seksjon bruker hele bredden.
+- [Releasenotat og testomfang](docs/releases/0.1.29.md).
+
+## 26. september 2026 – Testutgave 0.1.28: kursprofil og metadata
+
+- Kursfakta og påmelding starter ved siden av tittelen på desktop. På mobil er leserekkefølgen tittel, påmelding og beskrivelse. Kortere avstander i toppen.
+- Tilbakelenken heter «Tilbake til kursperioden» og beholder periode/filtre.
+- RegiNor skriver én HTML-tittel også når en SEO-plugin har fjernet WordPress sin tittelutskrift. Avadas metadata for den underliggende WordPress-siden undertrykkes kun på RegiNor-visninger med egne metadata.
+- Offentlig lesekontroll bekreftet manglende title og doble beskrivelser/OG på kurssiden før rettingen. [Releasenotat og testomfang](docs/releases/0.1.28.md).
+
+## 26. september 2026 – Testutgave 0.1.27: nivåarkiver
+
+- Nye nivåarkiver med egne tekster og adresser, termstyrte FAQ-/artikkelutvalg og språkvarianter. FAQs vises som korte forhåndsvisninger; artikler i karusell med automatisk avspilling og pause.
+- Egen publisering og adresselogikk, no-store, metadata og sitemap. Gamle ACF-arkiver og taksonomier beholdes.
+- Se [oppsett](docs/NIVAARKIVER.md) og [testbevis](docs/releases/0.1.27.md).
+
+## 26. september 2026 – Testutgave 0.1.26: rikere kalenderinnhold
+
+- Kalendernedlasting og abonnement viser nivå, nummererte aktive kurskvelder, korte beskrivelser, kveldens instruktører og synlig kurslenke. Kalendernavnet inkluderer nettstedsnavn, kurs og periode.
+- Stabile identiteter og revisjoner beholdes. Flytting følger faktisk dato; avlyste/fjernede kvelder beholdes uten å telle som aktive kvelder. Ingen kapasitet eller kjøpspåstander legges i kalenderen.
+- Parberegningen er bekreftet med tester: 7 på hver side gir 7 par, begrenset til 3 par dersom samlet ledighet er 7 deltakere.
+- Se [releasenotat og testbevis](docs/releases/0.1.26.md). Faktiske abonnementsklienter gjenstår.
+
+## 26. september 2026 – Testutgave 0.1.25: numerisk kapasitet og oppdatert godkjenning
+
+- Kategoritall vises uten «Opptil», med 0 for fullt og ∞ for ubegrenset. Gyldige svar med uspesifisert grense tolkes som ubegrenset; kjente grenser, partnerkrav og feilvern beholdes. Eldre tvetydige observasjoner avklares ved neste vellykkede kontroll.
+- Roadmapen registrerer prosjekteiers prod-/Avada-, kalendernedlastings-, iPhone- og målingstester, positiv cron-/republiseringsstatus og salgsprøve som avventes. Hybridrapporten er skilt fra bekreftet besøksattribusjon.
+- Rikere kalenderinnhold er foreslått under M4.2c; ikke implementert i denne utgaven.
+- Lokalt: status 95, kapasitet 39, lagring 65, offentlig 119 / HTTP 83, interface/DOM og Composer 231/573 består. Se [releasenotat](docs/releases/0.1.25.md). Ingen live API- eller produksjonskontroll er utført av kodeagenten.
+
+## 26. september 2026 – Roadmap- og statusgjennomgang
+
+- Samlet gjeldende milepælstatus, ansvar og konkrete beviskrav for cron/TEC, LetsReg, offentlig visning, import/roller, klientprøver, måling og innføring.
+- Skilt historiske feilsøkingspunkter fra aktiv arbeidsliste. Prosjekteiers bekreftede kladdretting er registrert som løst; automatisk cron og republisering/TEC er fortsatt ikke godkjent samlet.
+- Rettet utdaterte beskrivelser av HTML-editor, kalenderdatoer/tidsakse, kapasitet ved API-feil, delegert LetsReg-tilgang, kampanjesider og status for reell testperiode.
+- Bare dokumentasjon er endret; ingen nye funksjons-, server- eller live API-tester er kjørt. Testbevisene viser til sine faktiske tidligere utgaver. Pluginversjon og ZIP beholdes på 0.1.24.
+
 ## 25. september 2026 – Testutgave 0.1.24: enkeltkvelder og daglige tidsakser
 
 - Én kveld vises med entallsdag og «Dato» på kurskort og kursprofil. Kalenderkort viser datoen, og dagsoverskriften er i entall når alle viste kurs har én kveld. Kurs over flere kvelder beholder flertall og oppstart.

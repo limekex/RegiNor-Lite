@@ -43,3 +43,7 @@ Kursprofilens tittel følges av korte piller for valgt dansestil og nivå. Hoved
 Kurskort og kalenderkort viser nivåpill rett under tittelen. Lange nivåforklaringer og prisvilkår finnes på kursprofilen, ikke i oversikten. Klokkeslettene i kalenderen skal stå hver for seg ved riktig høyde og aldri brytes. Mobilvisningen bruker fortsatt en lesbar liste med tid på hvert kurs.
 
 Kurssted og kart vises i egen boks i hovedkolonnen, etter beskrivelsesfeltene og før kurskveldene. Kartet vises automatisk hvis stedet har koordinater. Sidekolonnen beholder adressen som ankerlenke til boksen. Kartlenke til OpenStreetMap finnes som alternativ.
+
+## Kursprofilens topp – 26. september 2026
+
+Tilbakelenken heter «Tilbake til kursperioden». På brede skjermer starter kursfakta, pris og påmelding i høyre kolonne på høyde med tittelområdet. Beskrivelsen starter under tittel, nivå og status i venstre kolonne. På mobil og i dokumentets leserekkefølge kommer tittel først, deretter fakta/påmelding og så beskrivelsesboksene. Avstandene i toppen er redusert uten fast høyde eller tomt reservert bildefelt.

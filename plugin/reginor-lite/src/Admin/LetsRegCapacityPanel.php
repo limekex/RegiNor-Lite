@@ -19,7 +19,7 @@ final class LetsRegCapacityPanel
             echo '<p role="status">' . esc_html(LetsRegAvailabilityStore::pendingExplanation($course)) . '</p></' . $tag . '>'; return;
         }
         echo '<div><p class="rnl-help">'
-            . esc_html(__('0 i plassgrensen betyr ubegrenset og vises som ∞. En positiv grense er full når antall påmeldte når grensen. 0 påmeldte betyr ikke fullt. Parkategoriene vises samlet som hele par. Salgsvindu og partnerkategori kan begrense påmeldingen. Tallene skal ikke summeres.', 'reginor-lite')) . '</p><div class="rnl-scroll"><table class="widefat striped"><thead><tr>';
+            . esc_html(__('0 eller en uspesifisert plassgrense i et gyldig LetsReg-svar betyr ubegrenset og vises som ∞. En positiv grense er full når antall påmeldte når grensen. 0 påmeldte betyr ikke fullt. Parkategoriene vises samlet som hele par. Salgsvindu og partnerkategori kan begrense påmeldingen. Tallene skal ikke summeres.', 'reginor-lite')) . '</p><div class="rnl-scroll"><table class="widefat striped"><thead><tr>';
         foreach ([__('Kategori', 'reginor-lite'), __('Rolle og påmeldingsform', 'reginor-lite'), __('Påmeldte hos LetsReg', 'reginor-lite'), __('Rapportert ledig hos LetsReg', 'reginor-lite'), __('Kapasitetsvurdering', 'reginor-lite')] as $label) { echo '<th scope="col">' . esc_html($label) . '</th>'; }
         echo '</tr></thead><tbody>';
         foreach (\RegiNor\Lite\Domain\Capacity\LetsRegCategoryCapacity::displayRows($view['categories']) as $row) {

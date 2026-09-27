@@ -59,11 +59,12 @@ final class PublicSite
     public static function register(): void
     {
         add_shortcode('reginor_courses', [self::class, 'render']);
+        add_shortcode('reginor_instructor_courses', [InstructorCourses::class, 'render']);
         $url = plugins_url('assets/', dirname(__DIR__, 2) . '/reginor-lite.php');
         wp_register_script('rnl-block', $url . 'block.js', ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n'], (string) filemtime(dirname(__DIR__, 2) . '/assets/block.js'), true);
         wp_set_script_translations('rnl-block', 'reginor-lite', dirname(__DIR__, 2) . '/languages');
         register_block_type('reginor-lite/courses', ['api_version' => 3, 'editor_script' => 'rnl-block',
-            'attributes' => ['default_view' => ['type' => 'string', 'default' => 'site'], 'allowed_views' => ['type' => 'array', 'default' => ['list', 'week']],
+            'attributes' => array_fill_keys(array_merge(OverviewOptions::BOUNDS, OverviewOptions::LIST_FILTERS, array_map(static fn ($key) => 'exclude_' . $key, OverviewOptions::LIST_FILTERS)), ['type' => 'string', 'default' => '']) + ['dropin' => ['type' => 'string', 'default' => 'all'], 'default_view' => ['type' => 'string', 'default' => 'site'], 'allowed_views' => ['type' => 'array', 'default' => ['list', 'week']],
                 'levels' => ['type' => 'string', 'default' => ''], 'exclude_levels' => ['type' => 'string', 'default' => ''],
                 'featured' => ['type' => 'string', 'default' => 'all'], 'show_header' => ['type' => 'boolean', 'default' => true],
                 'show_filters' => ['type' => 'boolean', 'default' => true], 'show_view_switch' => ['type' => 'boolean', 'default' => true]],
@@ -71,7 +72,7 @@ final class PublicSite
     }
     public static function route(): void
     {
-        if (is_404()) { return; }
+        if (is_404() || LevelArchive::$selection) { return; }
         if (!self::onPage()) {
             // Set headers before the theme renders an overview embedded on another page.
             // A late shortcode callback cannot reliably change headers after output has begun.
@@ -93,7 +94,7 @@ final class PublicSite
     }
     public static function containsCourses(string $content, array $visited = []): bool
     {
-        if (has_shortcode($content, 'reginor_courses') || has_block('reginor-lite/courses', $content)) { return true; }
+        if (has_shortcode($content, 'reginor_instructor_courses') || has_shortcode($content, 'reginor_courses') || has_block('reginor-lite/courses', $content)) { return true; }
         $inspect = static function (array $blocks) use (&$inspect, $visited): bool {
             foreach ($blocks as $block) {
                 if (($block['blockName'] ?? '') === 'core/block') {
@@ -117,6 +118,7 @@ final class PublicSite
         wp_enqueue_style('rnl-interface', $url . 'interface.css', [], (string) filemtime(dirname(__DIR__, 2) . '/assets/interface.css'));
         wp_enqueue_script('rnl-interface', $url . 'interface.js', ['wp-i18n'], (string) filemtime(dirname(__DIR__, 2) . '/assets/interface.js'), true);
         wp_set_script_translations('rnl-interface', 'reginor-lite', dirname(__DIR__, 2) . '/languages');
+        if (LevelArchive::$selection) { wp_enqueue_script('rnl-level-carousel', $url . 'level-carousel.js', [], (string) filemtime(dirname(__DIR__, 2) . '/assets/level-carousel.js'), true); }
         wp_enqueue_script('rnl-course-tools', $url . 'course-tools.js', ['wp-i18n'], (string) filemtime(dirname(__DIR__, 2) . '/assets/course-tools.js'), true);
         wp_set_script_translations('rnl-course-tools', 'reginor-lite', dirname(__DIR__, 2) . '/languages');
     }
@@ -150,6 +152,7 @@ final class PublicSite
     }
     public static function canonical(string $url, mixed $post = null): string
     {
+        if (LevelArchive::$selection && self::onPage()) { return LevelArchive::url(LevelArchive::$selection['id']); }
         if (!self::onPage() || ($post instanceof \WP_Post && $post->ID !== self::pageId())) { return $url; }
         if (self::integer('rnl_course') && isset((new Catalog())->read()['groups'][self::integer('rnl_course')])) { return self::url(self::integer('rnl_course')); }
         return self::url(null, self::integer('rnl_period') ? ['rnl_period' => self::integer('rnl_period')] : []);

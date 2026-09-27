@@ -2,7 +2,9 @@
 
 WordPress-plugin for SalsaNors kursoversikt og kursadministrasjon. WordPress eier kursinnhold og timeplan; LetsReg håndterer påmelding og betaling.
 
-**Status 25. september 2026: M0–M4 og M4.1 implementert lokalt, pluginversjon 0.1.24.** Kursadministrasjon, frontend, navnebaserte permalenker og delingsmetadata er levert. M5 har kurskobling/import, automatisk påmeldingsstatus og kategoriers øvre kapasitetsgrenser, med avgrenset faktisk lesetest. Faktisk Avada/WPML/SEO-staging, cache/CDN, brukertest og produksjonsdrift for API-et gjenstår. [Roadmapen](docs/ROADMAP.md) skiller leverte funksjoner fra åpne godkjenningspunkter.
+**Status 27. september 2026: testutgave 0.1.34; stabilisering og kontrollert innføring.** M0–M4.3 er implementert lokalt, med gjenstående miljø-, klient- og brukergodkjenning. Kursadministrasjon, frontend, navnebaserte permalenker og delingsmetadata er levert. M5 har kurskobling/import, automatisk påmeldingsstatus og kategoriers øvre kapasitetsgrenser, med avgrenset faktisk lesetest. Faktisk Avada/WPML/SEO-staging, cache/CDN, brukertest og produksjonsdrift for API-et gjenstår. [Roadmapen](docs/ROADMAP.md) skiller leverte funksjoner fra åpne godkjenningspunkter.
+
+**Oppdatert verifikasjon:** prosjekteier har godkjent visuell produksjons-/Avada-prøve av permalenker, SEO, kart og deling, kalendernedlasting, iPhone-kursreise og kampanjemåling/Tag Manager via nettleserkontroll. Kladd og republisering rapporteres fungerende; ryddet cron-kø tyder på fungerende servercron. LetsReg-status/hybridrapport prøves videre når salget pågår. Kursansvarligrolle og kalenderabonnement gjenstår. Se [samlet status og prioritert arbeidsliste](docs/ROADMAP.md#gjeldende-status--gjennomgang-26-september-2026). Ingen nye serverprøver er kjørt i denne dokumentgjennomgangen.
 
 **Styrende UI-krav:** Løsningen skal være intuitiv for brukere med lite eller ingen digital kompetanse, og samtidig elegant. Se [krav til brukeropplevelse](docs/BRUKEROPPLEVELSE.md).
 
@@ -10,15 +12,39 @@ WordPress-plugin for SalsaNors kursoversikt og kursadministrasjon. WordPress eie
 
 **M4.2/M4.3 levert lokalt:** kursprofilen har kalendernedlasting, abonnement på faktiske kurskvelder og delingsknapper. Import/oppdateringer i faktiske kalenderapper og SoMe-/visuell staging gjenstår. Kampanjestatistikk med Complianz/GTM finnes lokalt og er av som standard; besøkskobling til bekreftede kjøp er satt på vent etter LetsRegs supportsvar i sak #134895094. Valgfri historikk over LetsRegs ordresum/deltakerantall og eksperimentelle tidssammenfall med målte klikk er implementert lokalt. Dette er ikke bekreftet betaling eller kampanjeattribusjon.
 
+## Instruktører på kurs
+
+På et publisert enkeltkurs: velg **Instruktører → Lagre instruktører**. Du kan legge til, bytte eller fjerne alle uten å ta perioden til kladd. Valget gjelder alle ikke-påbegynte, ikke-avlyste kurskvelder, inkludert eventuelle egne instruktørvalg. Tidligere kvelder beholdes, og dobbeltbooking blokkeres.
+
+Instruktørvalget viser bare hovedspråkets profiler, én gang per person, uavhengig av administrasjonens språk. Frontend bruker besøkendes språk for navn og profillenke.
+
+Instruktørnavn vises på kurskort; enkeltkurset viser små profilkort med navn, profilbilde når tilgjengelig og lenke til eksisterende profil.
+
+Plasser `[reginor_instructor_courses]` på instruktørprofilen. Den viser kort fra alle offentlige perioder med gjenstående undervisning for instruktøren, uten filter eller visningsvalg. På andre sider kan du bruke `[reginor_instructor_courses instructor_id="123"]`. ID-en må tilhøre en offentlig profil av en instruktørtype valgt i RegiNor. Dager og klokkeslett hentes fra instruktørens faktiske kurskvelder. WPML-koblede profiler støttes uten kopiering av kursdata. Kortkoden endrer ikke profilsidens tittel eller metadata.
+
 ## Prosjektdokumenter
+
+- [Testutgave 0.1.34](docs/releases/0.1.34.md) – utvidede kortkodefiltre og egen kortkodegenerator under RegiNor Lite.
+
+- [Automatisk tid/pris og e-postvarsler](docs/LETSREG-AUTOMATIKK-OG-VARSLER.md) – aktive valg per kurs; tekst krever manuell godkjenning.
+- [Redaksjonelt forslag til nybegynnerside](docs/LANDINGSSIDE-NYBEGYNNER.md) – utkast, kortkoder og måleplan; ikke publisert.
+- [Testutgave – 0.1.33](docs/releases/0.1.33.md).
+
+- [Nivåarkiver](docs/NIVAARKIVER.md) – egne nivåadresser, HTML-tekster, FAQ-utvalg og artikkelkarusell med språkvarianter.
+- [Testutgave – 0.1.32](docs/releases/0.1.32.md) – uthevede endringer hos LetsReg.
+- [Testutgave – 0.1.31](docs/releases/0.1.31.md) – instruktørvalg bare fra hovedspråket.
+- [Testutgave – 0.1.30](docs/releases/0.1.30.md) – instruktørendringer etter publisering og instruktørens kurs.
+- [Testutgave – 0.1.29](docs/releases/0.1.29.md) – artikler og FAQ side om side.
+- [Testutgave – 0.1.28](docs/releases/0.1.28.md) – kompakt kursprofil og rettet nettlesertittel/Avada-metadata.
+- [Testutgave – 0.1.27](docs/releases/0.1.27.md) – nivåarkiver.
 
 - [LetsReg-endringer og beskrivelsesgjenbruk](docs/LETSREG-ENDRINGER-OG-BESKRIVELSER.md) – kildevarsler, før/etter, delte beskrivelser og vern av lokale endringer.
 
-- [Nyeste testutgave – 0.1.24](docs/releases/0.1.24.md) – entallsdag og dato for én kveld, med egen tidsakse per kalenderdag.
+- [Testutgave – 0.1.26](docs/releases/0.1.26.md) – rikere kalenderinnhold med nivå, nummerering, instruktør og kurslenke. Numerisk kapasitet fra 0.1.25 følger med.
 - [Testutgave – 0.1.22](docs/releases/0.1.22.md) – formell Consent API-erklæring og direkte kontroll av API-samtykke i nettleser og server.
 - [Testutgave – 0.1.21](docs/releases/0.1.21.md) – kortkoder for kampanjesider med nivåutvalg, fremheving og uavhengige visningsvalg. Kladdrettingen fra 0.1.20 følger med.
-- [Testutgave – 0.1.19](docs/releases/0.1.19.md) – valgfri sporing av kurslagring og databaseforbindelse; produksjonsblokkeringen er fortsatt åpen.
-- [Testutgave – 0.1.18](docs/releases/0.1.18.md) – konkret kødiagnose og lesende kontroll for webhotellet; 504-årsaken er fortsatt uavklart.
+- [Testutgave – 0.1.19](docs/releases/0.1.19.md) – historisk feilsøking med sporing av kurslagring; kladdblokkeringen ble senere bekreftet løst etter 0.1.20.
+- [Testutgave – 0.1.18](docs/releases/0.1.18.md) – historisk kødiagnose og lesende kontroll for webhotellet; se gjeldende status over for senere retting og åpne driftskontroller.
 - [Testutgave – 0.1.17](docs/releases/0.1.17.md) – kalenderoppdatering i bakgrunnen og konkret skille mellom lagringsfeil og versjonskonflikt.
 - [Testutgave – 0.1.16](docs/releases/0.1.16.md) – separate låser for kalenderoppdatering og kurslagring, med tydeligere databasefeil.
 - [Testutgave – 0.1.15](docs/releases/0.1.15.md) – samtykkerekkefølge og samlet tilbaketrekking.

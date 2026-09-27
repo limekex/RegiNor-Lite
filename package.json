@@ -1,6 +1,6 @@
 {
   "name": "reginor-lite",
-  "version": "0.1.24",
+  "version": "0.1.34",
   "private": true,
   "description": "Lokale utviklingsverktøy for RegiNor Lite WordPress-plugin.",
   "engines": {
@@ -25,7 +25,7 @@
     "test:http": "python3 scripts/test-http.py",
     "test:public": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-public.php",
     "test:public-http": "python3 scripts/test-public-http.py",
-    "test:interface": "node tests/interface.test.cjs && node tests/admin-form.test.cjs && node tests/category-suggestions.test.cjs && node tests/appearance.test.cjs && node tests/map.test.cjs && node tests/letsreg-picker.test.cjs && node tests/course-editor.test.cjs && node tests/letsreg-import.test.cjs && node tests/letsreg-bulk.test.cjs && node tests/letsreg-template.test.cjs && node tests/registration-status.test.cjs && node tests/sharing.test.cjs && node --test tests/course-tools.test.cjs && node tests/rich-text.test.cjs && node tests/block.test.cjs",
+    "test:interface": "node tests/interface.test.cjs && node tests/admin-form.test.cjs && node tests/category-suggestions.test.cjs && node tests/appearance.test.cjs && node tests/map.test.cjs && node tests/letsreg-picker.test.cjs && node tests/course-editor.test.cjs && node tests/letsreg-import.test.cjs && node tests/letsreg-bulk.test.cjs && node tests/letsreg-template.test.cjs && node tests/registration-status.test.cjs && node tests/sharing.test.cjs && node --test tests/course-tools.test.cjs && node tests/rich-text.test.cjs && node tests/block.test.cjs && node tests/level-carousel.test.cjs && node tests/shortcode-generator.test.cjs",
     "test:capacity": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-capacity.php",
     "test:api-transport": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-api-transport.php",
     "test:letsreg": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-letsreg.php",
@@ -50,7 +50,11 @@
     "test:calendar-http": "python3 scripts/test-calendar-http.py",
     "test:sales-history": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-sales-history.php",
     "test:letsreg-changes": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-letsreg-changes.php",
-    "test:local-registration": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-local-registration.php"
+    "test:local-registration": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-local-registration.php",
+    "test:level-archive": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-level-archive.php",
+    "test:level-archive-http": "python3 scripts/test-level-archive-http.py",
+    "test:instructors": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-instructors.php",
+    "test:source-automation": "wp-env run cli wp eval-file /var/www/html/rnl-tests/wordpress-source-automation.php"
   },
   "devDependencies": {
     "@wordpress/env": "11.15.0",

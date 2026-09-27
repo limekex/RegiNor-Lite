@@ -30,11 +30,11 @@ final class LetsRegAvailabilityTest extends TestCase
         yield 'unlimited event with known category' => [['availableRegistrations' => 0, 'maxAllowedRegistrations' => 0, 'registeredParticipants' => 0], [], 'available', true];
         yield 'unlimited event with registrations' => [['availableRegistrations' => 0, 'maxAllowedRegistrations' => 0, 'registeredParticipants' => 4], [], 'available', true];
         yield 'unknown event' => [['availableRegistrations' => -1], [], 'available', false];
-        yield 'nullable event' => [['availableRegistrations' => null], [], 'available', false];
+        yield 'nullable event' => [['availableRegistrations' => null], [], 'available', true];
         yield 'unknown category' => [[], ['available' => -1], 'available', false];
         yield 'boolean count' => [[], ['available' => false], 'available', false];
         yield 'unlimited category' => [[], ['available' => 0, 'registered' => 4], 'available', true];
-        yield 'zero without event limit' => [['availableRegistrations' => 0], [], 'available', false];
+        yield 'zero without event limit' => [['availableRegistrations' => 0], [], 'available', true];
         yield 'unlimited event and category' => [['availableRegistrations' => 0, 'maxAllowedRegistrations' => 0], ['available' => 0, 'registered' => 0], 'available', true];
         yield 'inactive category' => [[], ['active' => false], 'closed', false];
         yield 'category opens later' => [[], ['availableFrom' => '2030-01-02T12:00:00Z'], 'later', false];

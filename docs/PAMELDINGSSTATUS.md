@@ -1,5 +1,8 @@
 # Påmeldingsstatus uten ny publisering
 
+**Presisering 26. september 2026:** Numeriske kategoritall vises uten «Opptil», med 0 for fullt og ∞ ved ubegrenset. En uspesifisert grense (manglende/null felt) i et ellers gyldig svar behandles som ubegrenset; kjente positive grenser, rapportert ledighet og parkategoriens partner begrenser fortsatt tallet. Ugyldige tall, et manglende arrangement/kategori eller et feilet oppslag er ikke en uspesifisert innstilling. Eldre observasjoner som ikke skiller manglende fra ugyldige felt, får denne presiseringen etter neste vellykkede kontroll. Siste kjente tall og felles tilgjengelighetsmerknad beholdes. Reell salgsprøve avventes etter prosjekteiers beskjed.
+
+
 Implementert 20. september 2026. Gjelder både publiserte kurs og kursutkast. Ingen eksisterende kurs bytter status automatisk ved pluginoppdatering.
 
 ## Bruk
@@ -10,20 +13,20 @@ Implementert 20. september 2026. Gjelder både publiserte kurs og kursutkast. In
 
 Et eksternt lenkeikon ved kursnavnet åpner den lagrede LetsReg-lenken i ny fane for kontroll. Ikonet vises når kurset har en LetsReg-lenke, uavhengig av om påmeldingen er åpen. Kontrollklikk i administrasjonen telles ikke som deltakerklikk.
 
-Kurs og periode beholder publiseringen. Bare statusfeltet endres, med versjonskontroll og historikk. Samtidige endringer avvises med beskjed om å hente siste versjon. Uten JavaScript brukes «Lagre status». Administrator og kursansvarlig kan bruke menyen; kobling til LetsReg og API-oppsett krever fortsatt administrator.
+Kurs og periode beholder publiseringen. Bare statusfeltet endres, med versjonskontroll og historikk. Samtidige endringer avvises med beskjed om å hente siste versjon. Uten JavaScript brukes «Lagre status». Administrator og kursansvarlig kan bruke menyen. Kursansvarlig kan også søke, koble og importere kurs med sine avgrensede rettigheter; API-/arrangøroppsett og hemmeligheter forblir administratorstyrt.
 
 Automatisk krever en lagret LetsReg-kobling og en gyldig påmeldingslenke. Manuelt tilgjengelig/venteliste krever også lenke. En statusmeny kan derfor ikke alene gjøre uferdige kurs klare til påmelding.
 
 ## Hvordan status beregnes
 
 - Automatisk bruker API-ets `registrationStartDate` / `registrationEndDate`, arrangementets aktiv/publisert/avlyst/arkivert-status og åpning/stenging på valgte priskategorier.
-- Arrangementsledighet beregnes fra positiv `maxAllowedRegistrations` minus `registeredParticipants` når begge er kjent. Plassgrense 0 betyr ubegrenset. Ellers kan positiv `availableRegistrations` brukes som reservegrunnlag; null alene beviser ikke fullt. Kategorien bruker rapportert `available`. Prosjekteier har også avklart at kategoriens nullverdi representerer ubegrenset kapasitet (∞). Positivt rapportert kategoritall brukes som øvre ledighetsgrense; det summeres ikke eller tolkes som totalgrense. Manglende, negative eller ugyldige kapasitetstall er ukjent. Ukjent kapasitet alene stopper ikke en ellers åpen LetsReg-lenke, men gir ingen bekreftelse på ledige plasser.
+- Arrangementsledighet beregnes fra positiv `maxAllowedRegistrations` minus `registeredParticipants` når begge er kjent. Plassgrense 0 betyr ubegrenset. Ellers kan positiv `availableRegistrations` brukes som reservegrunnlag; null alene beviser ikke fullt. Kategorien bruker rapportert `available`. Prosjekteier har også avklart at kategoriens nullverdi representerer ubegrenset kapasitet (∞). Positivt rapportert kategoritall brukes som øvre ledighetsgrense; det summeres ikke eller tolkes som totalgrense. Negative eller ugyldige kapasitetstall er ukjent; uspesifiserte innstillinger følger presiseringen over. Ukjent kapasitet alene stopper ikke en ellers åpen LetsReg-lenke, men gir ingen bekreftelse på ledige plasser.
 - Venteliste krever eksplisitt `hasWaitinglist=true`. LetsReg-lenken brukes som inngang; faktisk ventelisteflyt må prøves mot det aktuelle arrangementet.
 - En manuell status erstatter den automatiske vurderingen, også ved API-feil. Den beholdes til du velger automatisk igjen.
 - Automatisk status bruker LetsRegs salgsvindu uten å arve periodens salgsdatoer. Egne påmeldingsdatoer på enkeltkurset kan fortsatt begrense vinduet. Uten gyldig API-observasjon vises «Må avklares», selv om perioden har fremtidige salgsdatoer.
 - Ved manuell status gjelder periodens og kursets lokale salgsdatoer fortsatt. Avlyst periode, avsluttet kurs og offentlig synlighet håndheves i begge modi.
 
-Kategorikapasitet summeres aldri. Parpåmelding gjelder per deltaker og vurderer partnerrolle og behovet for to deltakere. To positive parkategorier alene gir ingen garanti for at et helt par får plass i en delt kapasitetspool. Kategorier vises nå med «Opptil X plasser» fra kjente grenser, uten ubekreftet `InStock`. Se [kategorivisningen](M5-KATEGORIKAPASITET.md).
+Kategorikapasitet summeres aldri. Parpåmelding gjelder per deltaker og vurderer partnerrolle og behovet for to deltakere. To positive parkategorier alene gir ingen garanti for at et helt par får plass i en delt kapasitetspool. Kategorier vises nå med numeriske tall fra kjente grenser, uten ubekreftet `InStock`. Se [kategorivisningen](M5-KATEGORIKAPASITET.md).
 
 Nye utfyllingsforslag fra LetsReg foreslår automatisk status. Eksisterende manuelle valg beholdes. Kopiering av API-datoer til egne lokale salgsgrenser er ikke forhåndsvalgt: automatisk modus følger endringer hos LetsReg uten å fryses til importdatoene. Allerede lagrede lokale salgsgrenser beholdes og kan fortsatt begrense påmelding.
 

@@ -78,6 +78,17 @@ final class Wpml
         return $data;
     }
 
+    /** Stable selector identity, independent of the administrator's current language. */
+    public static function defaultProfile(int $id): int
+    {
+        $language = apply_filters('wpml_default_language', null);
+        if (!is_string($language) || $language === '') { return $id; }
+        $type = get_post_type($id);
+        if (!$type) { return 0; }
+        $main = (int) apply_filters('wpml_object_id', $id, $type, false, $language);
+        return $main > 0 && get_post_type($main) === $type ? $main : 0;
+    }
+
     public static function page(int $id): int
     {
         return (int) apply_filters('wpml_object_id', $id, 'page', true);

@@ -32,7 +32,7 @@ final class CachePolicy
 
     private static function courseRequest(): bool
     {
-        if (self::$active || get_query_var('rnl_route_index') || get_query_var('rnl_route_period') || isset($_GET['rnl_calendar']) || PublicSite::onPage()) { return true; }
+        if (self::$active || get_query_var('rnl_route_level') || isset($_GET['rnl_level_archive']) || get_query_var('rnl_route_index') || get_query_var('rnl_route_period') || isset($_GET['rnl_calendar']) || PublicSite::onPage()) { return true; }
         global $wp_query;
         // Includes archives/search/feed and secondary pages containing a shortcode or synced block.
         foreach ($wp_query->posts ?? [] as $post) {

@@ -52,6 +52,7 @@ final class WebIdentity
     }
     private static function free(string $slug, int $id): bool
     {
+        if ($slug === 'niva' && get_post_type($id) === 'rnl_period') { return false; }
         foreach (self::objects() as $other) {
             if ($other === $id || self::scope($id) !== self::scope($other)) { continue; }
             $identity = self::read($other);

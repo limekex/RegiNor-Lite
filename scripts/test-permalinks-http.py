@@ -53,8 +53,13 @@ try:
         parsed=Head();parsed.feed(body)
         check(parsed.canonical==[path],'Canonical duplicate/wrong: '+str(parsed.canonical))
         check(parsed.meta.get('og:url')==[path],'OG URL wrong')
+        titles=re.findall(r'<title\b[^>]*>(.*?)</title>',body,re.S|re.I)
+        check(len(titles)==1 and html.unescape(titles[0])==parsed.meta['og:title'][0], 'Browser title missing, duplicated or different from OG')
         check(len(parsed.meta.get('description',[]))==1,'Description duplicate/missing')
     status,body,headers=get(current);parsed=Head();parsed.feed(body)
+    check('← Tilbake til kursperioden' in body, 'Wrong course back label')
+    layout=body.split('class="rnl-detail-layout"',1)[1]
+    check(layout.index('class="rnl-hero"') < layout.index('rnl-booking') < layout.index('rnl-course-description'), 'Course reading order must be title, booking, description')
     check(parsed.meta['og:title'][0].startswith('Salsa "Øvet" & moro'),'Custom share title missing')
     check(parsed.meta['description']==['Delingsbeskrivelse uten HTML.'],'Custom description missing')
     check(parsed.meta['twitter:card']==['summary'],'Social fallback wrong')

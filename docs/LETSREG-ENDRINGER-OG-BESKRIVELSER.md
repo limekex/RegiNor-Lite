@@ -66,3 +66,8 @@ Administratorens tekstskjema er nå også synlig på publiserte kurs, med kursbe
 Tidligere kildegodkjenning oppdaterte bare feltene på den delte beskrivelsen, ikke prisvilkårene som ligger på hvert kurs. Dermed kunne tidligere importert ren tekst bli stående, selv etter oppdatering av de andre beskrivelsene. Prisvilkår vises nå som et eget godkjenningsvalg med lokal tekst og foreslått tekst. Dette virker også når kilden allerede er markert som gjennomgått. Versjoner, rettigheter, kontotilhørighet, kildehash og fersk kontroll kreves fortsatt. Handlingen godkjenner ikke andre kildeendringer.
 
 Backend har WordPress-editor med Visuell/HTML for beskrivelse, nivå/forkunnskaper, partnerinformasjon og prisvilkår. Dansestil/navn og nivåutvalgets korte forklaring forblir ren tekst. Administratorens tekstskjema på publiserte kurs kan lagre alle fire rike tekstfelt; prisvilkår gjelder bare det åpne kurset. Vanlige skjemaer, API-forslag og bulkimport synkroniserer editor og underliggende felt før forhåndsvisning/lagring.
+
+**Levert lokalt i 0.1.32:** Før-/etter-visninger suppleres med ordvis utheving: rød/gjennomstreket gammel tekst og grønn/understreket ny tekst. Lenkeadresser inngår i sammenligningen. Ved første sammenligning uten tidligere kildegrunnlag påstås ingen historisk endring. Rik tekst i originalvisningene beholdes.
+
+
+Fra 0.1.33 er automatisk klokkeslett og pris et aktivt valg per kurs, mens tekst fortsatt godkjennes manuelt. E-postvarsler kan aktiveres for alle kursansvarlige. Se [automatikk og varsler](LETSREG-AUTOMATIKK-OG-VARSLER.md) for gjeldende regler; dette erstatter eldre formuleringer om at tid/pris aldri endres automatisk.

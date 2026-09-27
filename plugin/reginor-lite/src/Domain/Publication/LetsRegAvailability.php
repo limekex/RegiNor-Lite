@@ -15,11 +15,15 @@ final class LetsRegAvailability
         $result['valid'] = is_bool($event['isArchived'] ?? null);
         $result['available'] = self::count($event['availableRegistrations'] ?? null);
         $result['limit'] = self::count($event['maxAllowedRegistrations'] ?? null);
+        // Preserve omitted/null settings separately from malformed numeric values.
+        $result['limit_unspecified'] = ($event['maxAllowedRegistrations'] ?? null) === null;
+        $result['available_unspecified'] = ($event['availableRegistrations'] ?? null) === null;
         $result['registered'] = self::count($event['registeredParticipants'] ?? null);
         $result['window'] = self::window($event, 'registrationStartDate', 'registrationEndDate');
         $result['categories'] = [];
         foreach ($prices as $price) {
             $result['categories'][$price['id']] = ['active' => $price['active'], 'available' => self::count($price['available'] ?? null), 'registered' => self::count($price['registered'] ?? null),
+                'available_unspecified' => ($price['available'] ?? null) === null,
                 'window' => self::window($price, 'availableFrom', 'availableTill')];
         }
         return $result;
@@ -31,14 +35,20 @@ final class LetsRegAvailability
         $limit = self::count($observation['limit'] ?? null);
         $registered = self::count($observation['registered'] ?? null);
         // A zero place limit means unlimited, not sold out (including 0 registered).
-        if ($limit === 0) { return null; }
+        if (self::unlimited($observation)) { return null; }
         if ($limit !== null && $registered !== null) { return max(0, $limit - $registered); }
         $count = self::count($observation['available'] ?? null);
         // Legacy/incomplete observations cannot prove full from an ambiguous zero.
         return $count === 0 ? null : $count;
     }
-    public static function unlimited(array $observation): bool { return self::count($observation['limit'] ?? null) === 0; }
-    public static function categoryUnlimited(array $category): bool { return self::count($category['available'] ?? null) === 0; }
+    public static function unlimited(array $observation): bool
+    {
+        if (self::count($observation['limit'] ?? null) === 0) { return true; }
+        // Unspecified limits are unbounded. A reported positive remaining count still constrains the event.
+        return ($observation['limit_unspecified'] ?? false) === true
+            && (($observation['available_unspecified'] ?? false) === true || ($observation['available'] ?? null) === 0);
+    }
+    public static function categoryUnlimited(array $category): bool { return self::count($category['available'] ?? null) === 0 || ($category['available_unspecified'] ?? false) === true; }
     public static function categoryRemaining(array $category): ?int
     {
         $count = self::count($category['available'] ?? null);

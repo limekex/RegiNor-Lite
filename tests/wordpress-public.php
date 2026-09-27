@@ -40,6 +40,24 @@ $assert($g['status']==='available' && $g['registration_url']!=='','Salg åpner i
 $assert($read['expires_at']===strtotime('2030-01-06T10:00:00Z'),'Neste statusgrense er feil.');
 $html=(new Renderer())->render($read,[]); $assert(str_contains($html,'Alle nivåer') && str_contains($html,'Testgata 12') && str_contains($html,number_format_i18n(1234.5, 2)),'Kurskort mangler nivåinngang, adresse eller eksakt pris.');
 $assert(str_contains($html,'application/ld+json'),'Oversikten mangler strukturerte data.');
+// Composable editorial restrictions stay inside the public catalog.
+$restrict = static fn($attrs,$data=null) => \RegiNor\Lite\Frontend\OverviewOptions::restrict($data ?? $read, \RegiNor\Lite\Frontend\OverviewOptions::normalize($attrs));
+foreach ([['styles'=>'salsa'],['styles'=>'SALSA','days'=>'man'],['rooms'=>(string)$room,'venues'=>(string)$venue],['instructors'=>(string)$teacher],['courses'=>(string)$group,'periods'=>(string)$period],['statuses'=>'available'],['price_min'=>'1234,50','price_max'=>'1234.50','price_bases'=>'person'],['time_from'=>'18:00','time_until'=>'18:00'],['sessions_min'=>'3','sessions_max'=>'3'],['styles'=>'salsa','days'=>'1','statuses'=>'available','price_max'=>'1300','sessions_min'=>'2']] as $attrs) {
+ $assert(isset($restrict($attrs)['groups'][$group]),'Matching restriction rejects public course: '.wp_json_encode($attrs));
+}
+foreach ([['styles'=>'rueda'],['styles'=>'salsa','exclude_styles'=>'salsa'],['days'=>'tirsdag'],['exclude_rooms'=>(string)$room],['exclude_venues'=>(string)$venue],['exclude_instructors'=>(string)$teacher],['exclude_courses'=>(string)$group],['statuses'=>'full'],['price_max'=>'1234.49'],['price_min'=>'1234.51'],['time_from'=>'18:01'],['time_until'=>'17:59'],['sessions_max'=>'2'],['sessions_min'=>'4'],['price_bases'=>'pair'],['dropin'=>'only'],['time_from'=>'24:00'],['price_min'=>'abc'],['price_min'=>'100','price_max'=>'10'],['styles'=>['salsa','rueda'],'days'=>'2']] as $attrs) {
+ $assert($restrict($attrs)['groups']===[],'Restriction widened: '.wp_json_encode($attrs));
+}
+$none=$restrict(['exclude_periods'=>(string)$period]);$assert(!$none['groups']&&!$none['periods']&&$none['default']===null,'Excluded period remains selectable');
+$limited=$restrict(['styles'=>'rueda']);$attack=(new Renderer())->render($limited,['rnl_course'=>$group]);$assert(!str_contains($attack,'data-rnl-track-course='),'Course URL bypasses style restriction');
+$translatedRead=$read;$translatedRead['groups'][$group]['dance_style']='Cuban salsa';$assert(isset($restrict(['styles'=>'salsa'],$translatedRead)['groups'][$group]),'Translated label changes source style selection');
+$code=\RegiNor\Lite\Admin\ShortcodeGenerator::build(['styles'=>['salsa'],'levels'=>'intro,nybegynner','price_max'=>'1250,50','show_filters'=>'0','days'=>['1','2']]);
+$assert(str_contains($code,'styles="salsa"')&&str_contains($code,'price_max="1250.50"')&&str_contains($code,'show_filters="0"'),'Generator loses selections');
+$unsafe=\RegiNor\Lite\Admin\ShortcodeGenerator::build(['styles'=>'salsa" ][evil]','unknown'=>'secret']);$assert(!str_contains($unsafe,'[evil]')&&!str_contains($unsafe,'secret'),'Generator permits shortcode injection');
+try { \RegiNor\Lite\Admin\ShortcodeGenerator::build(['sessions_min'=>'5','sessions_max'=>'2']);$assert(false,'Invalid generator interval accepted'); } catch (InvalidArgumentException) { $assert(true,'Invalid range rejected'); }
+wp_set_current_user($admin);$oldGet=$_GET;$_GET=['rnl_sc'=>['styles'=>['salsa'],'show_filters'=>'0']];ob_start();\RegiNor\Lite\Admin\ShortcodeGenerator::render();$generator=ob_get_clean();$_GET=$oldGet;wp_set_current_user(0);
+$assert(str_contains($generator,'rnl-generated-shortcode')&&str_contains($generator,'Kopier kortkode')&&str_contains($generator,'value="salsa" checked'),'Generator UI missing selected style or copy control');
+
 // Imported rich text survives storage and rendering, while active content does not.
 $rich = '<p>Dans <strong>sammen</strong> og <em>rolig</em>.</p><ul><li>Grunntrinn</li></ul><p><a href="https://example.org/info?x=1&amp;y=2" onclick="evil()" style="color:red" target="_self">Les mer</a><a href="javascript:evil()">Utrygg</a></p><script>evil()</script><img src="https://example.org/pixel">';
 $clean = \RegiNor\Lite\Infrastructure\RichText::clean($rich);

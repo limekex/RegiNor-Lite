@@ -18,6 +18,7 @@ final class Plugin
         add_action('init', [ContentTypes::class, 'register'], 20);
         Roles::boot();
         \RegiNor\Lite\Infrastructure\WebIdentity::boot();
+        \RegiNor\Lite\Frontend\LevelArchive::boot();
         \RegiNor\Lite\Frontend\PublicRoutes::boot();
         \RegiNor\Lite\Frontend\CalendarEndpoint::boot();
         \RegiNor\Lite\Frontend\SharingMetadata::boot();
@@ -30,6 +31,7 @@ final class Plugin
         \RegiNor\Lite\Infrastructure\Wpml::boot();
         \RegiNor\Lite\Infrastructure\CapacityStore::boot();
         \RegiNor\Lite\Infrastructure\LetsRegAvailabilityStore::boot();
+        \RegiNor\Lite\Infrastructure\CourseAutomation::boot();
         \RegiNor\Lite\Frontend\PublicSite::boot();
         \RegiNor\Lite\Frontend\JourneyTracking::boot();
         \RegiNor\Lite\Infrastructure\SalesHistory::boot();
@@ -38,13 +40,14 @@ final class Plugin
         // WordPress needs the parent menu before deriving submenu page hooks and URLs.
         add_action('admin_menu', [CoursePage::class, 'register']);
         add_action('admin_menu', [\RegiNor\Lite\Admin\SiteSettings::class, 'register']);
+        add_action('admin_menu', [\RegiNor\Lite\Admin\ShortcodeGenerator::class, 'register']);
         add_action('admin_menu', [\RegiNor\Lite\Admin\CapacityPage::class, 'register']);
         add_action('admin_menu', [\RegiNor\Lite\Admin\LetsRegPage::class, 'register']);
         add_action('admin_menu', [\RegiNor\Lite\Admin\AnalyticsPage::class, 'register']);
         add_action('admin_menu', [\RegiNor\Lite\Admin\AppearancePage::class, 'register']);
         add_action('admin_enqueue_scripts', static function (): void {
             $page = $_GET['page'] ?? '';
-            if (is_string($page) && in_array($page, ['reginor-lite', 'rnl-resources', 'rnl-site', 'rnl-capacity', 'rnl-letsreg', 'rnl-analytics', 'rnl-appearance', 'reginor-lite-status'], true)) {
+            if (is_string($page) && in_array($page, ['reginor-lite', 'rnl-resources', 'rnl-site', 'rnl-shortcodes', 'rnl-capacity', 'rnl-letsreg', 'rnl-analytics', 'rnl-appearance', 'reginor-lite-status'], true)) {
                 wp_enqueue_style('rnl-interface', plugins_url('assets/interface.css', dirname(__DIR__) . '/reginor-lite.php'), [], (string) filemtime(dirname(__DIR__) . '/assets/interface.css'));
                 wp_enqueue_style('rnl-admin', plugins_url('assets/admin.css', dirname(__DIR__) . '/reginor-lite.php'), ['rnl-interface'], (string) filemtime(dirname(__DIR__) . '/assets/admin.css'));
             }

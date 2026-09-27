@@ -13,14 +13,16 @@ const attributes = Object.fromEntries(Object.entries(block.attributes).map(([key
 const changes = [];
 const tree = block.edit({ attributes, setAttributes: value => changes.push(value) });
 const controls = tree.children.filter(child => ['text', 'select', 'toggle'].includes(child.tag));
-assert.equal(controls.length, 8);
+assert.equal(controls.length, 33);
+controls.find(c => c.props.label === 'Vis bare: dansestiler').props.onChange('salsa');
+controls.find(c => c.props.label === 'Høyeste pris (kr)').props.onChange('1500');
 controls.find(c => c.props.label === 'Vis bare disse nivåene').props.onChange('intro,nybegynner');
 controls.find(c => c.props.label === 'Utelat disse nivåene').props.onChange('videregående');
 controls.find(c => c.props.label === 'Fremhevede kurs').props.onChange('only');
 controls.find(c => c.props.label === 'Tillatte visninger').props.onChange('week');
 controls.find(c => c.props.label === 'Vis filtre').props.onChange(false);
 assert.deepEqual(JSON.parse(JSON.stringify(changes)), [
-    { levels: 'intro,nybegynner' }, { exclude_levels: 'videregående' }, { featured: 'only' },
+    { styles: 'salsa' }, { price_max: '1500' }, { levels: 'intro,nybegynner' }, { exclude_levels: 'videregående' }, { featured: 'only' },
     { allowed_views: ['week'] }, { show_filters: false }
 ]);
 console.log('Blokkvalg for nivåutvalg, fremheving og visning bestått.');

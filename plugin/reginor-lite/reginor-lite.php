@@ -2,7 +2,7 @@
 /**
  * Plugin Name: RegiNor Lite
  * Description: Grunnlag for SalsaNors kursoversikt og kursadministrasjon.
- * Version: 0.1.24
+ * Version: 0.1.34
  * Requires at least: 6.8
  * Requires PHP: 8.2
  * Text Domain: reginor-lite
@@ -25,4 +25,4 @@ require_once __DIR__ . '/src/autoload.php';
 add_action('plugins_loaded', [Plugin::class, 'boot']);
 register_activation_hook(__FILE__, static function (): void { Frontend\PublicRoutes::rules(); flush_rewrite_rules(false); });
 register_deactivation_hook(__FILE__, [Infrastructure\TecSyncQueue::class, 'stop']);
-register_deactivation_hook(__FILE__, static function (): void { global $wp_rewrite; unset($wp_rewrite->extra_rules_top['^kursrekke/([^/]+)(?:/([^/]+))?/?$']); flush_rewrite_rules(false); wp_clear_scheduled_hook(Infrastructure\CapacityStore::HOOK); wp_clear_scheduled_hook(Infrastructure\LetsRegAvailabilityStore::HOOK); });
+register_deactivation_hook(__FILE__, static function (): void { global $wp_rewrite; unset($wp_rewrite->extra_rules_top[Frontend\LevelArchive::RULE], $wp_rewrite->extra_rules_top['^kursrekke/([^/]+)(?:/([^/]+))?/?$']); flush_rewrite_rules(false); wp_clear_scheduled_hook(Infrastructure\CapacityStore::HOOK); wp_clear_scheduled_hook(Infrastructure\LetsRegAvailabilityStore::HOOK); });

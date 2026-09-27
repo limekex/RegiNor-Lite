@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RegiNor\Lite\Frontend;
 
 use function RegiNor\Lite\translate as __;
-use function RegiNor\Lite\plural as _n;
 
 /** Shared, translated category labels; no category or account identifiers in public output. */
 final class CategoryCapacityPresenter
@@ -21,12 +20,11 @@ final class CategoryCapacityPresenter
     public static function amount(array $row): string
     {
         if ($row['status'] === 'available' && $row['available'] !== null) {
-            if ($row['role'] === 'pair') { return sprintf(/* translators: %s: maximum number of complete pairs. */ __('Opptil %s par', 'reginor-lite'), number_format_i18n($row['available'])); }
-            return sprintf(/* translators: %s: maximum number of participant places. */ _n('Opptil %s plass', 'Opptil %s plasser', $row['available'], 'reginor-lite'), number_format_i18n($row['available']));
+            return number_format_i18n($row['available']);
         }
         return match ($row['status']) {
             'unlimited' => '∞',
-            'full' => __('Fullt', 'reginor-lite'), 'later' => __('Åpner senere', 'reginor-lite'),
+            'full' => '0', 'later' => __('Åpner senere', 'reginor-lite'),
             'closed' => __('Stengt', 'reginor-lite'), 'cancelled' => __('Avlyst', 'reginor-lite'),
             default => __('Antall ikke oppgitt', 'reginor-lite'),
         };

@@ -51,9 +51,11 @@ try:
         check(status == 200 and 'Opprett kursperiode' in html, f'{role}: login/workspace failed')
         links = [link for link in MenuLinks(html).links if 'rnl-analytics' in link]
         appearance_links = [link for link in MenuLinks(html).links if 'rnl-appearance' in link]
+        generator_status, generator_html = request(opener, '/wp-admin/admin.php?page=rnl-shortcodes&rnl_sc%5Bstyles%5D%5B%5D=salsa&rnl_sc%5Bprice_max%5D=1500')
+        check(generator_status == 200 and 'rnl-generated-shortcode' in generator_html and 'price_max=&quot;1500.00&quot;' in generator_html, 'Role cannot generate a filtered shortcode')
         if role == 'administrator':
             # Every RegiNor admin route must load the shared shell and its administration stylesheet.
-            for page in ['reginor-lite', 'rnl-resources', 'rnl-site', 'rnl-capacity', 'rnl-letsreg', 'rnl-analytics', 'rnl-appearance', 'reginor-lite-status']:
+            for page in ['reginor-lite', 'rnl-resources', 'rnl-site', 'rnl-shortcodes', 'rnl-capacity', 'rnl-letsreg', 'rnl-analytics', 'rnl-appearance', 'reginor-lite-status']:
                 page_status, page_html = request(opener, '/wp-admin/admin.php?page=' + page)
                 check(page_status == 200 and 'wrap rnl-ui rnl-admin' in page_html and 'assets/admin.css' in page_html and 'assets/interface.css' in page_html, 'Missing admin shell/styles: ' + page)
             _, dashboard = request(opener, '/wp-admin/index.php')

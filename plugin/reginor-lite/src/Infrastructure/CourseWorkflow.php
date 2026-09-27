@@ -54,8 +54,10 @@ trait CourseWorkflow
         $this->requireCapability('rnl_select_resources');
         $types = array_values(array_filter((array) apply_filters('rnl_instructor_post_types', get_option('rnl_instructor_types', [])), 'post_type_exists'));
         if (!$types) { return []; }
-        return array_map(static fn ($p): array => ['id' => $p->ID, 'title' => get_the_title($p)],
-            get_posts(['post_type' => $types, 'post_status' => 'publish', 'posts_per_page' => -1, 'suppress_filters' => true]));
+        $profiles = get_posts(['post_type' => $types, 'post_status' => 'publish', 'has_password' => false,
+            'posts_per_page' => -1, 'suppress_filters' => true, 'orderby' => 'title', 'order' => 'ASC']);
+        $profiles = array_filter($profiles, static fn ($p): bool => Wpml::defaultProfile($p->ID) === $p->ID);
+        return array_values(array_map(static fn ($p): array => ['id' => $p->ID, 'title' => $p->post_title], $profiles));
     }
 
     /** A replacement retains the cancelled occurrence and creates a separate, manually protected occurrence. */

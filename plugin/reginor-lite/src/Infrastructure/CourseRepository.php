@@ -24,6 +24,7 @@ final class CourseRepository
     use CourseWorkflow;
     use CourseImport;
     use CourseSourceReview;
+    use CourseSourceAutomation;
     public function __construct(private readonly Clock $clock = new SystemClock()) {}
 
     public function create(string $kind, array $data): int
@@ -153,7 +154,39 @@ final class CourseRepository
         return $this->proposal($id, $previous, $data, $period, $plan['changes'], $plan['issues']);
     }
 
-    /** Narrow update: identity and optionally the checked provider URL; no schedule/status changes. */
+    /** Change teachers without withdrawing the published course or rewriting past sessions. */
+    public function saveInstructors(int $id, int $expectedVersion, array $instructors): array
+    {
+        return Mutation::run(function () use ($id, $expectedVersion, $instructors): array {
+            $previous = $this->get($id, 'group');
+            $this->assertVersion($previous, $expectedVersion);
+            $this->requireCapability('rnl_select_resources');
+            $this->get($previous['data']['period_id'], 'period');
+            $data = $previous['data'];
+            $data['instructor_ids'] = array_values(array_unique($instructors));
+            $changed = [];
+            foreach ($data['sessions'] as &$session) {
+                if ($session['status'] !== 'cancelled' && StoredSession::time($session)->startsAt > $this->clock->now()) {
+                    if ($session['instructor_ids'] !== $data['instructor_ids']) { $changed[] = $id . '/' . $session['id']; }
+                    $session['instructor_ids'] = $data['instructor_ids'];
+                }
+            }
+            unset($session);
+            $data = $this->validate('group', $data);
+            if ($data === $previous['data']) { return $previous; }
+            foreach ($this->conflicts($id, $data) as $conflict) {
+                if ($conflict['instructors'] && (in_array($conflict['first'], $changed, true) || in_array($conflict['second'], $changed, true))) {
+                    throw new InvalidArgumentException(__('En valgt instruktør underviser på et annet kurs samtidig. Velg andre instruktører eller rett timeplanen først.', 'reginor-lite'));
+                }
+            }
+            $next = $this->write($id, $previous, $data, 'saved', true);
+            if (get_post_status($id) === 'publish') {
+                CourseCalendar::published(new \RegiNor\Lite\Frontend\Catalog($this->clock), (int) $data['period_id']);
+            }
+            return $next;
+        }, true);
+    }
+
     /** Change only registration policy; preserve publication, schedule and parent version. */
     public function saveRegistrationStatus(int $id, int $expectedVersion, string $status): array
     {
@@ -390,7 +423,7 @@ final class CourseRepository
                 }
                 $types = apply_filters('rnl_instructor_post_types', get_option('rnl_instructor_types', []));
                 foreach ($allocation['instructor_ids'] as $instructor) {
-                    if (!in_array(get_post_type($instructor), $types, true) || get_post_status($instructor) !== 'publish') {
+                    if (!in_array(get_post_type($instructor), $types, true) || get_post_status($instructor) !== 'publish' || get_post_field('post_password', $instructor) !== '') {
                         throw new InvalidArgumentException(__('Instruktøren må være en offentlig profil av en konfigurert innholdstype.', 'reginor-lite'));
                     }
                 }

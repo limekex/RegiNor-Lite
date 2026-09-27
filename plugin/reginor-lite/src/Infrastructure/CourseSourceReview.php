@@ -43,7 +43,17 @@ trait CourseSourceReview
             $data = $group['data']; $source = LetsRegChanges::assertReview($id, $data, $hash);
             $description = $this->resourceState($data['course_id'], 'course');
             if ($description['version'] !== $descriptionVersion) { throw new VersionConflict(); }
-            if ($operation === 'keep') { LetsRegChanges::baseline($id, $data['letsreg_mapping'], $source); return; }
+            if ($operation === 'keep') {
+                LetsRegChanges::baseline($id, $data['letsreg_mapping'], $source);
+                $automation = CourseAutomation::settings($id);
+                if ($automation['key'] === LetsRegChanges::key($data['letsreg_mapping'])) {
+                    $automation['seen'] = $source; $automation['status'] = '';
+                    $automation['local'] = array_intersect_key($data, array_flip(['start_time','end_time','timezone','price_minor','price_basis','currency']));
+                    CourseAutomation::put($id, CourseAutomation::META, $automation);
+                }
+                CourseAutomation::queueCurrent($id, $data, [__('Endringene er gjennomgått. Lokale opplysninger er beholdt.', 'reginor-lite')]);
+                return;
+            }
             if (!isset($source['description']) || trim($source['description']) === '') { throw new \RuntimeException(__('LetsReg har ikke levert en gyldig, utfylt beskrivelse. Lokal tekst er beholdt.', 'reginor-lite'), 409); }
             $template = \RegiNor\Lite\Domain\LetsRegDescriptionTemplate::parse($source['description']);
             if ($template['mode'] === 'invalid') { throw new \RuntimeException(__('Beskrivelsesmalen hos LetsReg er ufullstendig. Rett overskriftene hos LetsReg og hent på nytt, eller behold lokal beskrivelse. Ingen tekst er endret.', 'reginor-lite'), 409); }
@@ -52,6 +62,7 @@ trait CourseSourceReview
                 $data['price_terms'] = RichText::clean($template['fields']['price_terms']);
                 $this->write($id, $group, $this->validate('group', $data), 'saved', true);
                 $this->refreshDescriptionCalendars($data['course_id']);
+                CourseAutomation::queueCurrent($id, $data, [__('Prisvilkår er godkjent og oppdatert manuelt.', 'reginor-lite')]);
                 // Do not acknowledge unrelated provider text or changes.
                 return;
             }
@@ -84,6 +95,7 @@ trait CourseSourceReview
             $accepted['description'] = $source['description'];
             if (isset($source['lastUpdate'])) { $accepted['lastUpdate'] = $source['lastUpdate']; }
             LetsRegChanges::baseline($id, $data['letsreg_mapping'], $accepted);
+            CourseAutomation::queueCurrent($id, $data, [__('Kursbeskrivelsen er godkjent og oppdatert manuelt.', 'reginor-lite')]);
         }, true);
     }
 

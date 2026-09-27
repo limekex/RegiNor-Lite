@@ -86,6 +86,9 @@ if (($args[0] ?? '') === 'public') {
     $campaign = $created[] = wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'HTTP kampanje', 'post_content' => '<h2>Prøv intro</h2>[reginor_courses levels="http-intro" featured="only" default_view="list" show_header="0" show_filters="0" show_view_switch="0"]<h2>Flere kurs</h2>[reginor_courses exclude_levels="http-intro" default_view="week" show_header="0"]']);
     $variants = [];
     foreach ([
+        'style-range' => '[reginor_courses styles="salsa" days="tirs" price_max="1300" time_from="18:00" time_until="18:00" sessions_max="2" show_filters="0"]',
+        'style-excluded' => '[reginor_courses styles="salsa" exclude_styles="salsa"]',
+        'style-block' => '<!-- wp:reginor-lite/courses {"styles":"rueda"} /-->',
         'included' => '[reginor_courses levels="HTTP Intro,HTTP nivå Nybegynner" show_filters="0"]',
         'excluded' => '[reginor_courses levels="' . $introLevel . ',' . $level . '" exclude_levels="' . $introLevel . '"]',
         'unknown' => '[reginor_courses levels="ukjent-niva"]',

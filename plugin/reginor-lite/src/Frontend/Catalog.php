@@ -44,20 +44,24 @@ final class Catalog
             foreach ($g['sessions'] as $s) {
                 $sessionRoom = $this->data($s['room_id'], 'room'); $sessionVenue = $sessionRoom ? $this->data($sessionRoom['venue_id'], 'venue') : null;
                 if (!$sessionRoom || !$sessionVenue) { $valid = false; break; }
-                $teachers = [];
+                $teachers = []; $profiles = [];
                 foreach ($s['instructor_ids'] as $teacherId) {
                     if (get_post_field('post_password', $teacherId) !== '' || get_post_status($teacherId) !== 'publish' || !in_array(get_post_type($teacherId), (array) apply_filters('rnl_instructor_post_types', get_option('rnl_instructor_types', [])), true)) { $valid = false; break; }
                     $translatedId = (int) apply_filters('wpml_object_id', $teacherId, get_post_type($teacherId), true);
                     if (get_post_type($translatedId) !== get_post_type($teacherId) || get_post_status($translatedId) !== 'publish' || get_post_field('post_password', $translatedId) !== '') { $translatedId = $teacherId; }
                     $teachers[] = sanitize_text_field(get_post_field('post_title', $translatedId));
+                    $profiles[$teacherId] = ['id' => $teacherId, 'display_id' => $translatedId, 'name' => end($teachers), 'url' => get_permalink($translatedId), 'image' => get_the_post_thumbnail_url($translatedId, 'thumbnail') ?: ''];
                 }
                 $sessions[] = ['id' => $s['id'], 'latitude' => $sessionVenue['latitude'] ?? null, 'longitude' => $sessionVenue['longitude'] ?? null, 'date' => $s['date'], 'original_date' => $s['original_date'], 'start_time' => $s['start_time'], 'end_time' => $s['end_time'],
                     'starts_at' => $s['starts_at'], 'ends_at' => $s['ends_at'], 'timezone' => $s['timezone'], 'status' => $s['status'], 'reason' => $s['reason'],
-                    'room' => $sessionRoom['title'], 'venue' => $sessionVenue['title'], 'address' => $sessionVenue['address'], 'instructors' => $teachers];
+                    'room' => $sessionRoom['title'], 'venue' => $sessionVenue['title'], 'address' => $sessionVenue['address'], 'instructors' => $teachers, 'instructor_profiles' => $profiles];
             }
             if (!$valid) { continue; }
             usort($sessions, static fn ($a, $b) => strcmp($a['starts_at'], $b['starts_at']));
             $active = array_values(array_filter($sessions, static fn ($s) => $s['status'] !== 'cancelled'));
+            $remaining = array_filter($active, static fn ($s) => new DateTimeImmutable($s['ends_at']) > $now);
+            $profiles = [];
+            foreach ($remaining as $session) { $profiles += $session['instructor_profiles']; }
             $url = $g['registration_url'];
             if ($url && (($g['registration_status'] !== 'external' && !in_array(strtolower((string) wp_parse_url($url, PHP_URL_HOST)), \RegiNor\Lite\Infrastructure\RegistrationDomains::allowed(), true))
                 || (wp_parse_url($url, PHP_URL_PORT) !== null && wp_parse_url($url, PHP_URL_PORT) !== 443))) { $url = ''; }
@@ -71,7 +75,7 @@ final class Catalog
                 'weekday' => $g['weekday'], 'start_time' => $g['start_time'], 'end_time' => $g['end_time'], 'timezone' => $g['timezone'],
                 'latitude' => $venue['latitude'] ?? null, 'longitude' => $venue['longitude'] ?? null,
                 'room_id' => $g['room_id'], 'room' => $room['title'], 'venue' => $venue['title'], 'address' => $venue['address'],
-                'instructors' => array_values(array_unique(array_merge(...array_column($sessions, 'instructors')))),
+                'instructors' => array_values(array_column($profiles, 'name')), 'instructor_profiles' => $profiles,
                 'dropin_only' => $g['registration_status'] === 'dropin', 'dropin_enabled' => $g['dropin_enabled'] ?? false, 'dropin_price_minor' => $g['dropin_price_minor'] ?? null,
                 'price_from' => $g['price_from'] ?? false, 'price_minor' => $g['price_minor'], 'price_basis' => $g['price_basis'], 'price_terms' => $g['price_terms'],
                 'registration_from' => $g['registration_from'] ?? null, 'registration_until' => $g['registration_until'] ?? null,
@@ -116,6 +120,12 @@ final class Catalog
             unset($g['editorial_status']);
         }
         unset($g);
+        foreach ($groups as $group) {
+            foreach ($group['sessions'] as $session) {
+                $boundary = strtotime($session['ends_at']);
+                if ($boundary > $now->getTimestamp()) { $expiry = $expiry === null ? $boundary : min($expiry, $boundary); }
+            }
+        }
         $choices = $policy->choices(array_values($models));
         return ['periods' => $publicPeriods, 'groups' => $groups,
             'current' => array_map(static fn ($p) => (int) $p->id, $choices['current']), 'upcoming' => array_map(static fn ($p) => (int) $p->id, $choices['upcoming']),

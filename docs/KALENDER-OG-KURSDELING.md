@@ -1,6 +1,8 @@
 # Kalender og deling av kurs – M4.2 og M4.3
 
-Status: **M4.2a/b og M4.3 implementert og prøvd lokalt 20. september 2026**. Faktiske kalenderapper, SoMe-forhåndsvisninger, Avada/WPML og visuell tilgjengelighet er fortsatt åpne leveranseporter. Funksjonene bygger på M4.1 og krever ikke LetsReg-webhooks eller bekreftede kjøp. [Roadmap](ROADMAP.md) angir prioritet og gjenstående lanseringskontroller.
+**Oppfølging 26. september 2026:** Prosjekteier bekrefter fungerende kalendernedlasting og godkjent visuell delingsvisning i produksjon/Avada. Kalenderabonnement med endringer og dekning av alle klienter gjenstår. Rikere oppføringer er implementert som M4.2c i 0.1.26. Kalendernavnet er «nettstedsnavn · kurs med nivå · kursperiode».
+
+Historisk lokal status: **M4.2a/b og M4.3 implementert og prøvd lokalt 20. september 2026**. Faktiske kalenderapper, SoMe-forhåndsvisninger, Avada/WPML og visuell tilgjengelighet er fortsatt åpne leveranseporter. Funksjonene bygger på M4.1 og krever ikke LetsReg-webhooks eller bekreftede kjøp. [Roadmap](ROADMAP.md) angir prioritet og gjenstående lanseringskontroller.
 
 ## Mål og avgrensning
 
@@ -143,3 +145,11 @@ Lokale prøver:
 Parseren er bare et testverktøy og følger ikke pluginpakken. Installer den isolert med `python3 -m venv /tmp/rnl-calendar-check` og `/tmp/rnl-calendar-check/bin/pip install -r tests/requirements-calendar.txt`. Kjør HTTP-prøven med `RNL_CALENDAR_PYTHON=/tmp/rnl-calendar-check/bin/python npm run test:calendar-http`. CI har samme parserprøve, men GitHub-kjøring etter push er ikke bekreftet.
 
 **Gjenstår:** K03/K06/K07 krever faktisk import og abonnement i Apple Kalender, Google Kalender og Outlook fra offentlig testadresse. K04/K10 krever faktisk CDN/HTTPS/drift; K08/D05 krever visuell/menneskelig tilgjengelighetsprøve. D04 og reelt WPML-/Avada-samspill gjenstår. Nettleserverktøyet feilet ved oppstart med `Cannot redefine property: process`, så lokal visuell kontroll er ikke godkjent. Syntaktisk gyldig ICS er ikke bevis for klientenes oppdateringsforsinkelse eller avlysningsvisning. Ingen kalenderkontoer eller SoMe-kontoer er endret.
+
+## Kalenderinnhold fra 0.1.26
+
+Tittelen viser fullt kursnavn, nivå dersom det ikke allerede står i navnet, og «Kurskveld X av Y». Kalendernavnet bruker nettstedets navn, ikke en hardkodet arrangør. Beskrivelsen har et utdrag på maksimalt 400 tegn (pluss ellipsetegn), nivå, opptil 400 tegn om forkunnskaper, den aktuelle kveldens instruktører når oppgitt, avviksgrunn og synlig kursprofiladresse. HTML gjøres om til ren tekst.
+
+Aktive kvelder nummereres kronologisk for hele kurset, også gjennomførte kvelder. Kursfrie dager inngår ikke. Individuelt avlyste eller fjernede kvelder beholdes med gammel UID uten nummer og teller ikke med i Y. Flytting og endret antall kan endre nummereringen; UID forblir stabil. Avlysning av hele kurset beholder nummereringen av de planlagte kveldene.
+
+Eksisterende abonnement får det nye innholdet ved neste vellykkede henting; revisjonen endres kun ved faktisk innholdsendring. En tidligere nedlastet kopi oppdateres ikke automatisk. Automatisk klientoppdatering og visning av kalendernavn må fortsatt prøves i de faktiske kalenderappene. Kapasitet, kjøpspåstander og automatiske påminnelser er ikke kalenderinnhold.

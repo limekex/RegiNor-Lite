@@ -89,7 +89,11 @@ check('name="rnl_embed[1][rnl_view]"' in tampered_sections[1] and 'name="utm_sou
 for name, target in fixtures['variant_urls'].items():
     _, variant, _ = get(embed_url(target))
     rendered = cards(variant)
-    if name == 'included':
+    if name == 'style-range':
+        check('HTTP fremhevet intro' in rendered and 'HTTP vanlig intro' not in rendered and 'HTTP testkurs' not in rendered, 'Combined style/time/price/day shortcode not enforced')
+    elif name in ['style-excluded', 'style-block']:
+        check(not rendered and 'Ingen kurs passer' in variant, 'Style exclusion/block widens selection')
+    elif name == 'included':
         check(all(title in rendered for title in ['HTTP testkurs', 'HTTP fremhevet intro', 'HTTP vanlig intro']), 'Multiple level names do not match')
         check('rnl-view-switch' in variant and 'rnl-filter-form' not in variant, 'Hiding filters also hides view choice')
     elif name == 'excluded':

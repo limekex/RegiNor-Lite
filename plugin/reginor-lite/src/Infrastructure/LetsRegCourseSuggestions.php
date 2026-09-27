@@ -51,7 +51,7 @@ final class LetsRegCourseSuggestions
             'prices' => array_values(array_filter($event['prices'], static fn ($p) => $p['active']))];
     }
 
-    private static function local(?string $value, string $timezone): ?DateTimeImmutable
+    public static function local(?string $value, string $timezone): ?DateTimeImmutable
     {
         if ($value === null) { return null; }
         try {

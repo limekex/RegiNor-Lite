@@ -401,6 +401,9 @@ Webhook-mottak alene oppdaterer ikke tidspunktet «sist kontrollert». Det gjør
 
 ### 16.5 Ferskhet, offentlig tekst og cache
 
+**Presisering fra prosjekteier 26. september 2026:** Kategorivisningen skal være numerisk, uten «Opptil»: 0 ved fullt og ∞ ved ubegrenset. Manglende/null grense i et ellers gyldig LetsReg-svar er ubegrenset. Kjente positive grenser og partnerkrav beholdes; ugyldig/manglende svar, kobling eller kategori er ikke en uspesifisert innstilling. Behold siste kjente data med kontrolltid og felles tilgjengelighetsmerknad. Dette erstatter eldre motstridende visningskrav; faktisk status-/poolprøve avventes til salg pågår.
+
+
 Foreslått startkonfigurasjon: kontroll hvert **5. minutt** for aktive kurs med åpen påmelding, og en grense på **15 minutter** for å vise eksakte tall. Dette er produktkrav som må tilpasses dokumenterte kvoter og realistisk oppdateringstid hos LetsReg, ikke en lovnad fra leverandøren. Et varsel skal prioritere ny kontroll i køen. Sett et målbart reaksjonsmål først etter måling mot det faktiske API-et.
 
 | Datatilstand | Offentlig visning |
@@ -626,3 +629,31 @@ Tidsgrensene evalueres ved lesing med en testbar klokke; løsningen skal ikke v�
 | R12 | Utløpt cache og uteblitt cron kan ikke eksponere skjult innhold; autorisert forhåndsvisning er privat |
 
 Disse kapitlene er krav til WordPress-pluginen. Nettsteder-prototypen demonstrerer ennå ikke reell rollebegrensning, flere uavhengige perioder eller automatiske synlighetsvinduer. Ingen WordPress-roller eller produksjonsdata er endret i denne spesifikasjonsoppdateringen.
+
+**Kalenderpresisering 26. september 2026 (0.1.26):** M4.2c er implementert med fullt kursnavn/nivå, nummererte aktive kurskvelder, korte tekstutdrag, instruktør og synlig kanonisk kurslenke. Kalendernavnet inkluderer nettstedsnavn og periode. Nummerering, avlysninger og gjenstående klientprøver er definert i [kalenderkontrakten](KALENDER-OG-KURSDELING.md#kalenderinnhold-fra-0126).
+
+## Nivåarkiver – avklart 26. september 2026
+
+Nye nivåarkiver eies av RegiNor under `/kursrekke/niva/<slug>/`. Hvert arkiv har egen publisering, tittel, HTML-introduksjon og HTML-ekstratekst, samt separate termkoblinger til eksisterende FAQ-er og WordPress-innlegg. FAQ-listen viser kort utdrag med lenke; artikler vises i en rolig karusell med automatisk avspilling, pause og tilgjengelige manuelle kontroller. Kursutvalget begrenses til nivået og tilgjengelige pågående/kommende perioder. Tekstinnhold består når kursutvalget er tomt. Gamle ACF/taksonomiarkiver beholdes uten migrering. Språkvarianter og publisering følger kontrakten i [Nivåarkiver](NIVAARKIVER.md).
+
+**Avklaring 26. september 2026, 0.1.28:** Kursprofilens topp komprimeres med fakta/påmelding på høyde med tittelen på desktop, og etter tittelen på mobil. HTML-tittelen eies eksplisitt av RegiNor for virtuelle ruter når temaet støtter WordPress `title-tag`; eldre temaer får samme verdi gjennom `wp_title`. Avadas `insert_og_meta` undertrykkes kun på disse rutene for å unngå den underliggende sidens beskrivelse/URL. Meta-keywords legges ikke til; relevante nivå-/stilord beholdes i synlig innhold, beskrivelse og strukturerte data.
+
+**Layoutavklaring 26. september 2026, 0.1.29:** Nivåarkivets relaterte artikler vises til venstre med 2/3 bredde og FAQ til høyre med 1/3 fra 1000 px. Under dette stables artikler før FAQ. Én seksjon alene bruker full bredde.
+
+### Avklaring 27. september 2026 – instruktører etter publisering (0.1.30)
+
+Publiserte enkeltkurs har en avgrenset instruktørhandling med tilgangs- og versjonskontroll. Valget erstatter instruktørlisten på alle ikke-påbegynte, ikke-avlyste kvelder, også kvelder med egne instruktørvalg. Påbegynte/historiske og avlyste kvelder endres ikke. Periodestatus, kursstatus og øvrige kursdata beholdes. Instruktørkollisjoner som berører endrede kvelder avvises. Instruktør er fortsatt valgfritt.
+
+Offentlige kort/profilkort viser instruktører på gjenstående aktive kvelder. Kursdatoer og kalenderinnhold beholder historiske koblinger. Kortkoden `reginor_instructor_courses` bruker gjeldende profils ID, eventuelt eksplisitt `instructor_id`, og viser kort på tvers av offentlige perioder uten filter. Dager/tider bygger på instruktørens faktiske kvelder. WPML oversetter profilnavn/lenker; allokeringer er felles. Ingen ACF-data flyttes.
+
+**WPML-presisering (0.1.31):** Instruktørvelgeren viser bare publiserte, passordfrie hovedspråksprofiler. Oversettelser er ikke selvstendige instruktørvalg. Tidligere valgte oversettelser vises avkrysset på hovedprofilen og nye skjemavalg bruker denne ID-en. Ingen automatisk datamigrering. Frontend velger fortsatt profilens oversettelse ut fra besøkendes språk.
+
+
+### Avklaring 27. september 2026 – automatikk og varsler
+
+Tekstendringer godkjennes manuelt. Klokkeslett og vist pris kan oppdateres automatisk etter aktivt valg per kurs. Datoendring, kollisjon og uklart grunnlag krever gjennomgang; publisering og historiske/særskilte kvelder beholdes. Varsler går etter aktivt valg til alle Kursansvarlig-brukere på nettstedet. Se [implementert atferd og avgrensninger](LETSREG-AUTOMATIKK-OG-VARSLER.md), som erstatter tidligere absolutte krav om at tid/pris alltid behandles manuelt. Faktisk LetsReg-/SMTP-verifikasjon gjenstår.
+
+
+### Avklaring – kortkodegenerator og bredere utvalg (0.1.34)
+
+Kortkode og blokk skal kunne kombinere dansestil, nivå, dag, sal/sted, instruktør, periode, kurs, status, prisgrunnlag og drop-in, med inkluder/utelat-valg. Pris, vanlig oppstartstid og antall ikke-avlyste kvelder kan begrenses med inklusive intervaller. Egen backend-generator skal tilby eksisterende valg og ferdig kopierbar kortkode uten å endre kurs. Se [gjeldende semantikk](KORTKODER-OG-KAMPANJESIDER.md). Synlighet og publisering kan aldri overstyres av disse filtrene.

@@ -23,7 +23,7 @@ c=Calendar.from_ical(sys.stdin.buffer.read())
 events=[]
 for e in c.walk('VEVENT'):
     assert not e.errors, e.errors
-    events.append(dict(uid=str(e['UID']),start=e.decoded('DTSTART').isoformat(),end=e.decoded('DTEND').isoformat(),status=str(e['STATUS']),sequence=int(e['SEQUENCE']),title=str(e['SUMMARY']),url=str(e['URL'])))
+    events.append(dict(uid=str(e['UID']),start=e.decoded('DTSTART').isoformat(),end=e.decoded('DTEND').isoformat(),status=str(e['STATUS']),sequence=int(e['SEQUENCE']),title=str(e['SUMMARY']),description=str(e['DESCRIPTION']),url=str(e['URL'])))
 print(json.dumps(events))'''
 def parse(body):return json.loads(subprocess.run([parser_python,'-c',parse_code],input=body,capture_output=True,check=True).stdout)
 class Elements(HTMLParser):
@@ -43,6 +43,8 @@ try:
     check(len(original)==2 and all(e['status']=='CONFIRMED' for e in original),'Actual sessions')
     check(original[0]['start']=='2030-01-07T17:00:00+00:00','Wrong actual date/time')
     check(len({e['uid'] for e in original})==2,'Duplicate UID')
+    check(all(f'Kurskveld {i} av 2' in e['title'] for i,e in enumerate(original,1)),'Numbered titles missing')
+    check(all('Kursprofil: '+e['url'] in e['description'] and '\n\n' in e['description'] for e in original),'Visible URL or paragraph escaping lost')
     check(all(len(line)<=75 and line.decode('utf-8') is not None for line in body.split(b'\r\n')),'Invalid byte folding')
     status,download,h=get(feed+'&rnl_calendar_download=1')
     check(status==200 and download==body and h['Content-Disposition'].startswith('attachment'),'Download differs from feed')

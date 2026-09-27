@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace RegiNor\Lite\Admin;
 
-use RegiNor\Lite\Infrastructure\{CourseRepository, ContentTypes, LetsRegChanges, LetsRegConnection, LetsRegMapping, ImportedDescriptions};
+use RegiNor\Lite\Infrastructure\{CourseRepository, ContentTypes, LetsRegChanges, LetsRegConnection, LetsRegMapping, ImportedDescriptions, CourseAutomation};
 use function RegiNor\Lite\translate as __;
 
 final class LetsRegChangesPanel
@@ -30,6 +30,10 @@ final class LetsRegChangesPanel
         if (!$mapping) { throw new \RuntimeException(__('Kurset mangler en tilgjengelig LetsReg-kobling.', 'reginor-lite'), 409); }
         $identity = LetsRegConnection::identity();
         if (!$identity || $mapping['affiliate_id'] !== $identity['affiliate_id'] || $mapping['organizer_id'] !== $identity['organizer_id']) { throw new \RuntimeException(__('Koblingen tilhører ikke konfigurert LetsReg-arrangør.', 'reginor-lite'), 409); }
+        if (($input['operation'] ?? '') === 'settings') {
+            CourseAutomation::save($id, CourseActions::integer($input['version'] ?? ''), is_array($input['automation'] ?? null) ? $input['automation'] : []);
+            return;
+        }
         if (($input['operation'] ?? '') === 'check') {
             $result = LetsRegConnection::checkCourse($mapping['event_id']);
             if ($result['state'] !== 'verified') { throw new \RuntimeException(LetsRegPage::message($result['error'] ?? '') . ' ' . __('Lokale kursopplysninger er beholdt.', 'reginor-lite'), 503); }
@@ -61,10 +65,11 @@ final class LetsRegChangesPanel
     {
         if (empty($state['data']['letsreg_mapping']) || !LetsRegMapping::canUse() || !current_user_can('edit_post', $id)) { return; }
         $review = LetsRegChanges::inspect($id, $state['data']); $description = get_post_meta($state['data']['course_id'], ContentTypes::META, true);
-        echo '<section class="rnl-panel" id="rnl-source-review"><h3>' . esc_html(__('Endringer hos LetsReg', 'reginor-lite')) . '</h3><p>' . esc_html(__('Vi kontrollerer arrangementet i bakgrunnen. Endringer varsles her og i kursoversikten. Tekst, tid og pris overskrives ikke automatisk.', 'reginor-lite')) . '</p>';
+        echo '<section class="rnl-panel" id="rnl-source-review"><h3>' . esc_html(__('Endringer hos LetsReg', 'reginor-lite')) . '</h3><p>' . esc_html(__('Vi kontrollerer arrangementet i bakgrunnen. Endringer varsles her og i kursoversikten. Tekst godkjennes alltid manuelt. Automatisk oppdatering av klokkeslett og pris er valgfritt.', 'reginor-lite')) . '</p>';
         if (isset($_GET['rnl_source_saved'])) { echo '<p class="rnl-notice" role="status">' . esc_html(__('Handlingen er fullført. Se gjeldende sammenligning nedenfor.', 'reginor-lite')) . '</p>'; }
         self::form($id, $state, $description, $review);
         echo '<button class="rnl-button rnl-button-secondary" name="operation" value="check">' . esc_html(__('Kontroller LetsReg nå', 'reginor-lite')) . '</button></form>';
+        self::automation($id, $state, $description, $review);
         if (empty($review['latest'])) { echo '<p>' . esc_html(__('Ingen nylig innholdskontroll. Hent opplysninger for å sammenligne.', 'reginor-lite')) . '</p></section>'; return; }
         echo '<p class="rnl-help">' . esc_html(sprintf(/* translators: %s: last local source check time. */ __('Sist kontrollert: %s.', 'reginor-lite'), wp_date('d.m.Y H:i', $review['latest']['at']))) . '</p>';
         if (!$review['fresh']) { echo '<p class="rnl-notice">' . esc_html(__('Opplysningene er utdaterte eller siste kontroll feilet. Kontroller LetsReg nå før du godkjenner endringer.', 'reginor-lite')) . '</p>'; }
@@ -84,6 +89,9 @@ final class LetsRegChangesPanel
         foreach (self::labels() as $field=>$label) {
             if ($review['previous'] !== null && !isset($review['changes'][$field])) { continue; }
             echo '<tr><th scope="row">' . esc_html($label) . '</th><td class="rnl-preserve-lines">' . ($field === 'description' ? \RegiNor\Lite\Infrastructure\RichText::html(self::value($review['previous'][$field] ?? null)) : esc_html(self::value($review['previous'][$field] ?? null))) . '</td><td class="rnl-preserve-lines">' . ($field === 'description' ? \RegiNor\Lite\Infrastructure\RichText::html(self::value($source[$field] ?? null)) : esc_html(self::value($source[$field] ?? null))) . '</td></tr>';
+            if ($review['previous'] !== null) {
+                echo '<tr><td colspan="3">' . TextChanges::render(self::value($review['previous'][$field] ?? null), self::value($source[$field] ?? null), $field === 'description') . '</td></tr>';
+            }
         }
         echo '</tbody></table></div><p class="rnl-help">' . esc_html(__('Datoer, priser og kategorier endres gjennom det vanlige kursoppsettet etter gjennomgang. «Behold lokalt» markerer bare dette kildegrunnlaget som vurdert; det endrer ingen lokale felt.', 'reginor-lite')) . '</p>';
         } else { echo '<summary>' . esc_html(__('Sammenlign lokale tekster med LetsReg', 'reginor-lite')) . '</summary>'; }
@@ -93,6 +101,7 @@ final class LetsRegChangesPanel
             foreach (['description'=>__('Kursbeskrivelse', 'reginor-lite'), 'dance_style'=>__('Dansestil', 'reginor-lite'), 'level_description'=>__('Nivå og forkunnskaper', 'reginor-lite'), 'partner_info'=>__('Partnerinformasjon', 'reginor-lite')] as $key=>$label) {
                 if ($incoming[$key] === $description['data'][$key]) { continue; }
                 echo '<tr><th>' . esc_html($label) . '</th><td class="rnl-preserve-lines">' . \RegiNor\Lite\Infrastructure\RichText::html($description['data'][$key]) . '</td><td class="rnl-preserve-lines">' . \RegiNor\Lite\Infrastructure\RichText::html($incoming[$key]) . '</td></tr>';
+                echo '<tr><td colspan="3">' . TextChanges::render($description['data'][$key], $incoming[$key], true) . '</td></tr>';
             }
             echo '</tbody></table></div>';
             $count = count(ImportedDescriptions::references($state['data']['course_id']));
@@ -100,7 +109,7 @@ final class LetsRegChangesPanel
             echo '<p class="rnl-help">' . esc_html(__('En gjenkjent mal oppdaterer kursbeskrivelse, dansestil, nivåforklaring og partnerinformasjon som vist over. Uten mal oppdateres bare kursbeskrivelsen. Prisvilkår godkjennes separat nedenfor og gjelder bare dette kurset. På publiserte kurs blir godkjent tekst synlig straks.', 'reginor-lite')) . '</p>';
         }
         if ($termsChanged) {
-            echo '<h4>' . esc_html(__('Prisvilkår og tillegg', 'reginor-lite')) . '</h4><div class="rnl-scroll"><table class="widefat striped"><thead><tr><th>' . esc_html(__('Lokalt nå', 'reginor-lite')) . '</th><th>' . esc_html(__('Etter godkjenning', 'reginor-lite')) . '</th></tr></thead><tbody><tr><td>' . \RegiNor\Lite\Infrastructure\RichText::html($state['data']['price_terms']) . '</td><td>' . \RegiNor\Lite\Infrastructure\RichText::html($terms) . '</td></tr></tbody></table></div><p class="rnl-help">' . esc_html(__('Godkjenning erstatter prisvilkårene på dette kurset, også eventuelle lokale redigeringer. Kontroller forskjellen først. Prisbeløp, andre beskrivelser, timeplan og publisering beholdes.', 'reginor-lite')) . '</p>';
+            echo '<h4>' . esc_html(__('Prisvilkår og tillegg', 'reginor-lite')) . '</h4>' . TextChanges::render($state['data']['price_terms'], $terms, true) . '<div class="rnl-scroll"><table class="widefat striped"><thead><tr><th>' . esc_html(__('Lokalt nå', 'reginor-lite')) . '</th><th>' . esc_html(__('Etter godkjenning', 'reginor-lite')) . '</th></tr></thead><tbody><tr><td>' . \RegiNor\Lite\Infrastructure\RichText::html($state['data']['price_terms']) . '</td><td>' . \RegiNor\Lite\Infrastructure\RichText::html($terms) . '</td></tr></tbody></table></div><p class="rnl-help">' . esc_html(__('Godkjenning erstatter prisvilkårene på dette kurset, også eventuelle lokale redigeringer. Kontroller forskjellen først. Prisbeløp, andre beskrivelser, timeplan og publisering beholdes.', 'reginor-lite')) . '</p>';
         }
         self::form($id, $state, $description, $review); $disabled = $review['fresh'] ? '' : ' disabled';
         if ($termsChanged) { echo '<p><button class="rnl-button" name="operation" value="price_terms"' . $disabled . '>' . esc_html(__('Godkjenn prisvilkår for dette kurset', 'reginor-lite')) . '</button></p>'; }
@@ -111,6 +120,23 @@ final class LetsRegChangesPanel
         }
         echo '</form></details></section>';
     }
+    private static function automation(int $id, array $state, array $description, array $review): void
+    {
+        $config = CourseAutomation::settings($id);
+        echo '<details><summary>' . esc_html(__('Automatiske oppdateringer og e-postvarsler', 'reginor-lite')) . '</summary>';
+        echo '<p>' . esc_html(__('Valgene gjelder nye endringer hos LetsReg etter lagring. Tekst må fortsatt godkjennes manuelt. Datoendringer og kollisjoner krever gjennomgang. Tidligere, avlyste og særskilt endrede kurskvelder beholdes.', 'reginor-lite')) . '</p>';
+        self::form($id, $state, $description, $review);
+        foreach (['time' => __('Oppdater klokkeslett automatisk', 'reginor-lite'), 'price' => __('Oppdater vist pris automatisk', 'reginor-lite'), 'email' => __('Varsle alle kursansvarlige på e-post om tilgjengelige og utførte endringer', 'reginor-lite')] as $key => $label) {
+            echo '<p><label><input type="checkbox" name="automation[' . esc_attr($key) . ']" value="1"' . checked($config[$key], true, false) . '> ' . esc_html($label) . '</label></p>';
+        }
+        echo '<p><label>' . esc_html(__('Priskategori for kursets viste pris', 'reginor-lite')) . ' <select name="automation[category]"><option value="0">' . esc_html(__('Velg kategori', 'reginor-lite')) . '</option>';
+        foreach ($state['data']['letsreg_mapping']['categories'] as $category) { echo '<option value="' . esc_attr((string) $category['id']) . '"' . selected($config['category'], $category['id'], false) . '>' . esc_html($category['name']) . '</option>'; }
+        echo '</select></label></p><p class="rnl-help">' . esc_html(__('Velg ordinær pris, ikke en rabattkategori. Pris per person eller par beholdes; en pris per par beregnes fra to deltakere i valgt parkategori. Varslene går til kursansvarlige på dette nettstedet, ikke til deltakerne. Bakgrunnskontrollen krever fungerende WordPress-cron.', 'reginor-lite')) . '</p>';
+        echo '<button class="rnl-button rnl-button-secondary" name="operation" value="settings">' . esc_html(__('Lagre automatikk og varsler', 'reginor-lite')) . '</button></form>';
+        if ($config['status']) { echo '<p class="rnl-notice">' . esc_html($config['status']) . '</p>'; }
+        echo '</details>';
+    }
+
     private static function form(int $id, array $state, array $description, array $review): void
     {
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">'; wp_nonce_field('rnl_letsreg_review');

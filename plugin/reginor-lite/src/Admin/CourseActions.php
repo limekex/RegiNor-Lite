@@ -31,6 +31,12 @@ final class CourseActions
         $data = $input['data'] ?? [];
         if (!is_array($data)) { throw new InvalidArgumentException(__('Ugyldig skjema.', 'reginor-lite')); }
         switch ($action) {
+            case 'save_instructors':
+                $state = $this->repo->saveInstructors($id, $version, self::ids($data['instructor_ids'] ?? []));
+                return ['id' => $state['data']['period_id'], 'group' => $id, 'message' => __('Instruktørene er oppdatert. Publiserte kurs er fortsatt publisert.', 'reginor-lite')];
+            case 'save_level_archive':
+                \RegiNor\Lite\Infrastructure\LevelArchiveStore::save($id, $version, self::scalar($input, 'language'), $data);
+                return ['message' => __('Nivåarkivet er lagret.', 'reginor-lite')];
             case 'save_course_description':
                 if (!current_user_can('manage_options')) { throw new RuntimeException(__('Bare administrator kan endre den felles kursbeskrivelsen.', 'reginor-lite'), 403); }
                 return Mutation::run(function () use ($id, $version, $input, $data): array {

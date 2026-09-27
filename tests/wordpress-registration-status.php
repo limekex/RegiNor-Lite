@@ -99,11 +99,11 @@ try {
     $assert(!isset($read['groups'][$group]['capacity']['categories'][0]['reported_available']) && !isset($read['groups'][$group]['capacity']['categories'][0]['reported_registered']), 'Raw category observation leaks into public projection');
     foreach ([['rnl_period' => $period], ['rnl_period' => $period, 'rnl_view' => 'week'], ['rnl_course' => $group]] as $query) {
         $html = (new Renderer())->render($read, $query);
-        $assert(isset($query['rnl_course']) ? (str_contains($html, 'Opptil 10 plasser') && str_contains($html, 'Ledige plasser per kategori') && str_contains($html, 'Tall fra LetsReg')) : (!str_contains($html, 'Ledige plasser per kategori') && str_contains($html, 'Se kurset')), 'Capacity details must appear only on the course profile');
+        $assert(isset($query['rnl_course']) ? (str_contains($html, '>10</strong>') && str_contains($html, 'Ledige plasser per kategori') && str_contains($html, 'Tall fra LetsReg')) : (!str_contains($html, 'Ledige plasser per kategori') && str_contains($html, 'Se kurset')), 'Capacity details must appear only on the course profile');
     }
     ob_start(); \RegiNor\Lite\Admin\LetsRegCapacityPanel::render($g); $panel = ob_get_clean();
     $assert(Store::view($g, new DateTimeImmutable())['categories'][0]['reported_registered'] === 0 && str_contains($panel, 'Påmeldte hos LetsReg'), 'Registered count missing or conflated with availability');
-    $assert(str_contains($panel, 'Rapportert ledig hos LetsReg') && str_contains($panel, 'Opptil 10 plasser'), 'Live capacity panel missing reported or bounded count');
+    $assert(str_contains($panel, 'Rapportert ledig hos LetsReg') && str_contains($panel, '>10</td>'), 'Live capacity panel missing reported or bounded count');
     $_GET = ['page' => 'rnl-capacity', 'group' => (string) $group]; $_POST = [];
     ob_start(); \RegiNor\Lite\Admin\CapacityPage::render(); $panel = ob_get_clean();
     $assert(str_contains($panel, 'Kapasitet fra LetsReg') && !str_contains($panel, 'Lagre prøveoppsett'), 'Mapped course still uses demonstration page');
@@ -142,9 +142,9 @@ try {
     $assert(!in_array($expiredAt->getTimestamp() + 60, $deadlines, true), 'Unknown API status invalidates whole page after one minute');
     $expiredRead = (new Catalog())->read();
     $assert(!empty($expiredRead['groups'][$group]['capacity']['categories']), 'Last known counts disappeared after refresh deadline');
-    $assert(str_contains((new Renderer())->render($expiredRead, ['rnl_course' => $group]), 'Opptil 10') && str_contains((new Renderer())->render($expiredRead, ['rnl_course' => $group]), 'Siste kjente kapasitet'), 'Last known count or disclaimer missing');
+    $assert(str_contains((new Renderer())->render($expiredRead, ['rnl_course' => $group]), '>10</strong>') && str_contains((new Renderer())->render($expiredRead, ['rnl_course' => $group]), 'Siste kjente kapasitet'), 'Last known count or disclaimer missing');
     ob_start(); \RegiNor\Lite\Admin\LetsRegCapacityPanel::render($g); $panel = ob_get_clean();
-    $assert(str_contains($panel, 'Opptil 10') && str_contains($panel, 'Siste kjente kapasitet'), 'Admin lost last known counts');
+    $assert(str_contains($panel, '>10</td>') && str_contains($panel, 'Siste kjente kapasitet'), 'Admin lost last known counts');
     $assert(RegistrationState::resolve($futurePeriod, $g, new DateTimeImmutable())['status'] === 'available', 'Stale API observation incorrectly inherits period sales dates');
     $stored['checked_at'] = time() - 700; set_transient($key, $stored, 86400);
     wp_set_current_user(0); $before = $calls; Store::runDue([$group]);

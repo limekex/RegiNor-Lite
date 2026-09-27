@@ -25,7 +25,7 @@ final class Renderer
 
     public function render(array $catalog, array $input, string $defaultView = 'list', array $allowedViews = ['list', 'week'], array $options = []): string
     {
-        $this->options = $options + ['show_header' => true, 'show_filters' => true, 'show_view_switch' => true, 'instance' => '', 'base_url' => '', 'page_query' => []];
+        $this->options = $options + ['show_header' => true, 'show_filters' => true, 'show_level_filter' => true, 'show_view_switch' => true, 'instance' => '', 'base_url' => '', 'page_query' => []];
         $this->resultsId = 'rnl-results' . ($this->options['instance'] !== '' ? '-' . $this->options['instance'] : '');
         $this->allowedViews = $allowedViews;
         $this->now = (int) $catalog['now'];
@@ -37,7 +37,7 @@ final class Renderer
         $this->query = array_filter(['rnl_period' => $period, 'rnl_day' => $day >= 1 && $day <= 7 ? $day : 0, 'rnl_level' => $level, 'rnl_view' => $view]);
         ob_start();
         $appearance = Appearance::settings();
-        echo ('<section style="' . esc_attr(Appearance::variables($appearance)) . '" class="rnl-ui rnl-public' . ($appearance['layout'] === 'stacked' ? ' rnl-days-stacked' : '') . (!Appearance::dayColorsApply('week') ? ' rnl-day-colors-off' : '') . '" aria-label="' . esc_attr(__('Kursoversikt', 'reginor-lite')) . '" data-rnl-expiry="') . esc_attr((string) ($catalog['expires_at'] ?? '')) . '" data-rnl-now="' . (int) $catalog['now'] . '">';
+        echo ('<section style="' . esc_attr(Appearance::variables($appearance)) . '" class="rnl-ui rnl-public' . ($appearance['layout'] === 'stacked' ? ' rnl-days-stacked' : '') . (!Appearance::dayColorsApply('week') ? ' rnl-day-colors-off' : '') . (isset($input['rnl_course']) ? ' rnl-public-detail' : '') . '" aria-label="' . esc_attr(__('Kursoversikt', 'reginor-lite')) . '" data-rnl-expiry="') . esc_attr((string) ($catalog['expires_at'] ?? '')) . '" data-rnl-now="' . (int) $catalog['now'] . '">';
         if (isset($input['rnl_course'])) {
             $id = is_scalar($input['rnl_course']) ? (int) $input['rnl_course'] : 0;
             $g = $catalog['groups'][$id] ?? null;
@@ -94,14 +94,18 @@ final class Renderer
             echo ('<label>' . esc_html(__('Kursperiode', 'reginor-lite')) . '<select name="' . esc_attr($this->field('rnl_period')) . '">');
             $choices = array_values(array_unique(array_merge($catalog['current'], $catalog['upcoming'], [$period['id']])));
             foreach ($choices as $id) { $p = $catalog['periods'][$id]; $suffix = in_array($id, $catalog['current'], true) ? __(' · Pågående', 'reginor-lite') : (in_array($id, $catalog['upcoming'], true) ? __(' · Kommende', 'reginor-lite') : ''); echo '<option value="' . (int) $id . '"' . selected($period['id'], $id, false) . '>' . esc_html($p['title'] . $suffix) . '</option>'; }
-            echo '</select></label><label>' . esc_html(__('Kursnivå', 'reginor-lite')) . '<select name="' . esc_attr($this->field('rnl_level')) . '"><option value="0">' . esc_html(__('Alle nivåer', 'reginor-lite')) . '</option>';
-            $levels = [];
-            foreach ($groups as $g) { if (!empty($g['level_id'])) { $levels[$g['level_id']] = ['title' => $g['level_name'], 'order' => $g['level_order']]; } }
-            uasort($levels, static fn ($a, $b) => [$a['order'], $a['title']] <=> [$b['order'], $b['title']]);
-            $selectedLevel = $this->query['rnl_level'] ?? 0;
-            if ($selectedLevel && !isset($levels[$selectedLevel])) { echo '<option value="' . (int) $selectedLevel . '" selected>' . esc_html(__('Valgt nivå har ingen kurs i denne perioden', 'reginor-lite')) . '</option>'; }
-            foreach ($levels as $id => $item) { echo '<option value="' . (int) $id . '"' . selected($selectedLevel, $id, false) . '>' . esc_html($item['title']) . '</option>'; }
-            echo ('</select></label><label>' . esc_html(__('Hvilken dag passer?', 'reginor-lite')) . '<select name="' . esc_attr($this->field('rnl_day')) . '"><option value="0">' . esc_html(__('Alle dager', 'reginor-lite')) . '</option>');
+            echo '</select></label>';
+            if ($this->options['show_level_filter']) {
+                echo '<label>' . esc_html(__('Kursnivå', 'reginor-lite')) . '<select name="' . esc_attr($this->field('rnl_level')) . '"><option value="0">' . esc_html(__('Alle nivåer', 'reginor-lite')) . '</option>';
+                $levels = [];
+                foreach ($groups as $g) { if (!empty($g['level_id'])) { $levels[$g['level_id']] = ['title' => $g['level_name'], 'order' => $g['level_order']]; } }
+                uasort($levels, static fn ($a, $b) => [$a['order'], $a['title']] <=> [$b['order'], $b['title']]);
+                $selectedLevel = $this->query['rnl_level'] ?? 0;
+                if ($selectedLevel && !isset($levels[$selectedLevel])) { echo '<option value="' . (int) $selectedLevel . '" selected>' . esc_html(__('Valgt nivå har ingen kurs i denne perioden', 'reginor-lite')) . '</option>'; }
+                foreach ($levels as $id => $item) { echo '<option value="' . (int) $id . '"' . selected($selectedLevel, $id, false) . '>' . esc_html($item['title']) . '</option>'; }
+                echo '</select></label>';
+            }
+            echo ('<label>' . esc_html(__('Hvilken dag passer?', 'reginor-lite')) . '<select name="' . esc_attr($this->field('rnl_day')) . '"><option value="0">' . esc_html(__('Alle dager', 'reginor-lite')) . '</option>');
             $days = array_unique(array_column($groups, 'weekday')); sort($days);
             foreach ($days as $day) { echo '<option value="' . (int) $day . '"' . selected($this->query['rnl_day'] ?? 0, $day, false) . '>' . esc_html(self::days()[$day]) . '</option>'; }
             echo ('</select></label><button class="rnl-button rnl-button-secondary" type="submit">' . esc_html(__('Vis kurs', 'reginor-lite')) . '</button></form>');
@@ -132,6 +136,7 @@ final class Renderer
         if ($group !== null) { return PublicSite::url($group, $query); }
         if ($this->options['instance'] === '') {
             $retained = array_diff_key($this->options['page_query'], array_flip(['rnl_period', 'rnl_course', 'rnl_day', 'rnl_level', 'rnl_view', 'rnl_refresh', 'page_id', 'pagename']));
+            if ($this->options['base_url'] !== '') { return add_query_arg($query + $retained, $this->options['base_url']); }
             return PublicSite::url(null, $query + $retained);
         }
         $page = $this->options['page_query'];
@@ -171,7 +176,9 @@ final class Renderer
         if (!$pills) { return; }
         echo '<div class="rnl-course-pills">';
         foreach ($pills as [$kind, $label, $value]) {
-            echo '<span class="rnl-course-pill rnl-course-pill-' . esc_attr($kind) . '"><span class="screen-reader-text">' . esc_html($label) . ': </span>' . esc_html($value) . '</span>';
+            $archive = $kind === 'level' && !empty($g['level_id']) ? \RegiNor\Lite\Infrastructure\LevelArchiveStore::publicData((int) $g['level_id']) : null;
+            $tag = $archive ? 'a' : 'span';
+            echo '<' . $tag . ($archive ? ' href="' . esc_url(LevelArchive::url((int) $g['level_id'])) . '"' : '') . ' class="rnl-course-pill rnl-course-pill-' . esc_attr($kind) . '"><span class="screen-reader-text">' . esc_html($label) . ': </span>' . esc_html($value) . '</' . $tag . '>';
         }
         echo '</div>';
     }
@@ -185,7 +192,8 @@ final class Renderer
     private function card(array $g): void
     {
         echo '<article style="' . esc_attr(Appearance::dayCardStyle($g['weekday']) . Appearance::courseStyle($g['id'])) . '" class="rnl-card' . $this->featuredClass($g['id']) . (!empty($g['dropin_enabled']) ? ' rnl-has-dropin' : '') . '" id="' . esc_attr($this->courseAnchor((int) $g['id'])) . '" tabindex="-1"><div class="rnl-card-top"><span class="rnl-eyebrow">' . esc_html($g['dance_style']) . '</span>'; $this->badge($g);
-        echo '</div>'; $this->dropin($g); echo '<h3>' . esc_html($g['title']) . '</h3>'; $this->coursePills($g); echo ('<dl class="rnl-facts"><div><dt>' . esc_html(__('Når', 'reginor-lite')) . '</dt><dd>') . esc_html(self::courseDay($g) . ' · ' . $g['start_time'] . '–' . $g['end_time']) . ('</dd></div><div><dt>' . esc_html($g['count'] === 1 ? __('Dato', 'reginor-lite') : __('Oppstart', 'reginor-lite')) . '</dt><dd>') . esc_html($this->date($g['first'], $g['timezone']) . ' · ' . sprintf(/* translators: %d: number of course evenings. */ _n('%d kveld', '%d kvelder', $g['count'], 'reginor-lite'), $g['count'])) . ('</dd></div><div><dt>' . esc_html(__('Hvor', 'reginor-lite')) . '</dt><dd>') . '<strong class="rnl-room-name">' . esc_html($g['room']) . '</strong><span>' . esc_html($g['venue']) . '</span><span>' . esc_html($g['address']) . '</span></dd></div></dl>';
+        echo '</div>'; $this->dropin($g); echo '<h3>' . esc_html($g['title']) . '</h3>'; $this->coursePills($g); echo ('<dl class="rnl-facts"><div><dt>' . esc_html(__('Når', 'reginor-lite')) . '</dt><dd>') . esc_html($g['teaching_times'] ?? (self::courseDay($g) . ' · ' . $g['start_time'] . '–' . $g['end_time'])) . ('</dd></div><div><dt>' . esc_html($g['count'] === 1 ? __('Dato', 'reginor-lite') : __('Oppstart', 'reginor-lite')) . '</dt><dd>') . esc_html($this->date($g['first'], $g['timezone']) . ' · ' . sprintf(/* translators: %d: number of course evenings. */ _n('%d kveld', '%d kvelder', $g['count'], 'reginor-lite'), $g['count'])) . ('</dd></div><div><dt>' . esc_html(__('Hvor', 'reginor-lite')) . '</dt><dd>') . '<strong class="rnl-room-name">' . esc_html($g['room']) . '</strong><span>' . esc_html($g['venue']) . '</span><span>' . esc_html($g['address']) . '</span></dd></div></dl>';
+        if ($g['instructors']) { echo '<p class="rnl-card-instructors"><strong>' . esc_html(__('Instruktører', 'reginor-lite')) . ':</strong> ' . esc_html(implode(', ', $g['instructors'])) . '</p>'; }
         echo '<p class="rnl-price">' . esc_html($this->price($g)) . ('<span>' . esc_html((!empty($g['dropin_only']) ? __('per kurskveld', 'reginor-lite') : __('for hele kurset', 'reginor-lite'))) . '</span></p>');
         if ($g['changed']) { echo ('<p class="rnl-small">' . esc_html(__('Enkelte kurskvelder er endret – se kursdatoene.', 'reginor-lite')) . '</p>'); }
 
@@ -220,14 +228,22 @@ final class Renderer
     }
     private function detail(array $g, array $period): void
     {
-        echo '<a class="rnl-back" href="' . esc_url($this->url()) . '#rnl-course-' . (int) $g['id'] . ('">' . esc_html(__('← Tilbake til kursene', 'reginor-lite')) . '</a><header class="rnl-hero"><span class="rnl-eyebrow">') . esc_html($period['title']) . '</span><h2>' . esc_html($g['title']) . '</h2>'; $this->coursePills($g, true); $this->badge($g); echo '</header>';
-        echo '<div class="rnl-detail-layout">'; $this->booking($g, $period);
+        echo '<a class="rnl-back" href="' . esc_url($this->url()) . '#rnl-course-' . (int) $g['id'] . ('">' . esc_html(__('← Tilbake til kursperioden', 'reginor-lite')) . '</a><div class="rnl-detail-layout"><header class="rnl-hero"><span class="rnl-eyebrow">') . esc_html($period['title']) . '</span><h2>' . esc_html($g['title']) . '</h2>'; $this->coursePills($g, true); $this->badge($g); echo '</header>';
+        $this->booking($g, $period);
         echo '<div class="rnl-course-description"><section class="rnl-panel rnl-text-section rnl-section-description' . (!empty($g['dropin_enabled']) ? ' rnl-has-dropin' : '') . '">'; $this->dropin($g);
         echo '<h3>' . esc_html(__('Kursbeskrivelse', 'reginor-lite')) . '</h3>' . RichText::html($g['description']) . '</section>';
         $this->textSection('level', __('Nivå og forkunnskaper', 'reginor-lite'), $g['level'], $g['level_help'] ?? '');
         $this->textSection('partner', __('Partnerinformasjon', 'reginor-lite'), $g['partner_info']);
         $this->textSection('price-terms', __('Prisvilkår og tillegg', 'reginor-lite'), $g['price_terms']);
-        if ($g['instructors']) { echo '<section class="rnl-panel rnl-text-section"><h3>' . esc_html(__('Instruktører', 'reginor-lite')) . '</h3><p>' . esc_html(implode(', ', $g['instructors'])) . '</p></section>'; }
+        if (!empty($g['instructor_profiles'])) {
+            echo '<section class="rnl-panel rnl-text-section"><h3>' . esc_html(__('Instruktører', 'reginor-lite')) . '</h3><div class="rnl-instructor-profiles">';
+            foreach ($g['instructor_profiles'] as $profile) {
+                echo '<a class="rnl-instructor-profile" href="' . esc_url($profile['url']) . '">';
+                if ($profile['image']) { echo '<img src="' . esc_url($profile['image']) . '" width="64" height="64" alt="" loading="lazy">'; }
+                echo '<span>' . esc_html($profile['name']) . '</span></a>';
+            }
+            echo '</div></section>';
+        }
         echo '<section class="rnl-panel rnl-location" id="rnl-location-' . (int) $g['id'] . '" tabindex="-1"><h3>' . esc_html(__('Kurssted og kart', 'reginor-lite')) . '</h3><p><strong>' . esc_html($g['venue']) . '</strong><br>' . esc_html($g['address']) . '<br><strong class="rnl-room-name">' . esc_html($g['room']) . '</strong></p>';
         \RegiNor\Lite\Infrastructure\VenueMap::display($g);
         echo '</section>';

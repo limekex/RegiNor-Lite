@@ -8,6 +8,19 @@ foreach(['AFFILIATE_ID','ORGANIZER_ID','USERNAME','PASSWORD','CLIENT_ID']as$key)
 $admin=(int)get_users(['role'=>'administrator','number'=>1,'fields'=>'ID'])[0];$repo=new CourseRepository();
 $assert=static function($ok,$why)use(&$checks){++$checks;if(!$ok)throw new RuntimeException($why);};
 $reject=static function($fn,$code=0)use($assert){try{$fn();}catch(Throwable $e){$assert(!$code||$e->getCode()===$code,'Wrong error: '.$e->getMessage());return;}$assert(false,'Invalid operation accepted');};
+$diff=\RegiNor\Lite\Admin\TextChanges::render('<p>Oppstart kl. 18:00 på mandag.</p>', '<p>Oppstart kl. 18:30 på mandag.</p>', true);
+$assert(str_contains($diff,'<del>18:00</del>') && str_contains($diff,'<ins>18:30</ins>'),'Small time change not highlighted');
+$assert(!str_contains($diff,'<del>Oppstart'),'Unchanged text highlighted');
+$diff=\RegiNor\Lite\Admin\TextChanges::render('<p>Ærlig øving.</p>', '<p>Ærlig og rolig øving.</p>', true);
+$assert(str_contains($diff,'<ins>') && str_contains($diff,'Ærlig'),'Unicode word diff failed');
+$diff=\RegiNor\Lite\Admin\TextChanges::render('<a href="https://example.com/old">Info</a>', '<a href="https://example.com/new">Info</a>', true);
+$assert(str_contains($diff,'<del>') && str_contains($diff,'example.com/new'),'Link-only change hidden');
+$diff=\RegiNor\Lite\Admin\TextChanges::render('old','<script>alert(1)</script><img src=x onerror=alert(1)>');
+$assert(!str_contains($diff,'<script') && !str_contains($diff,'<img'),'Diff executes provider markup');
+$assert(\RegiNor\Lite\Admin\TextChanges::render('same','same')==='','Unchanged content shown as changed');
+$assert(str_contains(\RegiNor\Lite\Admin\TextChanges::render('', 'Ny tekst'),'<ins>Ny tekst</ins>'),'Added text not highlighted');
+$assert(str_contains(\RegiNor\Lite\Admin\TextChanges::render('Gammel tekst', ''),'<del>Gammel tekst</del>'),'Removed text not highlighted');
+$assert(str_contains(\RegiNor\Lite\Admin\TextChanges::render('<p>Lik tekst</p>', '<p><strong>Lik tekst</strong></p>', true),'formatering'),'Formatting-only difference not explained');
 $text='Lær salsa fra bunnen av. Vi øver på grunntrinn, rytme, samspill og enkle kombinasjoner i et hyggelig miljø med god tid til spørsmål og repetisjon.';
 $event=['id'=>12345,'organizer'=>['id'=>42,'affiliateId'=>7],'name'=>'Salsa nybegynner','description'=>$text,'active'=>true,'published'=>true,'isCancelled'=>false,'lastUpdate'=>'2026-09-21T12:00:00Z','eventUrl'=>'https://www.letsreg.com/event/changes','startDate'=>'2031-01-06T18:00:00+01:00','endDate'=>'2031-01-13T19:00:00+01:00'];
 $http=static function($pre,$args,$url)use(&$calls,&$event,&$failure){++$calls;if(Mutation::active())throw new RuntimeException('Network under repository lock');
@@ -55,7 +68,7 @@ try{
  $group=$repo->get($g1);$review=Changes::inspect($g1,$group['data']);
  $assert($calls>$before&&$review['state']==='changed'&&isset($review['changes']['description'],$review['changes']['lastUpdate']),'Background source change not detected');
  $assert($repo->get($c1)['data']['description']===$changedDescription['description'],'Polling overwrites local text');
- ob_start();Panel::render($g1,$group);$html=ob_get_clean();$assert(str_contains($html,'Sist gjennomgått')&&str_contains($html,'Uten mal oppdateres bare kursbeskrivelsen'),'Source review missing');
+ ob_start();Panel::render($g1,$group);$html=ob_get_clean();$assert(str_contains($html,'Sist gjennomgått')&&str_contains($html,'Uten mal oppdateres bare kursbeskrivelsen'),'Source review missing');$assert(str_contains($html,'rnl-text-changes'),'Source panel lacks highlighted comparison');
  ob_start();Panel::badge($g1,$group['data']);$badge=ob_get_clean();$assert(str_contains($badge,'Endret hos LetsReg'),'Period warning missing');
  $payload=['_wpnonce'=>wp_create_nonce('rnl_letsreg_review'),'id'=>(string)$g1,'version'=>(string)$group['version'],'description_version'=>(string)$repo->get($c1)['version'],'source_hash'=>Changes::hash($review['latest']['snapshot']),'operation'=>'description'];
  $before=$calls;$reject(static fn()=>Panel::dispatch(array_replace($payload,['_wpnonce'=>'wrong'])),403);$reject(static fn()=>Panel::dispatch(array_replace($payload,['source_hash'=>'wrong'])),409);$assert($calls===$before,'Invalid review calls API');

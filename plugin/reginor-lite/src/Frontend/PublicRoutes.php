@@ -15,11 +15,12 @@ final class PublicRoutes
         add_action('wp_loaded', [self::class, 'upgrade'], 21);
         add_filter('option_rewrite_rules', static function ($rules) {
             if (is_array($rules) && !self::enabled()) { unset($rules['^kursrekke/?$'], $rules['^kursrekke/([^/]+)(?:/([^/]+))?/?$']); }
+            if (is_array($rules) && !LevelArchive::prettyEnabled()) { unset($rules[LevelArchive::RULE]); }
             return $rules;
         });
-        add_filter('query_vars', static fn ($v) => [...$v, 'rnl_route_index', 'rnl_route_period', 'rnl_route_course']);
+        add_filter('query_vars', static fn ($v) => [...$v, 'rnl_route_index', 'rnl_route_period', 'rnl_route_course', 'rnl_route_level']);
         add_filter('request', static function (array $v): array {
-            if (empty($v['rnl_route_period']) && empty($v['rnl_route_index'])) { return $v; }
+            if (empty($v['rnl_route_period']) && empty($v['rnl_route_index']) && empty($v['rnl_route_level'])) { return $v; }
             $v['page_id'] = PublicSite::pageId();
             return $v;
         });
@@ -28,34 +29,36 @@ final class PublicRoutes
             add_action($hook, static function (): void { self::rules(); flush_rewrite_rules(false); });
         }
         add_filter('wpml_active_languages', static function ($languages) {
-            if ((!self::$selection && !get_query_var('rnl_route_index')) || !is_array($languages)) { return $languages; }
+            if ((!self::$selection && !LevelArchive::$selection && !get_query_var('rnl_route_index')) || !is_array($languages)) { return $languages; }
             foreach ($languages as $code => &$language) {
                 $page = (int) apply_filters('wpml_object_id', (int) get_option('rnl_course_page_id'), 'page', false, $code);
                 if (!$page || get_post_status($page) !== 'publish' || get_post_field('post_password', $page) !== '') { unset($languages[$code]); continue; }
-                $language['url'] = self::url(self::$selection['period'] ?? 0, self::$selection['group'] ?? null, $code);
+                $language['url'] = LevelArchive::$selection ? LevelArchive::url(LevelArchive::$selection['id'], $code) : self::url(self::$selection['period'] ?? 0, self::$selection['group'] ?? null, $code);
             }
             unset($language); return $languages;
         }, 20);
     }
     public static function upgrade(): void
     {
-        if (get_option('rnl_public_routes_version') === '1') { return; }
+        if (get_option('rnl_public_routes_version') === '2') { return; }
         self::rules();
         flush_rewrite_rules(false);
-        update_option('rnl_public_routes_version', '1', false);
+        update_option('rnl_public_routes_version', '2', false);
     }
     public static function enabled(): bool
     {
         // Never take over an existing WordPress section. Query URLs remain available as fallback.
-        foreach (get_post_types(['public' => true], 'objects') as $type) { if (is_array($type->rewrite) && trim($type->rewrite['slug'] ?? '', '/') === 'kursrekke') { return false; } }
-        foreach (get_taxonomies(['public' => true], 'objects') as $type) { if (is_array($type->rewrite) && trim($type->rewrite['slug'] ?? '', '/') === 'kursrekke') { return false; } }
+        foreach (get_post_types(['public' => true], 'objects') as $type) { if (is_array($type->rewrite) && preg_match('#^kursrekke(?:/|$)#', trim($type->rewrite['slug'] ?? '', '/'))) { return false; } }
+        foreach (get_taxonomies(['public' => true], 'objects') as $type) { if (is_array($type->rewrite) && preg_match('#^kursrekke(?:/|$)#', trim($type->rewrite['slug'] ?? '', '/'))) { return false; } }
         return (bool) get_option('permalink_structure') && (bool) get_option('rnl_pretty_urls', true) && !get_page_by_path('kursrekke');
     }
     public static function rules(): void
     {
         global $wp_rewrite;
         unset($wp_rewrite->extra_rules_top['^kursrekke/?$'], $wp_rewrite->extra_rules_top['^kursrekke/([^/]+)(?:/([^/]+))?/?$']);
+        unset($wp_rewrite->extra_rules_top[LevelArchive::RULE]);
         if (self::enabled()) {
+            if (LevelArchive::prettyEnabled()) { add_rewrite_rule(LevelArchive::RULE, 'index.php?rnl_route_level=$matches[1]', 'top'); }
             add_rewrite_rule('^kursrekke/?$', 'index.php?rnl_route_index=1', 'top');
             add_rewrite_rule('^kursrekke/([^/]+)(?:/([^/]+))?/?$', 'index.php?rnl_route_period=$matches[1]&rnl_route_course=$matches[2]', 'top'); }
     }
@@ -94,7 +97,7 @@ final class PublicRoutes
     public static function retainedQuery(): array
     {
         // Preserve arbitrary campaign/linker parameters; exclude only our routing identity.
-        return array_diff_key(wp_unslash($_GET), array_flip(['rnl_course', 'rnl_period', 'rnl_route_index', 'rnl_route_period', 'rnl_route_course', 'page_id', 'pagename']));
+        return array_diff_key(wp_unslash($_GET), array_flip(['rnl_course', 'rnl_period', 'rnl_route_level', 'rnl_route_index', 'rnl_route_period', 'rnl_route_course', 'page_id', 'pagename']));
     }
     public static function route(): void
     {

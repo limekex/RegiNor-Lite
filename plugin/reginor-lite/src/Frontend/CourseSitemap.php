@@ -21,6 +21,11 @@ final class CourseSitemap extends \WP_Sitemaps_Provider
             $urls[] = PublicSite::url($g['id']);
             foreach ($languages as $code) { $urls[] = PublicRoutes::url($g['period_id'], $g['id'], $code); }
         }
+        foreach (\RegiNor\Lite\Infrastructure\LevelArchiveStore::ids() as $id) {
+            if (!\RegiNor\Lite\Infrastructure\LevelArchiveStore::publicData($id)) { continue; }
+            $urls[] = LevelArchive::url($id);
+            foreach ($languages as $code) { $urls[] = LevelArchive::url($id, $code); }
+        }
         return array_values(array_unique($urls));
     }
     public function get_url_list($page_num, $object_subtype = ''): array

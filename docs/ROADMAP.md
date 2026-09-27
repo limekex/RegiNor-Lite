@@ -1,15 +1,95 @@
 # Roadmap – RegiNor Lite
 
-Oppdatert **25. september 2026**. Grunnlag: spesifikasjon v1.2 og prosjekteiers avklaringer. RegiNor tas i bruk fra neste nye kursperiode uten migrering av gamle ACF-kurs. Avada og The Events Calendar videreføres.
+Oppdatert **27. september 2026**. Grunnlag: spesifikasjon v1.2 og prosjekteiers avklaringer. RegiNor tas i bruk fra neste nye kursperiode uten migrering av gamle ACF-kurs. Avada og The Events Calendar videreføres.
 
 Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfrist er avtalt. Backend og frontend skal være intuitive for personer med lav digital kompetanse og ha et elegant uttrykk; se [brukeropplevelse](BRUKEROPPLEVELSE.md). Leveransehistorikk og lokale testbevis finnes i [endringsloggen](../CHANGELOG.md).
+
+## Tillegg – utvidede kortkodefiltre og generator (0.1.34)
+
+- [x] Dansestil og nivå kan kombineres med dag, sted/sal, instruktør, periode, bestemte kurs, offentlig status, prisgrunnlag og drop-in. Inkluder/utelat og pris-/tid-/kveldsintervaller støttes.
+- [x] Egen kortkodegenerator for administrator og Kursansvarlig, uten endring av kurs eller sider. Blokken har tilsvarende attributter.
+- [x] Nybegynnerutkastet bruker nå dansestilfilter.
+- [ ] Visuell Avada-/WPML-kontroll av ferdig landingsside med generatorens kortkode.
+
+Se [kortkodeveiledningen](KORTKODER-OG-KAMPANJESIDER.md) for presise filterregler.
+
+## Tillegg 27. september – automatikk og nybegynnerkampanje
+
+- [x] Valg per kurs for automatisk klokkeslett/pris med eksplisitt priskategori, kollisjonskontroll og vern av lokale/historiske økter. Tekst godkjennes manuelt.
+- [x] Valg per kurs for e-post til alle kursansvarlige på nettstedet, med gjenkjenning av samme varsel og nytt forsøk ved sendefeil.
+- [x] [Redaksjonelt nybegynnerutkast](LANDINGSSIDE-NYBEGYNNER.md) basert på nettstedets innhold og lesing av faktisk kampanjerapport. Registrerte LetsReg-klikk i utsnittet kom fra QA-kampanjen; ingen effektvinner er utpekt.
+- [ ] Faktisk LetsReg-/SMTP-prøve og visuell kontroll av de nye innstillingene i produksjonsoppsettet.
+- [ ] Landingssiden publiseres og prøves med riktig periode/nivåutvalg og ordinær kampanjetrafikk.
+
+Se [atferd og begrensninger](LETSREG-AUTOMATIKK-OG-VARSLER.md). Dette er lokale leveranser, ikke bekreftet produksjonsdrift.
+
+## Prosjekteiers verifikasjon – 26. september 2026
+
+Dette er rapporterte prøver fra prosjekteier, ikke nye prøver utført av kodeagenten. De oppdaterer den tidligere statusgjennomgangen nedenfor.
+
+- [x] Visuell produksjons-/Avada-kontroll av permalenker, SEO-visning, kart og deling godkjent. Dette er ikke en separat schema-validator-, indekserings- eller WPML-godkjenning.
+- [x] Kalendernedlasting fungerer i prosjekteiers prøve, med oppføring og navngitt kalender vist i skjermbildet. Alle tre klientfamilier og abonnementsoppdatering er ikke dermed testet.
+- [x] Kampanjemåling og Tag Manager-oppsett er rapportert testet gjennom ChatGPT-appens nettleserkontroll. Tidligere «upublisert workspace» brukes ikke lenger som gjeldende status; eksakt publiserings-/samtykkematrise er ikke fremlagt i denne rapporten.
+- [x] Kursarkiv, enkeltkurs, filterbytte og utgående LetsReg-klikk fungerte i faktisk iPhone-prøve. Tastatur, skjermleser og 200 % zoom er egne åpne kontroller.
+- [x] Republisering rapporteres å fungere. Tidligere cron-kø er redusert/tømt uten gamle hengende jobber; dette er positivt driftsbevis for servercron. Fortsett vanlig observasjon; ny full feilsøkingsrunde er ikke en forutsetning ut fra denne rapporten. TEC-resultat/duplikatkontroll er fortsatt separat.
+- [ ] Automatisk LetsReg-status og kapasitet under faktisk salg avventes til salget pågår. Dette er en planlagt salgsprøve, ikke en ny påvist feil.
+- [ ] Faktisk kursansvarligrolle/import-/redigeringsflyt og kalenderabonnement med flytting/avlysning gjenstår. Kampanjemåling er allerede rapportert prøvd ovenfor.
+
+**M5b er todelt:** hybridrapporten er implementert: klikk sammenholdes med endring i `ordersTotalSum`/deltakerantall for det koblede LetsReg-arrangementet. Flere lokale kurs som deler arrangement, deler også totalen; rapporten gir ikke egen omsetning per priskategori. Bare den bekreftede koblingen mellom et bestemt besøk og et betalt kjøp står på vent. Hybridens økonomiske betydning prøves når reelle salg foreligger.
+
+**Neste prioritet etter tilbakemeldingen:** numerisk kapasitet (0.1.25) og rikere kalenderinnhold (0.1.26) er levert lokalt. Neste steg er delegert brukerprøve og kalenderabonnement i faktiske klienter. Salgsprøven av LetsReg/hybrid avventes, og cron/republisering følges i normal drift.
+
+## Gjeldende status – gjennomgang 26. september 2026
+
+**Grunnlaget for den første gjennomgangen var testutgave 0.1.24; kapasitetsoppfølgingen leveres i 0.1.25. Vi er i stabilisering og kontrollert innføring, ikke i ferdig produksjonsgodkjenning.** Gjennomgangen bygger på kildekode, releasenotater og prosjekteiers tilbakemeldinger. Ingen nye server-, API- eller brukertester ble kjørt i den første dokumentgjennomgangen. Senere rapporterte godkjenninger står over. Siste lokale testbevis er fra [0.1.24](releases/0.1.24.md): offentlig 119, offentlig HTTP 83, admin 117, interface/DOM og Composer 230 tester / 565 assertions. Dette er ikke en ny full regresjonsrunde for alle integrasjoner.
+
+| Område | Levert | Gjenstår |
+| --- | --- | --- |
+| M0–M2: fundament og kursmodell | Plugin, lagring/historikk, datoer, økter, opphold, kollisjoner og publiseringsregler. Manuelt bekreftet introkurs før perioden. | CI for aktuell arbeidskopi og komplett dokumentasjon av faktisk miljø. Ingen migrering av gamle kurs. |
+| M3: administrasjon | Kursansvarligrolle, enkelt-/bulkimport, kobling/søk, ressursvalg, kopiering, validering, HTML-editor og statusendring uten kladd. | Hel brukerreise med faktisk kursansvarlig; WPML og delegert tilgang i faktisk miljø. |
+| M4/M4.1: kursvisning | Kurskort, kalender, kursside, kart, nivåer, kampanjekortkoder, navnebaserte adresser, SEO/schema og cachepolicy. Én kveld har entallsdag/dato; hver kalenderdag har egen tidsakse. | Mobil/tastatur/zoom, Avada/SEO/cache-samspill og de siste layoutendringene på faktisk nettsted. |
+| M4.2/M4.3: kalender og deling | ICS-nedlasting, abonnement på faktiske økter og delingsknapper. | Import og oppdatering i Apple Kalender, Google Kalender og Outlook; faktiske delingsforhåndsvisninger. |
+| M5: LetsReg | Import/mapping, beskrivelsesmal/gjenbruk/endringskontroll, automatisk status og siste kjente kategorikapasitet, samlet parvisning og ∞. Faktisk lesetilgang er prøvd i avgrenset omfang. | Stabil automatisk drift, token/kvoter, pool-/reservasjonssemantikk og kontrollert endringsprøve. Webhook-mottak er ikke implementert. |
+| M5a: måling | Samtykkestyrte visninger/klikk, kampanjer og Consent API-støtte. | Oppsett og måling er rapportert testet i nettleser; dokumenter eventuelt udekkede samtykketilstander. |
+| M5b: salg | Valgfri arrangementshistorikk og eksperimentell sammenligning med klikktidspunkter. | Bekreftet besøks-/salgskobling står på vent etter LetsRegs supportsvar. Rapportert ordresum er ikke verifisert betalt omsetning; ingen kalibrert kjøpssannsynlighet. |
+| M6: innføring | Versjonerte pakker og reell kursperiode brukt i kontrollert test. «Til kladd» er bekreftet raskt og fungerende av prosjekteier etter 0.1.20. | Republisering og ryddet cron-kø er rapportert fungerende. TEC-resultat, brukerprøve, tilbakeføring og avtalt driftsansvar gjenstår før samlet godkjenning. |
+
+### Prioritert arbeidsliste nå
+
+| Prioritet | Oppgave og ansvar | Ferdig når |
+| --- | --- | --- |
+| Normal oppfølging | Automatisk servercron på nettsted 19 – drift/administrator, utvikler bistår | Korrekt PHP CLI og nettstedsvalg er dokumentert; gjentatte automatiske kjøringer fører LetsReg- og TEC-køene videre uten manuelt «Kjør nå». Prosjekteier rapporterer nå ryddet kø uten gamle hengende jobber; fortsatt normal observasjon, ingen ny aktiv serverprøve startet her. |
+| Oppfølging av TEC | Republisering og TEC – prosjekteier + utvikler | Høst 3 2026 kan redigeres og republiseres uten timeout; eksisterende TEC-oppføring oppdateres, ingen dubletter opprettes, og lenke/synlighet stemmer. Både kladd og republisering er nå rapportert fungerende. Det konkrete TEC-resultatet gjenstår separat. |
+| Avventer salg | LetsReg-status/kapasitet over tid – prosjekteier + utvikler | Avtalt testarrangement viser forventet salgsvindu, kategori/par, fullt/venteliste og manuell overstyring. API-feil beholder siste kjente observasjon; ny gyldig endring vises. Poolgrenser og reservasjoner dokumenteres før tall omtales som eksakt salgbare. |
+| P1 | Offentlig innføring – prosjekteier + utvikler | Anonym kursreise gjennom Cloudflare/LiteSpeed har riktig innhold, dato, pris, status, lenke og cacheatferd. Mobil, zoom og tastatur prøves; begge kampanjekortkodene fungerer på samme side. |
+| P2 | Redaksjonell/importert tekst og delegert rolle – kursansvarlig + administrator | Importerte avsnitt/lenker er synlige i alle relevante felt; kildeendringer godkjennes uten avpublisering og uten å overskrive lokale endringer. Kursansvarlig gjennomfører oppgaven uten tilgang til hemmeligheter/øvrig backend. |
+| P2 | Kalenderapper, deling, SEO og språk – prosjekteier + utvikler | Kalenderimport/abonnement/flytting/avlysning og delingsforhåndsvisning dokumenteres. Aktive SEO-/WPML-oppsett har konsistente adresser og metadata. |
+| P2 | Måling – administrator/markedsansvarlig + utvikler | Aksept, avslag og tilbaketrekking prøves i faktisk Complianz/GTM/GA4; kursklikk er synlige uten å bli rapportert som bekreftede kjøp. |
+| P2 | Innføringsgodkjenning – prosjekteier + drift | Relevant CI, brukerprøve, sikkerhetskopi, tilbakeføring, driftsansvar og sjekkliste er dokumentert. Ingen godkjenning utledes bare fra lokalt beståtte tester. |
+
+**Tidligere anbefaling, justert av prosjekteiers verifikasjon over:** cron/republisering er rapportert bedre/fungerende, og LetsReg-salgsprøven avventes til salg pågår. Klient-/målefunksjoner kan godkjennes separat etter hva som skal tas i bruk. M5b og fremtidsfunksjonene er ikke en forutsetning for ordinær kursvisning og påmelding.
+
+**Etter stabilisering:** velg én retning. F06.1 (lokal kursgenerator og tekstforhåndsvisning) kan redusere oppsettsarbeid uten å være avhengig av ekstern skrivetilgang. F01 + F02 → F03 er alternativet dersom deltakerlister og instruktørens oppmøtearbeid gir størst verdi. Full LetsReg-oppretting, QR/offline, økonomisk avstemming og webhook-mottak krever egne avklaringer. Ingen ny utviklingsfase er startet ved denne gjennomgangen.
+
+## Oppfølging – 0.1.25
+
+- [x] Kategorikapasitet vises numerisk uten «Opptil», med 0 for fullt og ∞ ved ubegrenset. Statusbadgen «Fullt» beholdes.
+- [x] Manglende/null kapasitetsgrense i et gyldig LetsReg-svar betyr ubegrenset. Kjente positive grenser/ledighet og partnerkrav gjelder fortsatt. Feilet oppslag, manglende kategori/kobling og ugyldige tall blir ikke ubegrenset.
+- [x] Normaliseringen skiller nå uspesifiserte fra ugyldige felt. Gamle observasjoner med tvetydig null tolkes ikke om før neste vellykkede kontroll. Ingen ekstra API-kall eller endret kontrollintervall.
+- [ ] Verifiser ny tallvisning og faktisk status under salg etter prosjekteiers plan.
+
+[Releasenotat og testomfang](releases/0.1.25.md).
+
+## Leveransehistorikk
+
+Punktene nedenfor viser status ved hver utgave. Tidligere feil og åpne kontroller er historikk; tabellene over og de oppdaterte milepælene er gjeldende arbeidsliste. Særlig er «Til kladd»-blokkeringen bekreftet løst etter 0.1.20, mens automatisk cron og TEC fortsatt krever egen verifikasjon.
 
 ## Oppfølging – 0.1.24
 
 - [x] Kurs med én kveld bruker entallsdag og «Dato» i kort/kursprofil, og viser faktisk dato i kalenderkortet. Dagsoverskriften er i entall når alle viste kurs den dagen har én kveld; gjentakende kurs beholder flertall og oppstart.
 - [x] Kalenderens tidsakse avgrenses til første/siste viste kurs på hver dag. Saler samme dag beholder felles klokke og faktiske opphold. Filtre oppdaterer tidsrommet, og korte dagskolonner strekkes ikke til nabodagens høyde.
 - [x] Lokalt: offentlig 119 / HTTP 83, admin 117, interface/DOM og Composer 230/565 består. Regresjonsprøvene dekker bl.a. enkeltkveld kl. 13 på lørdag og kveldskurs på andre dager. POT og ZIP med 126 runtime-filer kontrollert.
-- [ ] Visuell prøve i faktisk Avada/staging med ulike dagstider og enkeltkvelder.
+- Gjensto ved denne gjennomgangen/utgaven: Visuell prøve i faktisk Avada/staging med ulike dagstider og enkeltkvelder.
 
 [Releasenotat og testbevis](releases/0.1.24.md).
 
@@ -19,7 +99,7 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 - [x] Forhåndsvisning/publiseringskontroll viser unntaket. Andre kurs, periodens datoer og synlighets-/salgsvinduer beholdes. Eksisterende økt-, kollisjons-, sluttdato- og historikkvern gjelder fortsatt.
 - [x] Kursvisning, schema og kalenderfil bruker faktiske datoer; ukeskalenderen viser tidligere oppstart. TECs samleoppføring beholder periodens oppgitte datoer.
 - [x] Lokalt: admin 117, lagring 65, arbeidsflyt 92, HTTP 43, offentlig 99 / HTTP 83, import 117, kalender 43, WordPress, interface/DOM og Composer 230/565 består. Importprøven bruker syntetiske API-svar. POT og ZIP med 126 runtime-filer kontrollert.
-- [ ] Prøv godkjent introkurs før perioden i faktisk Avada/staging, inkludert synlighets- og salgsvindu.
+- Gjensto ved denne gjennomgangen/utgaven: Prøv godkjent introkurs før perioden i faktisk Avada/staging, inkludert synlighets- og salgsvindu.
 
 [Releasenotat og testbevis](releases/0.1.23.md).
 
@@ -27,14 +107,14 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 
 - [x] [Introkursbeskrivelse i enkel HTML](SALSA-INTROKURS-LETSREG.md), med eksisterende tekstmarkører og veiledning for én økt på 150 minutter. Ingen ny kurstype eller automatisk timeplantolkning fra brødtekst.
 - [x] Eksisterende maltester (6 / 34 assertions) og 11 direkte kontroller av HTML-eksemplet og nivånavntreff består lokalt. Ingen runtime-endring.
-- [ ] Bekreft arrangementsår, sal, pris/partnerordning og videre kurstilbud; prøv teksten gjennom LetsRegs editor/API og kontroller importert kladd med én økt.
+- Gjensto ved denne gjennomgangen/utgaven: Bekreft arrangementsår, sal, pris/partnerordning og videre kurstilbud; prøv teksten gjennom LetsRegs editor/API og kontroller importert kladd med én økt.
 
 ## Oppfølging – 0.1.22
 
 - [x] Erklærer WP Consent API-støtte gjennom den dokumenterte kroken for RegiNors egen pluginfil. Nettstedhelse skal dermed gjenkjenne støtten.
 - [x] API-avslag håndheves direkte for statistikk og markedsføring i nettleser og server. Complianz kreves fortsatt; tilbaketrekking og sletting av måleøkten beholdes.
 - [x] Lokalt: journey 55, analytics 36, WordPress-oppstart og Composer 230/565 består. Prøvene bruker syntetisk samtykke og bekrefter også at andre utvidelser ikke får RegiNors erklæring. POT og ZIP med 126 runtime-filer kontrollert.
-- [ ] Kontroller Nettstedhelse og reelle samtykkevalg/tilbaketrekking med Complianz/GTM etter installasjon. Erklæringen er ikke en full revisjon av nettstedets øvrige utvidelser.
+- Gjensto ved denne gjennomgangen/utgaven: Kontroller Nettstedhelse og reelle samtykkevalg/tilbaketrekking med Complianz/GTM etter installasjon. Erklæringen er ikke en full revisjon av nettstedets øvrige utvidelser.
 
 [Releasenotat og lokale testbevis](releases/0.1.22.md).
 
@@ -44,7 +124,7 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 - [x] Egne brytere for innledning/overskrifter, filtre og visningsvalg; startvisning og tillatte visninger. Flere innbygginger kan ha ulike valg på samme side, med egne filtre/ankre og bevarte kampanjeparametere. Tilsvarende valg i WordPress-blokken og eksempler under Nettsidevisning.
 - [x] Prosjekteier bekrefter at midlertidig lagringssporing er slått av etter vellykket kladdprøve.
 - [x] Lokalt: offentlig 99 / HTTP 83, admin 91, nivåer 37, WordPress, interface/DOM/blokk/fokus, journey og Composer 230/565 består. POT og ZIP med 126 runtime-filer kontrollert.
-- [ ] Visuell kontroll av kampanjelandingsside med to kortkoder i faktisk Avada/staging. Automatisk cron-testing avventes fortsatt.
+- Gjensto ved denne gjennomgangen/utgaven: Visuell kontroll av kampanjelandingsside med to kortkoder i faktisk Avada/staging. Automatisk cron-testing avventes fortsatt.
 
 [Brukerveiledning](KORTKODER-OG-KAMPANJESIDER.md) · [Releasenotat og lokale testbevis](releases/0.1.21.md).
 
@@ -56,7 +136,7 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 - [x] Lokalt: cache 15, diagnostikk, arbeidsflyt 92 med/uten sporing, lagring 65, WordPress, HTTP 43, TEC 102, offentlig 99 / HTTP 58, DOM og Composer 230/565. POT og ZIP med 125 runtime-filer kontrollert. [Avgrensninger](releases/0.1.20.md#verifikasjon).
 - [x] Prosjekteier bekrefter LiteSpeed Object Cache av, med deaktivert Redis-/Memcached-utvidelse. Ny runtime-sporing skal bekrefte den faktiske implementasjonen.
 - [x] **Prosjekteier bekrefter 25. september at «Til kladd» fungerer etter 0.1.20 og går «forholdsvis raskt».** Den konkrete blokkerende brukerreisen er dermed bekreftet løst i denne prøven. Eksakt tidsmåling og nytt spor er ikke mottatt.
-- [ ] Republisering og etterfølgende TEC-synkronisering må bekreftes separat i faktisk miljø. Automatisk cron-testing avventes fortsatt; den vellykkede kladdprøven godkjenner ikke hele driftsoppsettet.
+- Gjensto ved denne gjennomgangen/utgaven: Republisering og etterfølgende TEC-synkronisering må bekreftes separat i faktisk miljø. Automatisk cron-testing avventes fortsatt; den vellykkede kladdprøven godkjenner ikke hele driftsoppsettet.
 
 > Punktene nedenfor beskriver tidligere utgaver og feilsøking. «Til kladd» er senere bekreftet løst med 0.1.20 som beskrevet over; øvrige driftskontroller beholdes åpne.
 
@@ -65,7 +145,7 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 - [x] Valgfri lagringsdiagnostikk med operasjons-ID, nettsteds-ID, databaseforbindelse og tidsbruk per trinn. Av som standard; ingen rå SQL, kursinnhold eller innsendte felter. Avgrenses til nettsted 19 under kontrollert forsøk.
 - [x] Tidlige oversettelser av cron-navn rettet, med egen regresjonsprøve. Intervallene er uendret.
 - [x] Lokalt: diagnostikkprøve med 92 arbeidsflytkontroller, arbeidsflyt uten sporing 92, lagring 65, HTTP 43, WordPress, oversettelser og Composer 230/565. POT og ZIP med 125 runtime-filer kontrollert. [Testomfang og avgrensninger](releases/0.1.19.md#verifikasjon).
-- [ ] Produksjonsfeilen er fortsatt åpen: siste logg har 37 låsetidsavbrudd ved Avadas cache og to PHP-stopp etter 120 sekunder. Knytt neste lagringsspor til aktiv ventende/blokkerende forbindelse hos host. Automatisk cron-testing avventes.
+- Gjensto ved denne gjennomgangen/utgaven: Produksjonsfeilen er fortsatt åpen: siste logg har 37 låsetidsavbrudd ved Avadas cache og to PHP-stopp etter 120 sekunder. Knytt neste lagringsspor til aktiv ventende/blokkerende forbindelse hos host. Automatisk cron-testing avventes.
 
 ## Driftsfunn etter 0.1.18 – nettsted 19
 
@@ -75,43 +155,43 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 - [x] Køoversikt og ny logg vurdert: periodisk kalenderjobb finnes, men flere RegiNor-jobber er kraftig forsinket og besøksutløst cron er slått av. Gammel kømelding og faktisk køinnhold er skilt i [feilsøkingsnotatet](FEILSOKING-KLADD-OG-TEC.md).
 - [x] Servercron-kommando og konkret oppstartsfeil bekreftet fra cPanel/logg: WP-CLI starter med PHP-CGI og avbryter før hendelseskjøring. [Rettet kommando og avgrenset prøve](HOSTING-DATABASEKONTROLL.md#bekreftet-oppstartsfeil-i-cpanel-cron) er dokumentert.
 - [x] Prosjekteiers terminalprøve bekrefter `/usr/local/bin/php` som PHP 8.3.33 (cli). OPcache-advarsel om dobbel lasting gjenstår separat.
-- [ ] Bekreft periodens TEC-status og «Til kladd» etter den vellykkede manuelle kjøringen. Kontroller gamle planlagte publiseringer før hele cron-køen gjenopptas, og verifiser automatisk fremdrift over flere intervaller. Terminaltesten alene bekrefter ikke at cPanel-jobben er endret eller at kalenderoppføringen ble lagret riktig.
-- [ ] Finn eieren av den aktive databaseblokkeringen. Ny logg viser ti låsetidsavbrudd og PHP-stopp kl. 22:32:42 CEST. Cron-problemet er ikke i seg selv bevis for årsaken til «Til kladd»-feilen.
+- Gjensto ved denne gjennomgangen/utgaven: Bekreft periodens TEC-status og «Til kladd» etter den vellykkede manuelle kjøringen. Kontroller gamle planlagte publiseringer før hele cron-køen gjenopptas, og verifiser automatisk fremdrift over flere intervaller. Terminaltesten alene bekrefter ikke at cPanel-jobben er endret eller at kalenderoppføringen ble lagret riktig.
+- Gjensto ved denne gjennomgangen/utgaven: Finn eieren av den aktive databaseblokkeringen. Ny logg viser ti låsetidsavbrudd og PHP-stopp kl. 22:32:42 CEST. Cron-problemet er ikke i seg selv bevis for årsaken til «Til kladd»-feilen.
 
 ## Oppfølging – 0.1.18
 
 - [x] Konkret WordPress-cron-feilkode, jobbnavn og administrativ lesestatus. Skiller kalenderkøen fra Action Scheduler og viser nettsteds-ID i flernettstedsoppsett.
 - [x] Bekreftet konkurrerende kølegging gir ikke falsk feil; tidligere køfeil ryddes når samme jobb faktisk finnes. Feil fra kalenderarbeidet beholdes.
 - [x] Lokalt: TEC 102, lagring 65, admin 91, adminmeny HTTP 56, WordPress og Composer 225 tester / 518 assertions; POT og ZIP kontrollert.
-- [ ] **Driftsblokkering fortsatt åpen:** Loggen etter 0.1.17 viser 32 låsetidsavbrudd rundt Avada-cache og PHP-timeout etter 120 sekunder. Identifiser aktiv blokkerende transaksjon med host, se [lesende kontroll](HOSTING-DATABASEKONTROLL.md). Gammel feilet TEC/Shepherd-jobb er ikke bevist som årsak.
+- Gjensto ved denne gjennomgangen/utgaven: **Driftsblokkering fortsatt åpen:** Loggen etter 0.1.17 viser 32 låsetidsavbrudd rundt Avada-cache og PHP-timeout etter 120 sekunder. Identifiser aktiv blokkerende transaksjon med host, se [lesende kontroll](HOSTING-DATABASEKONTROLL.md). Gammel feilet TEC/Shepherd-jobb er ikke bevist som årsak.
 
 ## Oppfølging – 0.1.17
 
 - [x] TEC-skriving flyttet fra sidelasting/skjemasvar/avslutning til bakgrunnsjobb, med deduplisering og periodisk kontroll. Samme oppføring gjenbrukes; kladd holdes skjult før jobben fullføres.
 - [x] Skiller avvist lagring fra reell versjonskonflikt. Meldinger identifiserer endret kurs/versjon og kontrollkode. Tom TEC-datovelgerinnstilling håndteres i reserveoppdateringen.
 - [x] Lokalt: TEC 91, arbeidsflyt 92, lagring 65, admin 91, HTTP 43 / TEC HTTP 15 / adminmeny 56, offentlig 99 / HTTP 58, WordPress, DOM og Composer 225 tester / 518 assertions.
-- [ ] Bekreft kladd/republisering og kjørende bakgrunnsjobb på faktisk nettsted. Ny prøve etter 0.1.16 viser fortsatt 120 sekunders tidsavbrudd og databaseventing; original blokkerende operasjon er ikke identifisert. Sikkerhetsutvidelser er ikke bevist som årsak.
+- Gjensto ved denne gjennomgangen/utgaven: Bekreft kladd/republisering og kjørende bakgrunnsjobb på faktisk nettsted. Ny prøve etter 0.1.16 viser fortsatt 120 sekunders tidsavbrudd og databaseventing; original blokkerende operasjon er ikke identifisert. Sikkerhetsutvidelser er ikke bevist som årsak.
 
 ## Oppfølging – 0.1.16
 
 - [x] TEC har egen lås under oppdatering. Felles kurslås brukes bare til å lese et konsistent kildegrunnlag; kalenderarbeid venter ikke på andre skrivere.
 - [x] Databasefeil skilles fra opptatt lås. Språk-/oppryddingsfeil frigjør låser, og kladd beskyttes også når en eldre kalenderkopi fortsatt er publisert.
 - [x] Lokalt: TEC 82, arbeidsflyt 90, lagring 61, admin 91, HTTP 43 / TEC HTTP 15, offentlig 99 / HTTP 58, WordPress, DOM, journey 46 og Composer 225 tester / 518 assertions.
-- [ ] Bekreft «Til kladd» for Høst 3 2026 i faktisk miljø etter oppgradering. Loggen viser feil i databaseforbindelsen og WPML-låseventing; den opprinnelige årsaken er ikke bevist. Se [feilsøkingsnotat](FEILSOKING-KLADD-OG-TEC.md).
+- Gjensto ved denne gjennomgangen/utgaven: Bekreft «Til kladd» for Høst 3 2026 i faktisk miljø etter oppgradering. Loggen viser feil i databaseforbindelsen og WPML-låseventing; den opprinnelige årsaken er ikke bevist. Se [feilsøkingsnotat](FEILSOKING-KLADD-OG-TEC.md).
 
 ## Oppfølging – 0.1.15
 
 - [x] RegiNor avventer samlet Complianz-/WP Consent API-oppdatering før nye hendelser, og stopper måling umiddelbart ved tilbaketrekking.
 - [x] Ingen ekstra reisestart ved mellomtilstanden i «Avslå alle»; slettingsforespørsler avbrytes ikke av senere kategoriendringer.
 - [x] Regresjonstest feilet før retting; 46 journey-tester og Composer-kontrollen passerer etter retting.
-- [ ] Verifiser 0.1.15 på salsanor.no med A–D og GA4 DebugView. GTM er integrert, og RegiNor-workspace er konfigurert, men upublisert.
+- Gjensto ved denne gjennomgangen/utgaven: Verifiser 0.1.15 på salsanor.no med A–D og GA4 DebugView. GTM er integrert, og RegiNor-workspace er konfigurert, men upublisert.
 
 ## Oppfølging – 0.1.14
 
 - [x] Lagrede arrangementsfelt leses tilbake etter TEC-oppdatering; et upålitelig retursvar avgjør ikke alene resultatet.
 - [x] Ved manglende oppdatering prøves TECs direkte oppdaterings-API på samme eide arrangements-ID. Vern, synlighetsregler og dublettsikring beholdes.
 - [x] Ved feil i begge metoder viser status arrangements-ID, avvikende felt og ufølsomme resultatkoder.
-- [ ] Bekreft «Høst 3 2026» i faktisk Pro-stage. Skjermbildet fra 0.1.13 bekrefter at feilen skjer i lagringsfasen; eksakt leverandørfeil er ikke fastslått.
+- Gjensto ved denne gjennomgangen/utgaven: Bekreft «Høst 3 2026» i faktisk Pro-stage. Skjermbildet fra 0.1.13 bekrefter at feilen skjer i lagringsfasen; eksakt leverandørfeil er ikke fastslått.
 
 - [x] Lokalt: TEC 64, TEC HTTP 15 (med fremprovosert ORM-feil), admin 91, lagring 61, offentlig 99 / HTTP 58, WordPress, DOM og Composer 225 tester / 518 assertions.
 
@@ -119,7 +199,7 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 
 - [x] TECs forekomst-ID-er normaliseres til stabil WordPress-ID ved kobling, lagringskontroll, lenker, REST og kalendernedlasting. Eldre kobling med forekomst-ID repareres ved synkronisering.
 - [x] Kalenderstatus skiller kladd, synlighetsdatoer, manglende kursside/kurs/sluttdato, databaselås og feil i opprettelse/lagring/kategori/bilde.
-- [ ] Bekreft i faktisk TEC Pro-stage at «Høst 3 2026» opprettes og lenker riktig. Offentlig kursrekke er lest; søk etter «Kursperiode» i offentlig TEC REST ga ingen treff. Produksjonsårsaken er ikke bekreftet.
+- Gjensto ved denne gjennomgangen/utgaven: Bekreft i faktisk TEC Pro-stage at «Høst 3 2026» opprettes og lenker riktig. Offentlig kursrekke er lest; søk etter «Kursperiode» i offentlig TEC REST ga ingen treff. Produksjonsårsaken er ikke bekreftet.
 
 - [x] Lokalt: TEC 64, TEC HTTP 15, admin 91, offentlig 99 / HTTP 58, lagring 61, WordPress-smoketest, DOM og Composer 225 tester / 518 assertions. Pro-ID-er er simulert via dokumentert filter; faktisk Pro-test gjenstår.
 
@@ -141,21 +221,13 @@ Avkrysset betyr levert i repoet, ikke godkjent i produksjon. Ingen lanseringsfri
 - [x] Visuell/HTML-editor for de fire rike tekstfeltene, med synkronisering i vanlig lagring, enkelt-/bulkimport og forslag.
 - [x] Egen før/etter og godkjenning av prisvilkår uten kladd, også for tidligere gjennomgåtte LetsReg-kilder. Manuell redigering på publiserte kurs og vern gjennom rettigheter/versjoner/kildekontroll.
 - [x] Gjennomgående lokal test av avsnitt, lenker, tekstformatering og lister fra syntetisk API via import/lagring til alle fire seksjoner i frontend.
-- [ ] Installer og godkjenn nye prisvilkår på faktisk nettsted. Eldre ren tekst får ikke tilbake formatering uten ny henting/godkjenning eller manuell redigering.
+- Gjensto ved denne gjennomgangen/utgaven: Installer og godkjenn nye prisvilkår på faktisk nettsted. Eldre ren tekst får ikke tilbake formatering uten ny henting/godkjenning eller manuell redigering.
 
 ## Vurdering og anbefalt neste arbeid
 
-**Grunnfunksjonene i M0–M4 og M4.1 er implementert lokalt. Det største hullet før innføring er bekreftelse i faktisk miljø og med brukere.** M5 har nå reell lesetilgang, automatisk status og kategoriers øvre kapasitetsgrenser. Eksakte salgbare pooltall, produksjonsdrift og bekreftede konverteringer er fortsatt åpne. M4.2a/b og M4.3 er også implementert lokalt; faktiske kalenderklienter og SoMe-/visuell staging gjenstår.
+Den prioriterte arbeidslisten står i [gjeldende status](#gjeldende-status--gjennomgang-26-september-2026). Gjenstående hovedarbeid er drifts- og brukergodkjenning, ikke ny implementering av hele M0–M4. Kalenderapper og måling har egne kontroller; M5b og fremtidsfunksjoner skal ikke blokkere ordinær kursvisning.
 
-| Prioritet | Gjenstående arbeid | Bevis før godkjenning |
-| --- | --- | --- |
-| 1 – Innføringsgrunnlag | M0–M4/M4.1: GitHub CI, faktisk Avada/TEC/WPML/SEO, cache/CDN, riktige kursopplysninger og tilgjengelighet | [G01–G08](M0-M4-GJENNOMGANG.md#gjenstående-kontroller-med-krav-til-bevis), faktiske delingsforhåndsvisninger og integrasjonstester |
-| 2 – Klientprøver | M4.2a/b og M4.3 er levert lokalt: prøv filimport, abonnement, flytting/avlysning og delingsdialoger | Faktiske klientbevis og gjenstående K-/D-kriterier etter [egen kontrakt](KALENDER-OG-KURSDELING.md) |
-| Parallelt – Integrasjon | M5: verifiser kapasitetsbetydning, token/kvoter, servercron, varsling og cacheutløp. M5a: faktisk Complianz/GTM/GA4 | [Kategoriavgrensning](M5-KATEGORIKAPASITET.md), leverandørprøve og dokumentert stagingdrift |
-| Delvis på vent – M5b | Bekreftet besøks-/salgskobling mangler leverandørstøtte; arrangementshistorikk og eksperimentelle tidssammenfall er implementert lokalt | [Supportsak #134895094 og kontrakthull](M5B-KONTRAKTGJENNOMGANG.md#leverandørsvar-besøkskobling-satt-på-vent); ingen bekreftet kampanjeattribusjon |
-| Deretter – M6 | Første reelle kursperiode, brukerprøve, utrulling og tilbakeføring | Godkjent staging og driftsansvar; portene for funksjonene som faktisk slås på må være bestått |
-
-Prioritetene er en anbefalt arbeidsrekkefølge, ikke tidsestimater. Miljøkartlegging og leverandøravklaringer kan gå samtidig med utvikling. M5b er ikke en forutsetning for kalender, deling eller ordinær påmelding via LetsReg. Live API er valgfritt ved første innføring; en funksjon som ikke er godkjent, må forbli avslått.
+Detaljerte beviskrav finnes i [G01–G08](M0-M4-GJENNOMGANG.md#gjenstående-kontroller-med-krav-til-bevis), [kalender/deling](KALENDER-OG-KURSDELING.md), [kategoriavgrensning](M5-KATEGORIKAPASITET.md) og [M5b-kontrakthull](M5B-KONTRAKTGJENNOMGANG.md#leverandørsvar-besøkskobling-satt-på-vent). Prioriteringen er ikke et tidsestimat eller en ny lanseringsfrist. Live API er valgfritt ved første innføring; funksjoner som ikke er godkjent, må forbli avslått.
 
 ## Faser og sprinter
 
@@ -247,13 +319,13 @@ Sprintene er leveransebolker, ikke tidsestimater. M1 kan gjennomføres ved siden
 - [x] Felles Utseende-side med bakgrunner, palettkobling, alpha og standardvisning; kursfarge/fremheving og drop-in/pris i kursoppsettet. Se [leveranse og avgrensninger](UTSEENDE-OG-DROPIN.md).
 - [ ] Visuell prøve av fargeprøver/popover og Avada-paletten, inkludert ekstra farger, gjennomsiktighet og kontrast.
 
-- [x] Felles PHP-renderer i dynamisk blokk og shortcode; administrator velger eksisterende kursside. Ingen produksjonsinnbygging er gjort.
+- [x] Felles PHP-renderer i dynamisk blokk og shortcode; administrator velger eksisterende kursside. Prosjekteier har prøvd offentlig kursvisning på faktisk nettsted; samlet produksjonsgodkjenning gjenstår.
 - [x] Kort/detalj med nivå, faktiske datoer, pris, sted og LetsReg-handling uten krav om JavaScript. Kursprofilen har dansestil-/nivåpiller ved tittelen og egne hovedkolonnebokser for beskrivelse, nivå/forkunnskaper, partnerinformasjon og prisvilkår. Kort/kalender viser kort nivåpill uten lang nivåforklaring eller prisvilkår.
 - [x] Tidskolonnen tåler temaets etterfølgende avsnittsformatering (`wpautop`): klokkeslett forblir selvstendige rutenettelementer, uten linjebryting. Lokalt testet; ny pakke må kontrolleres i faktisk Avada etter installasjon.
 - [x] Kursdetalj viser fakta, faktisk oppstart og påmelding før lang tekst i HTML-/tastaturrekkefølgen. Åpningsdato følger samme effektive salgsvindu som statuskontrollen.
 - [x] Periode-/nivå-/dagvalg og tilbakeføring av valg via URL og fokus via progressiv forbedring. Manuell fokusprøve gjenstår.
 - [x] Brukerdefinerte kursnivåer erstatter målgruppesnarveiene. Felles nivåfilter i liste/kalender, nivånavn på kurs og i schema, med filtervalg bevart ved retur. Ingen automatisk gjetting av nivå for eksisterende kurs.
-- [x] Ukeskalender med dag/sal og fast tidsmønster uten datoer/ukevelger; avvik peker til faktiske økter. Mobil bruker lesbar dagliste.
+- [x] Ukeskalender med dag/sal og fast tidsmønster uten ukevelger. Enkeltkvelder viser dato/entallsdag; hver dag avgrenses til sine viste kurstider. Avvik peker til faktiske økter. Mobil bruker lesbar dagliste.
 - [x] Samme publiseringspolicy i leverte offentlige flater; skjuling i core søk/REST/feeds/sitemap kontrollert lokalt.
 - [x] Lesetidspolicy uten cron-avhengighet, no-store på dynamiske responser og utløp av åpne sider med JavaScript.
 - [x] Tidlig no-store også på andre enkeltsider med shortcode/kursblokk, inkludert nestede synkroniserte blokker. Anonym HTTP-prøve dekker begge innbyggingsmåter.
@@ -270,7 +342,7 @@ Gjenstående arbeid for M0–M4 er konkretisert med ansvar og bevis i [G01–G08
 
 Oppfølging 22. september: kursoversikten har mindre eksternt ikon, forkortede ukedager og kun skjermlesertittel for merker. Kort/kalender henviser til kurssiden for kategoriers kapasitetsdetaljer. Den åpne administrasjonsoversikten starter nå den avgrensede LetsReg-køen automatisk. Påmeldte og rapportert ledig vises separat i backend. Faktisk kapasitetssemantikk/pooler og servercron i produksjon er fortsatt åpne kontroller.
 
-Oppfølging 22. september (0.1.9): statusmerker er forkortet og identiske på kort, kalender og kursprofil. Eksisterende riktekstflyt er kontrollert: enkel HTML bevares i kursbeskrivelse, nivåforklaring, partnerinformasjon og prisvilkår. Backend viser HTML-kode i vanlige tekstbokser; visuell teksteditor er ikke implementert.
+Oppfølging 22. september (0.1.9): statusmerker er forkortet og identiske på kort, kalender og kursprofil. Eksisterende riktekstflyt er kontrollert: enkel HTML bevares i kursbeskrivelse, nivåforklaring, partnerinformasjon og prisvilkår. Fra 0.1.10 har backend også Visuell-/HTML-editor. Tidligere ren tekst må hentes/godkjennes på nytt eller formateres manuelt for å få tilbake avsnitt og lenker.
 
 ## M4.1 – Permalenker, SEO og delingsmetadata
 
@@ -289,7 +361,8 @@ Bestilt 20. september 2026. [Detaljert kontrakt og akseptansekriterier](PERMALEN
 - [x] WPML-grunnlag, prøvd med stubber: språktilpassede adresser, metadata, canonical og hreflang uten kopiering av driftsdata.
 - [ ] Samspill med Avada, TEC og nettstedets faktiske SEO-plugin, uten motstridende canonical-, Open Graph- eller schema-utdata.
 - [x] Automatiske rute-/metadata-/synlighetstester (55 WordPress- og 62 HTTP-kontroller, inkludert standardoversikten på `/kursrekke/`).
-- [ ] Stagingkontroll av søk, delingsforhåndsvisning, schema og eksisterende lenker.
+- [x] Visuell produksjons-/Avada-kontroll av permalenker, SEO, kart og deling godkjent av prosjekteier 26. september.
+- [ ] Separat kontroll av søk/schema-validator, faktisk språkvariant og eventuelt resterende gamle lenker.
 
 **Leveranseport:** alle akseptansekriteriene i kontrakten er prøvd, og metadata er kontrollert i faktisk Avada/WPML/TEC-/SEO-oppsett. Implementeringsrekkefølge: adresser og identitet → SEO/deling → Event/sted → integrasjonsprøve. Ingen dato er avtalt.
 
@@ -304,7 +377,8 @@ Implementert og prøvd lokalt 20. september 2026; **klient-/staginggodkjenning g
 - [x] Persistente kalender-/øktidentiteter og revisjon fra første fil, felles serializer for nedlasting og senere abonnement. Kopiering gir nye identiteter.
 - [x] Ingen automatisk påmelding eller oppdatering av en nedlastet kopi; påmeldingshandlingen beholder prioritet.
 - [x] Uavhengig ICS-parser, HTTP-tilgang/utløp, I18n-grunnlag og DOM-reservevalg prøvd lokalt.
-- [ ] Visuell tilgjengelighet og faktisk filimport i Apple Kalender, Google Kalender og Outlook prøvd.
+- [x] Kalendernedlasting/import fungerer i prosjekteiers faktiske prøve 26. september.
+- [ ] Dekning av alle tre klientfamilier og visuell tilgjengelighet dokumenteres separat.
 
 ### M4.2b – Hold kursdatoene oppdatert
 
@@ -315,6 +389,17 @@ Implementert og prøvd lokalt 20. september 2026; **klient-/staginggodkjenning g
 - [ ] Faktiske abonnementer, flytting, avlysning og avslutning prøvd mot offentlig tilgjengelig testfeed i Apple Kalender, Google Kalender og Outlook.
 
 **Leveranseport:** M4.2a kan leveres før abonnement. Hele K01–K10 må prøves før M4.2 samlet godkjennes; faktisk klientoppførsel og forsinkelse dokumenteres. Abonnement på hele perioder, personlige kursutvalg, toveis synkronisering og kalenderinvitasjoner etter kjøp er utenfor første leveranse.
+
+### M4.2c – Rikere kalenderinnhold (implementert lokalt i 0.1.26)
+
+Levert etter prosjekteiers kalenderprøve 26. september. Samme innhold brukes i nedlasting og abonnement:
+
+- Tittel med fullt kursnavn/nivå og «kurskveld X av Y», uten å gjenta nivået dersom det allerede inngår i navnet.
+- Kort beskrivelse i ren tekst, nivå og forkunnskaper, instruktør når oppgitt, og synlig kursprofiladresse også i beskrivelsen.
+- Tydelig kalendernavn, for eksempel «SalsaNor · Salsa øvet 2 · Høst 3 2026».
+- Behold faktisk sted og avviksgrunn, stabile UID-er og revisjoner. Aktive kvelder nummereres kronologisk over hele kurset, inkludert gjennomførte kvelder. Individuelt avlyste/fjernede kvelder beholdes uten nummer og teller ikke med. Flytting kan endre nummer, men ikke UID. Ved avlysning av hele kurset beholdes nummereringen av planlagte kvelder.
+- Ikke legg flyktig kapasitet, antatt kjøp eller automatiske påminnelser inn som ny standard. Kalenderen er kursinformasjon, ikke påmeldingsbekreftelse.
+- Lokale kalender-, revisjons- og HTTP-prøver dekker nedlasting og eksisterende identiteter. Faktiske kalenderklienter gjenstår. En allerede nedlastet kopi får ikke innholdsendringene automatisk. Se [0.1.26](releases/0.1.26.md).
 
 ## M4.3 – Delingsknapper på kursprofilen
 
@@ -335,7 +420,7 @@ Oppfølging 22. september (0.1.8): siste gyldige status/kapasitet overlever utl�
 
 Oppfølging 22. september: prosjekteier avklarer plassgrense 0 = ubegrenset. Implementert på arrangementsnivå med `maxAllowedRegistrations` og `registeredParticipants`: positiv grense minus påmeldte, aldri negativ ledighet. Ukjent grense er ikke ubegrenset. Eget maksimum per kategori mangler i prisendepunktet; prosjekteier har i etterfølgende avklaring bekreftet null som ubegrenset kategori.
 
-Prosjekteier har bekreftet vellykket manuell token-/arrangørkontroll mot SalsaNor Oslo. M5.2 har nå lokal kurskobling og import av nye kursutkast, med felles navnesøk og eksplisitt kategorivalg. Importen er prøvd med syntetiske svar; visuell brukertest og faktisk importprøve gjenstår. Avgrenset M5.3-polling og valgfri automatisk påmeldingsstatus er nå implementert. Kategoritall er også levert i frontend/backend og prøvd med en avgrenset faktisk lesekontroll. Betydningen av salgbare plasser/pooler, driftskvoter og gjenstående tokenmodell i M5.1 samt M5.4-webhooks gjenstår. Se [arbeidsplan, API-grunnlag og dokumentasjonen vi trenger](LETSREG-API-M5.md).
+Prosjekteier har bekreftet vellykket manuell token-/arrangørkontroll mot SalsaNor Oslo. M5.2 har nå lokal kurskobling og import av nye kursutkast, med felles navnesøk og eksplisitt kategorivalg. Automatiske importprøver bruker syntetiske svar. Prosjekteier har prøvd importerte kurs i faktisk miljø og rapportert avvik som er fulgt opp; en samlet dokumentert godkjenning av import-/endringsflyten gjenstår. Avgrenset M5.3-polling og valgfri automatisk påmeldingsstatus er nå implementert. Kategoritall er også levert i frontend/backend og prøvd med en avgrenset faktisk lesekontroll. Betydningen av salgbare plasser/pooler, driftskvoter og gjenstående tokenmodell i M5.1 samt M5.4-webhooks gjenstår. Se [arbeidsplan, API-grunnlag og dokumentasjonen vi trenger](LETSREG-API-M5.md).
 
 - [x] Leverandøruavhengig lesetransport med fast HTTPS-opprinnelse, TLS-kontroll, ingen redirects, tids-/størrelsesgrenser og separate tilgangs-/retryfeil. Brukes av manuelle kontroller og valgfri automatisk statuskontroll.
 - [x] M5.1: sammenlignet Betait-integrasjonen med offisiell OpenAPI 2.2.8. Dokumentert password-tokenflyt, ny Swagger-tokenadresse og affiliate-prefiks i brukernavnet. Se [API-kontrakten](LETSREG-API-KONTRAKT.md).
@@ -374,8 +459,8 @@ Prosjekteier har bekreftet vellykket manuell token-/arrangørkontroll mot SalsaN
 - [ ] Verifiser organisasjon, autentisering, rolle-/poolkapasitet, reservasjoner, datotolkning og kvoter før produksjonsgodkjenning av automatisk status.
 - [x] Polling, varig kø, atomiske snapshots og retry for demonstrasjonen. Separat serverstyrt kjøring er dokumentert, ikke satt opp i produksjon.
 - [ ] Verifiser live kø-/poolmodell, kvoter og eventuell webhook-kontrakt før produksjonsgodkjenning.
-- [x] Demonstrasjonsdata vises aldri offentlig. Faktiske kategoriers øvre grenser utløper i åpne visninger og skjules ved ukjent/feil/manuell status; kontrollert lokalt.
-- [ ] Verifiser faktisk CDN/cache og utløp av offentlige kategoritall, også i allerede åpne faner.
+- [x] Demonstrasjonsdata vises aldri offentlig. Siste gyldige LetsReg-kapasitet beholdes ved gammel kontroll/API-feil, med kontrolltid og felles merknad. Uten gyldig observasjon finnes ingen kjente tall; salg/synlighet og manuelt statusvalg håndheves fortsatt. Se 0.1.8 og påmeldingskontrakten.
+- [ ] Verifiser faktisk CDN/cache, oppdatering av siste kjente kategoritall og salgs-/synlighetsgrenser, også i allerede åpne faner.
 
 **Leveranseport:** demonstrasjon, lesetransport, kurskobling/import, automatisk status og kategoriers øvre grenser er implementert og prøvd lokalt. Faktisk tilgang og avgrenset lesing av arrangementer/kategorier er bekreftet; se [testbevis og begrensninger](M5-KATEGORIKAPASITET.md). Dette godkjenner ikke eksakte salgbare rolle-/pooltall eller alle L1–L10. Produksjonsdrift krever gjenstående kontrakt-, kvote-, cron- og cachekontroller. Webhooks er ikke implementert. Live API er valgfritt ved første innføring.
 
@@ -386,7 +471,8 @@ Menyretting: Statistikk registreres etter hovedmenyen slik at WordPress bygger k
 - [x] M5a: UTM/kampanjer, samtykket besøksøkt, side-/kursvisning og LetsReg-klikk; egen rapport under Statistikk.
 - [x] Complianz-styring, standard av, separate statistikk-/markedsføringssamtykker, tilbaketrekking og 30-dagers opprydding. Egne GTM-hendelser uten ny Google-tag.
 - [x] Lokale perioder med 12 kurs hver: tre kurs per sal, to saler mandag og tirsdag; ett forskjøvet kurs per periode. Idempotent opprettelse og tydelig oppstartsmerking i kalenderen.
-- [ ] Verifiser faktisk Complianz/GTM/GA4-container, samtykke, cron og måling i staging.
+- [x] Prosjekteier rapporterer kampanjemåling og riktig Tag Manager-oppsett testet via ChatGPT-appens nettleserkontroll 26. september.
+- [ ] Dokumenter eventuelt manglende dekning av avslag/tilbaketrekking og opprydding; generell måletest beviser ikke alle samtykketilstander.
 - [x] M5b: gjennomgått offentlig API 2.2.8 og lokal kode; [dokumenterte ordrefelt og konkrete kontrakthull](M5B-KONTRAKTGJENNOMGANG.md). Ingen mottaker/konverteringssporing aktivert.
 - [x] M5b: [offentlig finsøk](M5B-OFFENTLIG-RESEARCH.md) bekrefter tokenflyt, webhook-omfang og mulige refusjonskilder. Egne arrangørpiksler er omtalt, men referanseoverføring og callback-sikkerhet er fortsatt uverifisert.
 - [x] M5b: vurdert brukerlevert `participant.registered`-eksempel med konvolutt, ordre-/kategori-/arrangements-ID og betalingsdato. [Eksempelvurderingen](M5B-KONTRAKTGJENNOMGANG.md#brukerlevert-webhook-eksempel) skiller mulig API-avstemming fra ubekreftet betaling og manglende besøksreferanse. Ingen rå deltakerdata lagret.
@@ -405,7 +491,8 @@ Menyretting: Statistikk registreres etter hovedmenyen slik at WordPress bygger k
 - [x] Første lokale testutgave **0.1.0**: [releasenotat](releases/0.1.0.md), versjonert ZIP og SHA-256-kontrollsum. Miljø-/brukergodkjenning og utrulling gjenstår.
 - [x] Beskrivelsesmal levert som lokal testutgave **0.1.2** med [releasenotat](releases/0.1.2.md), ZIP og kontrollsum. Faktisk editor/API-roundtrip gjenstår.
 - [x] Oppdatert lokal testutgave **0.1.1**: [releasenotat](releases/0.1.1.md), versjonert ZIP og SHA-256-kontrollsum med endringskontroll mot LetsReg og gjenbruk av beskrivelser. Live endringskontroll og visuell staging-prøve gjenstår.
-- [ ] Opprett den første reelle nye perioden direkte i RegiNor med bekreftede opplysninger.
+- [x] Reell kursperiode «Høst 3 2026» er opprettet og brukt i prosjekteiers kontroll på faktisk nettsted. Dette bekrefter opprettelse/test, ikke alle kursopplysninger eller endelig innføring.
+- [ ] Godkjenn kursopplysninger, datoer, prisvilkår og påmeldingslenker for perioden som skal tas i bruk.
 - [ ] Test hele arbeidsflyten i staging med 1–2 kursansvarlige og 4–6 deltakere.
 - [ ] Bytt kursinngangen til RegiNor ved innføring; bevar gamle ACF-kursposter, registreringer og URL-er.
 - [ ] Verifiser Avada/TEC, canonical, sitemap, cache og at gamle kurs ikke påvirkes.
@@ -418,7 +505,7 @@ Menyretting: Statistikk registreres etter hovedmenyen slik at WordPress bygger k
 
 ## Etter MVP
 
-Automatisk nybegynnerside og eventuelle senere kalenderutvidelser som periodeabonnement/personlige kursutvalg. Kalendernedlasting og abonnement er nå konkretisert i M4.2, delingsknapper i M4.3. Behovsstyrt måling ligger i M5a/M5b etter prosjekteiers bestilling. Handlekurv, betaling, billetter, deltakerregister og egen venteliste inngår ikke i dagens leveranse. Mulige utvidelser for deltakerlister og oppmøte er beskrevet nedenfor som et separat fremtidig omfang. Import/migrering av gamle kurs er tatt ut av leveransen.
+Nybegynner-/kampanjesider støttes allerede med nivåavgrensede kortkoder fra 0.1.21; redaksjonell opprettelse av selve landingssidene gjenstår etter behov. Eventuelle senere kalenderutvidelser som periodeabonnement/personlige kursutvalg. Kalendernedlasting og abonnement er nå konkretisert i M4.2, delingsknapper i M4.3. Behovsstyrt måling ligger i M5a/M5b etter prosjekteiers bestilling. Handlekurv, betaling, billetter, deltakerregister og egen venteliste inngår ikke i dagens leveranse. Mulige utvidelser for deltakerlister og oppmøte er beskrevet nedenfor som et separat fremtidig omfang. Import/migrering av gamle kurs er tatt ut av leveransen.
 
 ### Mulige fremtidige features – deltakerdrift og videre API-bruk
 
@@ -468,3 +555,40 @@ Foreslått ansvarsdeling og tilgang ved en eventuell oppmøtemodul:
 - Prøv først med syntetiske data og deretter et avtalt testkurs: flere undervisningskvelder, delte arrangementer, etternølere, avmelding/refusjon, samtidige innsjekkinger og tilbakekalt tilgang. Oppmøteregistrering skal ikke innebære ny påmelding eller betalingsbekreftelse.
 
 **Kildegrunnlag for kandidatene:** offentlig [LetsReg OpenAPI 2.2.8](https://integrate.deltager.no/swagger/v1/swagger.json), kontrollert 21. september 2026, og [LetsRegs egen appbeskrivelse](https://play.google.com/store/apps/details?id=com.letsreg.app). Dokumentert API-funksjon er ikke bevis for kontotilgang eller gjennomført integrasjonstest. Synkronisering av lokal innsjekk tilbake til LetsReg er fortsatt uavklart.
+
+## M4.4 – Nivåarkiver (0.1.27)
+
+- [x] Egne arkiver under `/kursrekke/niva/<slug>/`, separat publisering, HTML-introduksjon og ekstratekst.
+- [x] Eksisterende FAQ-/innleggstyper velges gjennom termkoblinger uten ACF-avhengighet. FAQ-utdrag lenker til hele posten; artikkelkarusell har automatisk avspilling med pause, tastatur og redusert bevegelse.
+- [x] Felles nivåbegrensning, aktuelle perioder, tomtilstand, private/passordbeskyttede innlegg utelates.
+- [x] Separate arkivtekster/adresser per WPML-språk og oversatte term-/innleggskoblinger. Ingen operasjonelle kurskopier per språk.
+- [x] Canonical/OG, sitemap, aliaser, no-store og reservasjon av `niva`; ingen automatisk migrering av gamle arkiver.
+- [x] Lokalt: nivåarkiver 30 / HTTP 21, WordPress, lagring/admin/arbeidsflyt, offentlige ruter, permalenker, interface og Composer består. FAQ-/karusellvisning kontrollert på desktop og mobilbredde. POT og ZIP med 130 runtime-filer kontrollert.
+- [ ] Faktisk FAQ-type/taksonomi, WPML/Avada, bildevisning og berøring/tastatur i produksjonsoppsettet kontrolleres.
+
+Se [oppsett og avgrensninger](NIVAARKIVER.md) og [testbevis](releases/0.1.27.md).
+
+## Oppfølging – 0.1.28
+
+- [x] Kompakt kursprofil med tittel og påmeldingsboks side om side; mobil følger tittel → påmelding → beskrivelse.
+- [x] «Tilbake til kursperioden», med beholdt navigasjonskontekst.
+- [x] Eksplisitt HTML-tittel på virtuelle kurs-/nivåruter; ingen duplikat fra WordPress sin tittelutskrift. Avadas sidebeskrivelse/OG fjernes kun der RegiNor leverer egne metadata.
+- [x] Lokalt: WordPress, permalenker/metadata 63 / HTTP 66, offentlig 119 / HTTP 83, nivåarkiv-HTTP 21, interface og Composer 231/575. Visuell desktop-/mobilprøve, POT og ZIP med 130 runtime-filer kontrollert.
+- [ ] Rettet pakke kontrolleres på produksjonens faktiske Avada-/SEO-oppsett etter installasjon. Lesekontroll før retting viste manglende title og doble metadata.
+
+Se [testbevis og avgrensninger](releases/0.1.28.md).
+
+## Oppfølging – 0.1.29
+
+- [x] Nivåarkivets artikler/FAQ bruker 2/3 og 1/3 bredde på store skjermer, stablet med artikler først under 1000 px. Én synlig seksjon får full bredde.
+- [ ] Visuell bekreftelse i faktisk Avada-oppsett etter installasjon. [Lokale kontroller](releases/0.1.29.md).
+
+## Instruktøroppfølging – 0.1.30
+
+- [x] Endre instruktører på publiserte kurs uten avpublisering; historikk, rettigheter, versjonskontroll og instruktørkollisjoner ivaretas.
+- [x] Instruktørnavn på kort, profilkort på kurssiden og filterfri kortkode på instruktørprofiler. Kortkoden viser offentlige perioder med gjenstående undervisning og bruker faktiske kurskvelder.
+- [ ] Visuell kontroll av instruktørprofilkort og kortkode i faktisk Avada/WPML-oppsett. Lokal test er ikke produksjonsgodkjenning.
+
+- [x] 0.1.31: instruktørvalg avgrenset til hovedspråkets profiler. Frontend bruker fortsatt WPML-visningsspråket; faktisk WPML-installasjon gjenstår som miljøkontroll.
+
+**Levert lokalt i 0.1.32:** Før-/etter-visninger suppleres med ordvis utheving: rød/gjennomstreket gammel tekst og grønn/understreket ny tekst. Lenkeadresser inngår i sammenligningen. Ved første sammenligning uten tidligere kildegrunnlag påstås ingen historisk endring. Rik tekst i originalvisningene beholdes.

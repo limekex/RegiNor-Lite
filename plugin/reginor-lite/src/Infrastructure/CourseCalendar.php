@@ -61,12 +61,27 @@ final class CourseCalendar
         $previous = $state[$language] ?? $state['default'] ?? [];
         $url = PublicSite::url($id);
         $events = []; $now = gmdate(DATE_ATOM);
+        $title = self::title($group);
+        $total = count(array_filter($group['sessions'], static fn (array $session): bool => $session['status'] !== 'cancelled'));
+        $number = 0;
         foreach ($group['sessions'] as $session) {
+            /* translators: 1: Evening number, 2: Total active evenings in this course. */
+            $ordinal = $session['status'] !== 'cancelled' ? sprintf(__('Kurskveld %1$d av %2$d', 'reginor-lite'), ++$number, $total) : '';
             $cancelled = $session['status'] === 'cancelled' || $group['status'] === 'cancelled';
             $description = $cancelled ? __('Avlyst kurskveld.', 'reginor-lite') : __('Se kursprofilen for oppdaterte kursopplysninger.', 'reginor-lite');
             if ($session['status'] === 'moved') { $description .= ' ' . __('Endret kurskveld.', 'reginor-lite'); }
             if ($session['reason']) { $description .= ' ' . $session['reason']; }
-            $event = ['title' => $group['title'], 'start' => $session['starts_at'], 'end' => $session['ends_at'], 'cancelled' => $cancelled,
+            $details = [$ordinal, $description, self::excerpt($group['description'])];
+            /* translators: %s: Course level name. */
+            if ($group['level_name'] !== '') { $details[] = sprintf(__('Nivå: %s', 'reginor-lite'), $group['level_name']); }
+            /* translators: %s: Short plain-text prerequisites. */
+            if ($group['level'] !== '') { $details[] = sprintf(__('Nivå og forkunnskaper: %s', 'reginor-lite'), self::excerpt($group['level'])); }
+            /* translators: %s: Comma-separated instructor names for this evening. */
+            if ($session['instructors']) { $details[] = sprintf(__('Instruktør: %s', 'reginor-lite'), implode(', ', $session['instructors'])); }
+            /* translators: %s: Public canonical course URL. */
+            $details[] = sprintf(__('Kursprofil: %s', 'reginor-lite'), $url);
+            $description = implode("\n\n", array_filter($details, static fn (string $text): bool => $text !== ''));
+            $event = ['title' => $title . ($ordinal !== '' ? ' · ' . $ordinal : ''), 'start' => $session['starts_at'], 'end' => $session['ends_at'], 'cancelled' => $cancelled,
                 'location' => implode(' · ', array_filter([$session['room'], $session['venue'], $session['address']])), 'description' => $description, 'url' => $url];
             $before = $previous[$session['id']] ?? null;
             $events[$session['id']] = self::revision($event, $before, $now);
@@ -75,8 +90,9 @@ final class CourseCalendar
         foreach ($previous as $sessionId => $event) {
             if (isset($events[$sessionId])) { continue; }
             $next = array_diff_key($event, array_flip(['sequence', 'modified']));
-            $next['cancelled'] = true; $next['url'] = $url; $next['title'] = $group['title'];
-            $next['description'] = __('Denne kurskvelden er tatt ut av kursplanen og er avlyst.', 'reginor-lite');
+            $next['cancelled'] = true; $next['url'] = $url; $next['title'] = $title;
+            /* translators: %s: Public canonical course URL. */
+            $next['description'] = __('Denne kurskvelden er tatt ut av kursplanen og er avlyst.', 'reginor-lite') . "\n\n" . sprintf(__('Kursprofil: %s', 'reginor-lite'), $url);
             $events[$sessionId] = self::revision($next, $event, $now);
         }
         ksort($events);
@@ -96,6 +112,20 @@ final class CourseCalendar
         return $event + ['sequence' => $before ? $before['sequence'] + 1 : 0, 'modified' => $now];
     }
 
+    private static function title(array $group): string
+    {
+        $title = RichText::plain($group['title']);
+        $level = RichText::plain($group['level_name']);
+        return $level !== '' && !preg_match('/(?<![\pL\pN])' . preg_quote($level, '/') . '(?![\pL\pN])/iu', $title)
+            ? $title . ' · ' . $level : $title;
+    }
+
+    private static function excerpt(string $text): string
+    {
+        $plain = preg_replace('/\s+/u', ' ', RichText::plain($text)) ?? '';
+        return wp_html_excerpt(trim($plain), 400, '…');
+    }
+
     /** Anonymous read rechecks publication inside the same lock as snapshot generation. */
     public static function read(int $id, string $language): ?array
     {
@@ -105,7 +135,7 @@ final class CourseCalendar
             $catalog = (new Catalog())->read(); $group = $catalog['groups'][$id] ?? null;
             if (!$group) { return null; }
             $snapshot = self::save($group, $language);
-            $name = $group['title'] . ' · ' . $catalog['periods'][$group['period_id']]['title'];
+            $name = get_bloginfo('name') . ' · ' . self::title($group) . ' · ' . $catalog['periods'][$group['period_id']]['title'];
             return $snapshot + ['name' => $name, 'ics' => ICalendar::render($name, $snapshot['identity'], $snapshot['events'])];
         }), true);
     }
